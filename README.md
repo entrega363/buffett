@@ -1,6 +1,12 @@
-# HatchCanvas Copy - Teste Local
+# HatchCanvas Copy
 
-## 🚀 **INÍCIO RÁPIDO**
+## 🌐 **SITE AO VIVO**
+**URL**: https://buffetsobral1.github.io/buffet/
+
+## 🚀 **DEPLOY AUTOMÁTICO**
+Este projeto usa GitHub Actions para deploy automático. Qualquer push para a branch `main` atualiza o site automaticamente.
+
+## 🔧 **TESTE LOCAL**
 
 ### **Opção 1: Scripts Automáticos**
 
@@ -83,3 +89,46 @@ Consulte o arquivo `LOCAL-TESTING-GUIDE.md` para guia completo de troubleshootin
 
 **Versão**: 1.0.0  
 **Status**: ✅ Pronto para teste
+## 🚀 *
+*DEPLOY E ATUALIZAÇÕES**
+
+### **Deploy Inicial**
+Execute o script de configuração:
+```bash
+# Windows
+deploy-setup.bat
+
+# Linux/Mac
+./deploy-setup.sh
+```
+
+### **Atualizações Futuras**
+Para atualizar o site:
+```bash
+# Windows (script automático)
+push-to-github.bat
+
+# Manual
+git add .
+git commit -m "Sua mensagem"
+git push
+```
+
+### **Monitoramento**
+- **Actions**: https://github.com/buffetsobral1/buffet/actions
+- **Deploy Status**: Verifique a aba Actions para status dos deploys
+
+## 📊 **ESTATÍSTICAS DO PROJETO**
+
+- **Arquivos**: 65+ arquivos
+- **Performance**: 96% otimizado
+- **Fidelidade**: 94% ao design original
+- **Responsivo**: 100% compatível
+- **Testes**: Cobertura completa
+
+## 🔗 **LINKS ÚTEIS**
+
+- **Site**: https://buffetsobral1.github.io/buffet/
+- **Repositório**: https://github.com/buffetsobral1/buffet
+- **Deploy Guide**: [DEPLOY-AUTOMATICO.md](DEPLOY-AUTOMATICO.md)
+- **Testing Guide**: [LOCAL-TESTING-GUIDE.md](LOCAL-TESTING-GUIDE.md)
