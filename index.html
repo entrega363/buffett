@@ -1,397 +1,730 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="no-js">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="HatchCanvas - Plataforma de design e criação">
-    <meta name="keywords" content="design, canvas, criação, ferramenta">
-    <meta name="author" content="HatchCanvas">
-    
-    <title>HatchCanvas - Cópia</title>
-    
-    <!-- Preload de recursos críticos -->
-    <link rel="preload" href="assets/css/main.min.css" as="style">
-    <link rel="preload" href="assets/js/main.min.js" as="script">
-    
-    <!-- DNS Prefetch para recursos externos -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com">
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    
-    <!-- Estilos CSS Minificados -->
-    <link rel="stylesheet" href="assets/css/main.min.css">
-    <link rel="stylesheet" href="assets/css/responsive.min.css">
-    <link rel="stylesheet" href="assets/css/error-styles.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <title>Buffet Sobral - Festas inesquecíveis em Sobral e região</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e91e63 0%, #9c27b0 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .header .location {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .nav-tabs {
+            background: white;
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+        }
+
+        .nav-tab.active {
+            color: #9c27b0;
+            border-bottom-color: #9c27b0;
+            background-color: #f8f4ff;
+        }
+
+        .nav-tab:hover {
+            background-color: #f5f5f5;
+        }
+
+        .content {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Simulador Styles */
+        .simulator-form {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .event-types {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .event-type {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .event-type.active {
+            background: #9c27b0;
+            color: white;
+            border-color: #9c27b0;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2196f3;
+            cursor: pointer;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .package-card:hover {
+            border-color: #9c27b0;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.1);
+        }
+
+        .package-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .package-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .package-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #4caf50;
+        }
+
+        .package-features {
+            list-style: none;
+        }
+
+        .package-features li {
+            padding: 5px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .package-features li:before {
+            content: "✓";
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        /* Catálogo Styles */
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .service-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .service-content {
+            padding: 20px;
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .service-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-price {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4caf50;
+        }
+
+        .btn-add {
+            background: #9c27b0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #7b1fa2;
+            transform: translateY(-1px);
+        }
+
+        /* Avaliações Styles */
+        .rating-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .rating-stars {
+            font-size: 1.5rem;
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .rating-text {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .review-date {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .review-stars {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        .review-text {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Agenda Styles */
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .calendar-nav:hover {
+            background: #f0f0f0;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .calendar-day {
+            background: white;
+            padding: 15px 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background: #f0f0f0;
+        }
+
+        .calendar-day.available {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .calendar-day.booked {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .calendar-day.today {
+            background: #9c27b0;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-tab {
+                font-size: 0.8rem;
+                padding: 12px 8px;
+            }
+            
+            .event-types {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Fallback para usuários sem JavaScript -->
-    <noscript>
-        <style>
-            .js-only { display: none !important; }
-            .no-js-fallback { display: block !important; }
-            .mobile-menu-toggle { display: none !important; }
-            .header-nav { display: flex !important; }
-            * { animation: none !important; transition: none !important; }
-        </style>
-        <div class="noscript-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; margin: 20px; border-radius: 8px; text-align: center;">
-            <h3 style="margin: 0 0 10px 0;">⚠️ JavaScript Desabilitado</h3>
-            <p style="margin: 5px 0; font-size: 14px;">Para uma melhor experiência, recomendamos habilitar o JavaScript.</p>
-            <p style="margin: 5px 0; font-size: 14px;">O site ainda é totalmente utilizável sem JavaScript.</p>
-        </div>
-    </noscript>
-
-    <!-- Cabeçalho principal -->
-    <header id="header" class="header" role="banner">
-        <div class="container">
-            <div class="header-content">
-                <!-- Logo/Branding -->
-                <div class="header-logo">
-                    <a href="#" class="logo">
-                        <img src="assets/images/logo.svg" alt="HatchCanvas Logo">
-                        <span class="logo-text">HatchCanvas</span>
-                    </a>
-                </div>
-                
-                <!-- Navegação principal -->
-                <nav class="header-nav" role="navigation">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#home" class="nav-link active">Início</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#features" class="nav-link">Recursos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#gallery" class="nav-link">Galeria</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#about" class="nav-link">Sobre</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#contact" class="nav-link">Contato</a>
-                        </li>
-                    </ul>
-                </nav>
-                
-                <!-- Botões de ação -->
-                <div class="header-actions">
-                    <button class="btn btn-secondary">Login</button>
-                    <button class="btn btn-primary">Começar Grátis</button>
-                </div>
-                
-                <!-- Menu mobile -->
-                <button class="mobile-menu-toggle" aria-label="Menu">
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                    <span class="hamburger-line"></span>
-                </button>
-            </div>
-        </div>
+    <header class="header">
+        <h1>🎂 Buffet Sobral</h1>
+        <div class="subtitle">Festas inesquecíveis em Sobral e região</div>
+        <div class="location">📍 Sobral - CE</div>
     </header>
-    
-    <!-- Conteúdo principal -->
-    <main id="main-content" class="main-content" role="main">
-        <!-- Seção Hero -->
-        <section id="home" class="hero-section">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-text">
-                        <h1 class="hero-title">
-                            Crie designs incríveis com
-                            <span class="highlight">HatchCanvas</span>
-                        </h1>
-                        <p class="hero-description">
-                            A plataforma definitiva para designers profissionais. 
-                            Ferramentas poderosas, interface intuitiva e resultados excepcionais.
-                        </p>
-                        <div class="hero-actions">
-                            <button class="btn btn-primary btn-large">Começar Agora</button>
-                            <button class="btn btn-outline btn-large">Ver Demo</button>
-                        </div>
-                    </div>
-                    <div class="hero-visual">
-                        <img src="assets/images/hero-image.jpg" alt="HatchCanvas Interface">
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Seção de Recursos -->
-        <section id="features" class="features-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Recursos Poderosos</h2>
-                    <p class="section-description">
-                        Descubra as ferramentas que tornam o HatchCanvas único
-                    </p>
-                </div>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="assets/images/icon-design.svg" alt="Design Intuitivo">
-                        </div>
-                        <h3 class="feature-title">Design Intuitivo</h3>
-                        <p class="feature-description">
-                            Interface limpa e intuitiva para máxima produtividade e criação.
-                        </p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="assets/images/icon-collaboration.svg" alt="Colaboração">
-                        </div>
-                        <h3 class="feature-title">Colaboração</h3>
-                        <p class="feature-description">
-                            Trabalhe em equipe com sincronização em tempo real.
-                        </p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="assets/images/icon-templates.svg" alt="Templates">
-                        </div>
-                        <h3 class="feature-title">Templates</h3>
-                        <p class="feature-description">
-                            Centenas de templates prontos para uso criativo.
-                        </p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <img src="assets/images/icon-export.svg" alt="Exportação">
-                        </div>
-                        <h3 class="feature-title">Exportação</h3>
-                        <p class="feature-description">
-                            Exporte seus designs em múltiplos formatos de alta qualidade.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Seção Galeria -->
-        <section id="gallery" class="gallery-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Galeria de Projetos</h2>
-                    <p class="section-description">
-                        Veja alguns dos incríveis projetos criados com HatchCanvas
-                    </p>
-                </div>
-                
-                <div class="gallery-grid">
-                    <div class="gallery-item">
-                        <img src="assets/images/project-1.jpg" alt="Projeto 1">
-                        <div class="gallery-overlay">
-                            <h4 class="gallery-title">Design Moderno</h4>
-                            <p class="gallery-category">Branding</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/images/project-2.jpg" alt="Projeto 2">
-                        <div class="gallery-overlay">
-                            <h4 class="gallery-title">Interface Limpa</h4>
-                            <p class="gallery-category">UI/UX</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/images/project-3.jpg" alt="Projeto 3">
-                        <div class="gallery-overlay">
-                            <h4 class="gallery-title">Arte Digital</h4>
-                            <p class="gallery-category">Ilustração</p>
-                        </div>
-                    </div>
-                    
-                    <div class="gallery-item">
-                        <img src="assets/images/project-4.jpg" alt="Projeto 4">
-                        <div class="gallery-overlay">
-                            <h4 class="gallery-title">Layout Responsivo</h4>
-                            <p class="gallery-category">Web Design</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Seção Sobre -->
-        <section id="about" class="about-section">
-            <div class="container">
-                <div class="about-content">
-                    <div class="about-text">
-                        <h2 class="section-title">Sobre o HatchCanvas</h2>
-                        <p class="about-description">
-                            O HatchCanvas nasceu da necessidade de democratizar o design. 
-                            Nossa missão é fornecer ferramentas poderosas e acessíveis para que qualquer 
-                            pessoa possa criar designs extraordinários.
-                        </p>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <span class="stat-number">10K+</span>
-                                <span class="stat-label">Usuários Ativos</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">50K+</span>
-                                <span class="stat-label">Projetos Criados</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">99%</span>
-                                <span class="stat-label">Satisfação</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="about-visual">
-                        <img src="assets/images/about-image.jpg" alt="Equipe HatchCanvas">
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Seção de Contato -->
-        <section id="contact" class="contact-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Entre em Contato</h2>
-                    <p class="section-description">
-                        Tem alguma dúvida? Estamos aqui para ajudar!
-                    </p>
-                </div>
-                
-                <div class="contact-content">
-                    <div class="contact-form-wrapper">
-                        <form class="contact-form">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Nome</label>
-                                <input type="text" id="name" name="name" class="form-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email" class="form-label">E-mail</label>
-                                <input type="email" id="email" name="email" class="form-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="subject" class="form-label">Assunto</label>
-                                <input type="text" id="subject" name="subject" class="form-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="message" class="form-label">Mensagem</label>
-                                <textarea id="message" name="message" class="form-textarea" rows="5" required></textarea>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-large">Enviar Mensagem</button>
-                        </form>
-                    </div>
-                    
-                    <div class="contact-info">
-                        <div class="contact-item">
-                            <h4 class="contact-title">E-mail</h4>
-                            <p class="contact-detail">contato@hatchcanvas.com</p>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <h4 class="contact-title">Telefone</h4>
-                            <p class="contact-detail">+55 (11) 9999-9999</p>
-                        </div>
-                        
-                        <div class="contact-item">
-                            <h4 class="contact-title">Endereço</h4>
-                            <p class="contact-detail">
-                                Rua das Flores, 123<br>
-                                São Paulo, SP 01234-567
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <!-- Rodapé -->
-    <footer id="footer" class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <!-- Informações da empresa -->
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <img src="assets/images/logo-white.svg" alt="HatchCanvas">
-                        <p class="footer-description">
-                            Criando o futuro do design digital com ferramentas inovadoras e intuitivas.
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Links principais -->
-                <div class="footer-section">
-                    <h4 class="footer-title">Navegação</h4>
-                    <ul class="footer-links">
-                        <li><a href="#home" class="footer-link">Início</a></li>
-                        <li><a href="#features" class="footer-link">Recursos</a></li>
-                        <li><a href="#gallery" class="footer-link">Galeria</a></li>
-                        <li><a href="#about" class="footer-link">Sobre</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Suporte -->
-                <div class="footer-section">
-                    <h4 class="footer-title">Suporte</h4>
-                    <ul class="footer-links">
-                        <li><a href="#" class="footer-link">Ajuda</a></li>
-                        <li><a href="#" class="footer-link">Documentação</a></li>
-                        <li><a href="#contact" class="footer-link">Contato</a></li>
-                        <li><a href="#" class="footer-link">Status</a></li>
-                    </ul>
-                </div>
-                
-                <!-- Redes sociais -->
-                <div class="footer-section">
-                    <h4 class="footer-title">Redes Sociais</h4>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook">
-                            <img src="assets/images/icon-facebook.svg" alt="Facebook">
-                        </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <img src="assets/images/icon-twitter.svg" alt="Twitter">
-                        </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
-                            <img src="assets/images/icon-instagram.svg" alt="Instagram">
-                        </a>
-                        <a href="#" class="social-link" aria-label="LinkedIn">
-                            <img src="assets/images/icon-linkedin.svg" alt="LinkedIn">
-                        </a>
-                    </div>
-                </div>
-            </div>
+
+    <nav class="nav-tabs">
+        <button class="nav-tab" data-tab="catalogo">📋 Catálogo</button>
+        <button class="nav-tab active" data-tab="simulador">💰 Simulador</button>
+        <button class="nav-tab" data-tab="agenda">📅 Agenda</button>
+        <button class="nav-tab" data-tab="avaliacoes">⭐ Avaliações</button>
+    </nav>
+
+    <div class="content">
+        <!-- Seção Catálogo -->
+        <section id="catalogo" class="section">
+            <h2>Nossos Serviços</h2>
             
-            <!-- Copyright -->
-            <div class="footer-bottom">
-                <div class="footer-copyright">
-                    <p>&copy; 2024 HatchCanvas. Todos os direitos reservados.</p>
-                </div>
-                <div class="footer-legal">
-                    <a href="#" class="footer-link">Política de Privacidade</a>
-                    <a href="#" class="footer-link">Termos de Uso</a>
+            <div class="service-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f0f0f0'/%3E%3Ctext x='200' y='100' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EBuffet Completo%3C/text%3E%3C/svg%3E" alt="Buffet Completo" class="service-image">
+                <div class="service-content">
+                    <h3 class="service-title">Buffet Completo</h3>
+                    <p class="service-description">Salgados, doces, bebidas e serviço completo</p>
+                    <div class="service-footer">
+                        <span class="service-price">R$ 45/pessoa</span>
+                        <button class="btn-add">Adicionar</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
-    
-    <!-- Scripts de Tratamento de Erros -->
-    <script src="assets/js/error-handling.js" defer></script>
-    <script src="assets/js/offline-fallback.js" defer></script>
-    
-    <!-- Scripts Principais -->
-    <script src="assets/js/main.min.js" defer></script>
-    
-    <!-- Fallback para usuários sem JavaScript -->
+
+            <div class="service-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f0f0f0'/%3E%3Ctext x='200' y='100' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EBolo Personalizado%3C/text%3E%3C/svg%3E" alt="Bolo Personalizado" class="service-image">
+                <div class="service-content">
+                    <h3 class="service-title">Bolo Personalizado</h3>
+                    <p class="service-description">Bolos temáticos e personalizados para sua festa</p>
+                    <div class="service-footer">
+                        <span class="service-price">R$ 80/kg</span>
+                        <button class="btn-add">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23f0f0f0'/%3E%3Ctext x='200' y='100' text-anchor='middle' dy='.3em' font-family='Arial' font-size='16' fill='%23666'%3EDecoração%3C/text%3E%3C/svg%3E" alt="Decoração" class="service-image">
+                <div class="service-content">
+                    <h3 class="service-title">Decoração Completa</h3>
+                    <p class="service-description">Decoração temática para todos os tipos de festa</p>
+                    <div class="service-footer">
+                        <span class="service-price">R$ 300/evento</span>
+                        <button class="btn-add">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Simulador -->
+        <section id="simulador" class="section active">
+            <h2>Simule seu Orçamento</h2>
+            
+            <div class="simulator-form">
+                <div class="form-group">
+                    <label>Tipo de Evento</label>
+                    <div class="event-types">
+                        <div class="event-type active" data-type="aniversario">Aniversário</div>
+                        <div class="event-type" data-type="casamento">Casamento</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Número de Convidados: <span id="guestCount">50</span></label>
+                    <div class="slider-container">
+                        <input type="range" min="20" max="500" value="50" class="slider" id="guestSlider">
+                        <div class="slider-labels">
+                            <span>20</span>
+                            <span>500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Escolha seu Pacote</label>
+                    
+                    <div class="package-card">
+                        <div class="package-header">
+                            <div class="package-name">Pacote Básico</div>
+                            <div class="package-price">R$ 35/pessoa</div>
+                        </div>
+                        <ul class="package-features">
+                            <li>Buffet simples</li>
+                            <li>Refrigerantes</li>
+                            <li>Bolo básico</li>
+                            <li>1 Garçom</li>
+                        </ul>
+                    </div>
+
+                    <div class="package-card">
+                        <div class="package-header">
+                            <div class="package-name">Pacote Completo</div>
+                            <div class="package-price">R$ 55/pessoa</div>
+                        </div>
+                        <ul class="package-features">
+                            <li>Buffet completo</li>
+                            <li>Bebidas variadas</li>
+                            <li>Bolo personalizado</li>
+                            <li>Decoração básica</li>
+                            <li>2 Garçons</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Agenda -->
+        <section id="agenda" class="section">
+            <h2>Agenda de Disponibilidade</h2>
+            
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="calendar-nav" id="prevMonth">‹</button>
+                    <h3 id="currentMonth">Janeiro 2024</h3>
+                    <button class="calendar-nav" id="nextMonth">›</button>
+                </div>
+                
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated by JavaScript -->
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                    <div>🟢 Disponível &nbsp;&nbsp; 🔴 Ocupado &nbsp;&nbsp; 🟣 Hoje</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Avaliações -->
+        <section id="avaliacoes" class="section">
+            <h2>Avaliações dos Clientes</h2>
+            
+            <div class="rating-summary">
+                <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+                <div class="rating-text">4.9/5 (127 avaliações)</div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-name">Ana Paula</div>
+                    <div class="review-date">14/01/2024</div>
+                </div>
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-text">Buffet maravilhoso! A festa do meu filho ficou perfeita. Recomendo demais!</div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-name">Carlos Mendes</div>
+                    <div class="review-date">08/01/2024</div>
+                </div>
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-text">Excelente atendimento e comida deliciosa. Nosso casamento foi um sucesso!</div>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-name">Mariana Costa</div>
+                    <div class="review-date">02/01/2024</div>
+                </div>
+                <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                <div class="review-text">Muito bom! Só a sobremesa poderia ter mais variedade, mas no geral muito satisfeita.</div>
+            </div>
+        </section>
+    </div>
+
     <script>
-        document.documentElement.classList.remove('no-js');
-        document.documentElement.classList.add('js-enabled');
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and sections
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding section
+                const targetSection = tab.getAttribute('data-tab');
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        // Event Type Selection
+        document.querySelectorAll('.event-type').forEach(type => {
+            type.addEventListener('click', () => {
+                document.querySelectorAll('.event-type').forEach(t => t.classList.remove('active'));
+                type.classList.add('active');
+            });
+        });
+
+        // Guest Count Slider
+        const guestSlider = document.getElementById('guestSlider');
+        const guestCount = document.getElementById('guestCount');
+        
+        guestSlider.addEventListener('input', () => {
+            guestCount.textContent = guestSlider.value;
+        });
+
+        // Calendar Generation
+        function generateCalendar() {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const currentMonth = document.getElementById('currentMonth');
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth();
+            
+            const monthNames = [
+                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+            ];
+            
+            currentMonth.textContent = `${monthNames[month]} ${year}`;
+            
+            // Clear previous calendar
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day';
+                dayHeader.textContent = day;
+                dayHeader.style.fontWeight = 'bold';
+                dayHeader.style.background = '#f5f5f5';
+                calendarGrid.appendChild(dayHeader);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = now.getDate();
+            
+            // Add empty cells for days before month starts
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                // Add special classes
+                if (day === today) {
+                    dayElement.classList.add('today');
+                } else if (Math.random() > 0.7) {
+                    dayElement.classList.add('booked');
+                } else {
+                    dayElement.classList.add('available');
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Initialize calendar
+        generateCalendar();
+
+        // Add to cart functionality
+        document.querySelectorAll('.btn-add').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.textContent = 'Adicionado!';
+                btn.style.background = '#4caf50';
+                setTimeout(() => {
+                    btn.textContent = 'Adicionar';
+                    btn.style.background = '#9c27b0';
+                }, 2000);
+            });
+        });
+
+        // Package selection
+        document.querySelectorAll('.package-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.package-card').forEach(c => {
+                    c.style.borderColor = '#e0e0e0';
+                    c.style.background = 'white';
+                });
+                card.style.borderColor = '#9c27b0';
+                card.style.background = '#f8f4ff';
+            });
+        });
+
+        console.log('Buffet Sobral - Site carregado com sucesso!');
     </script>
 </body>
 </html>
