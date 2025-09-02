@@ -1,0 +1,22 @@
+<svg width="300" height="250" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="250" fill="linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)"/>
+  <rect x="40" y="50" width="220" height="150" rx="10" fill="white" opacity="0.95"/>
+  
+  <!-- Layout criativo -->
+  <rect x="60" y="70" width="180" height="25" rx="4" fill="#8b5cf6"/>
+  <rect x="70" y="78" width="40" height="9" rx="2" fill="white"/>
+  
+  <!-- Grid layout -->
+  <rect x="60" y="105" width="85" height="40" rx="4" fill="#f3f4f6"/>
+  <rect x="155" y="105" width="85" height="40" rx="4" fill="#f3f4f6"/>
+  <rect x="60" y="155" width="85" height="35" rx="4" fill="#f3f4f6"/>
+  <rect x="155" y="155" width="85" height="35" rx="4" fill="#f3f4f6"/>
+  
+  <!-- Elementos decorativos -->
+  <circle cx="80" cy="125" r="8" fill="#8b5cf6"/>
+  <circle cx="175" cy="125" r="8" fill="#f59e0b"/>
+  <circle cx="80" cy="172" r="8" fill="#10b981"/>
+  <circle cx="175" cy="172" r="8" fill="#ef4444"/>
+  
+  <text x="150" y="230" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="white" font-weight="600">Layout Criativo</text>
+</svg>

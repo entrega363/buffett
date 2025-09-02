@@ -1,0 +1,382 @@
+/* Estilos responsivos - Mobile First */
+
+/* ===== MOBILE (até 767px) ===== */
+@media screen and (max-width: 767px) {
+    /* Container */
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    /* Cabeçalho Mobile */
+    .header-content {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .header-nav {
+        display: none;
+    }
+    
+    .header-actions {
+        display: none;
+    }
+    
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .logo-text {
+        display: none;
+    }
+    
+    /* Hero Mobile */
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-3xl);
+        line-height: 1.2;
+    }
+    
+    .hero-description {
+        font-size: var(--font-size-base);
+    }
+    
+    .hero-actions {
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-large {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    /* Recursos Mobile */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+    
+    .feature-card {
+        padding: var(--spacing-xl);
+    }
+    
+    /* Galeria Mobile */
+    .gallery-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .gallery-overlay {
+        transform: translateY(0);
+        background: rgba(0, 0, 0, 0.7);
+    }
+    
+    /* Sobre Mobile */
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+        text-align: center;
+    }
+    
+    .about-stats {
+        justify-content: center;
+        gap: var(--spacing-xl);
+    }
+    
+    /* Contato Mobile */
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+    }
+    
+    /* Rodapé Mobile */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+        text-align: center;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    
+    .footer-legal {
+        justify-content: center;
+    }
+    
+    /* Seções Mobile */
+    section {
+        padding: var(--spacing-2xl) 0;
+    }
+    
+    .section-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .section-description {
+        font-size: var(--font-size-base);
+    }
+}/
+* ===== TABLET (768px - 1023px) ===== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    /* Container */
+    .container {
+        padding: 0 var(--spacing-lg);
+    }
+    
+    /* Cabeçalho Tablet */
+    .header-nav {
+        display: flex;
+    }
+    
+    .nav-list {
+        gap: var(--spacing-lg);
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+    }
+    
+    /* Hero Tablet */
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3xl);
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .hero-actions {
+        justify-content: center;
+    }
+    
+    /* Recursos Tablet */
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    /* Galeria Tablet */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    /* Sobre Tablet */
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3xl);
+        text-align: center;
+    }
+    
+    /* Contato Tablet */
+    .contact-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-3xl);
+    }
+    
+    /* Rodapé Tablet */
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    .footer-brand {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-bottom: var(--spacing-lg);
+    }
+}
+
+/* ===== DESKTOP PEQUENO (1024px - 1199px) ===== */
+@media screen and (min-width: 1024px) and (max-width: 1199px) {
+    /* Container */
+    .container {
+        padding: 0 var(--spacing-xl);
+    }
+    
+    /* Hero Desktop Pequeno */
+    .hero-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-3xl);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-4xl);
+    }
+    
+    /* Recursos Desktop Pequeno */
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-2xl);
+    }
+    
+    /* Galeria Desktop Pequeno */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    /* Sobre Desktop Pequeno */
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-3xl);
+    }
+    
+    /* Contato Desktop Pequeno */
+    .contact-content {
+        grid-template-columns: 2fr 1fr;
+        gap: var(--spacing-3xl);
+    }
+    
+    /* Rodapé Desktop Pequeno */
+    .footer-content {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: var(--spacing-xl);
+    }
+}/* ==
+=== DESKTOP GRANDE (1200px+) ===== */
+@media screen and (min-width: 1200px) {
+    /* Container */
+    .container {
+        padding: 0 var(--spacing-xl);
+    }
+    
+    /* Hero Desktop Grande */
+    .hero-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-4xl);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-5xl);
+    }
+    
+    /* Recursos Desktop Grande */
+    .features-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-2xl);
+    }
+    
+    /* Galeria Desktop Grande */
+    .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-xl);
+    }
+    
+    /* Sobre Desktop Grande */
+    .about-content {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-4xl);
+    }
+    
+    /* Contato Desktop Grande */
+    .contact-content {
+        grid-template-columns: 2fr 1fr;
+        gap: var(--spacing-4xl);
+    }
+    
+    /* Rodapé Desktop Grande */
+    .footer-content {
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: var(--spacing-2xl);
+    }
+}
+
+/* ===== AJUSTES ESPECÍFICOS ===== */
+
+/* Menu mobile ativo */
+@media screen and (max-width: 767px) {
+    .header-nav.mobile-active {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: var(--background-primary);
+        border-top: 1px solid #e2e8f0;
+        box-shadow: var(--shadow-lg);
+        z-index: 1000;
+    }
+    
+    .header-nav.mobile-active .nav-list {
+        flex-direction: column;
+        padding: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+    
+    .header-nav.mobile-active .nav-link {
+        padding: var(--spacing-md);
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media screen and (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .section-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .btn-large {
+        padding: var(--spacing-sm) var(--spacing-lg);
+        font-size: var(--font-size-sm);
+    }
+    
+    .about-stats {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+}
+
+/* Ajustes para telas muito grandes */
+@media screen and (min-width: 1400px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+    }
+}

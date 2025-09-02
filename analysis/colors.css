@@ -1,0 +1,36 @@
+/* Paleta de cores extraída do site original */
+/* Será preenchida após análise manual */
+
+:root {
+    /* Cores principais */
+    --primary-color: #000000; /* A ser atualizada */
+    --secondary-color: #666666; /* A ser atualizada */
+    --accent-color: #ff0000; /* A ser atualizada */
+    
+    /* Cores de fundo */
+    --background-primary: #ffffff; /* A ser atualizada */
+    --background-secondary: #f5f5f5; /* A ser atualizada */
+    
+    /* Cores de texto */
+    --text-primary: #333333; /* A ser atualizada */
+    --text-secondary: #666666; /* A ser atualizada */
+    --text-muted: #999999; /* A ser atualizada */
+    
+    /* Cores de estado */
+    --success-color: #28a745; /* A ser atualizada */
+    --warning-color: #ffc107; /* A ser atualizada */
+    --error-color: #dc3545; /* A ser atualizada */
+    --info-color: #17a2b8; /* A ser atualizada */
+    
+    /* Cores de borda */
+    --border-color: #e0e0e0; /* A ser atualizada */
+    --border-light: #f0f0f0; /* A ser atualizada */
+    --border-dark: #cccccc; /* A ser atualizada */
+}
+
+/* Exemplos de uso das cores */
+/*
+.primary-bg { background-color: var(--primary-color); }
+.secondary-bg { background-color: var(--secondary-color); }
+.accent-bg { background-color: var(--accent-color); }
+*/

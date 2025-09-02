@@ -1,0 +1,15 @@
+<svg width="300" height="250" viewBox="0 0 300 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="250" fill="linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)"/>
+  <rect x="50" y="50" width="200" height="150" rx="8" fill="white" opacity="0.9"/>
+  
+  <!-- Design moderno -->
+  <rect x="70" y="70" width="160" height="20" rx="4" fill="#6366f1"/>
+  <rect x="70" y="100" width="120" height="15" rx="3" fill="#e5e7eb"/>
+  <rect x="70" y="120" width="140" height="15" rx="3" fill="#e5e7eb"/>
+  <rect x="70" y="140" width="100" height="15" rx="3" fill="#e5e7eb"/>
+  
+  <circle cx="220" cy="130" r="30" fill="#f59e0b" opacity="0.8"/>
+  <circle cx="220" cy="130" r="20" fill="white"/>
+  
+  <text x="150" y="230" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="white" font-weight="600">Design Moderno</text>
+</svg>

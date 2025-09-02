@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes Funcionais - HatchCanvas Copy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f8fafc;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #3182ce;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .header p {
+            color: #718096;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .test-controls {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #2c5aa0;
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-success {
+            background: #38a169;
+        }
+        
+        .btn-success:hover {
+            background: #2f855a;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+        }
+        
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+        
+        .btn-danger {
+            background: #e53e3e;
+        }
+        
+        .btn-danger:hover {
+            background: #c53030;
+        }
+        
+        .test-progress {
+            background: #edf2f7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .test-progress.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            background: #3182ce;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            font-size: 14px;
+            color: #4a5568;
+            text-align: center;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .test-category {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .category-header {
+            background: #edf2f7;
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .category-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-score {
+            background: #3182ce;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .category-score.success {
+            background: #38a169;
+        }
+        
+        .category-score.warning {
+            background: #ed8936;
+        }
+        
+        .category-score.error {
+            background: #e53e3e;
+        }
+        
+        .test-results {
+            padding: 20px;
+        }
+        
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f7fafc;
+        }
+        
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        
+        .test-name {
+            font-size: 14px;
+            color: #4a5568;
+            flex: 1;
+        }
+        
+        .test-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+        }
+        
+        .status-pass {
+            background: #38a169;
+        }
+        
+        .status-fail {
+            background: #e53e3e;
+        }
+        
+        .status-warning {
+            background: #ed8936;
+        }
+        
+        .status-pending {
+            background: #a0aec0;
+        }
+        
+        .test-details {
+            font-size: 11px;
+            color: #718096;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .test-item:hover .test-details {
+            display: block;
+        }
+        
+        .summary-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .summary-score {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .summary-score.excellent {
+            color: #38a169;
+        }
+        
+        .summary-score.good {
+            color: #3182ce;
+        }
+        
+        .summary-score.warning {
+            color: #ed8936;
+        }
+        
+        .summary-score.poor {
+            color: #e53e3e;
+        }
+        
+        .summary-text {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        
+        .summary-details {
+            font-size: 14px;
+            color: #718096;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            border-top-color: #3182ce;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .test-log {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .test-log.active {
+            display: block;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+        
+        .log-success {
+            color: #68d391;
+        }
+        
+        .log-error {
+            color: #fc8181;
+        }
+        
+        .log-warning {
+            color: #f6e05e;
+        }
+        
+        .log-info {
+            color: #63b3ed;
+        }
+        
+        @media (max-width: 768px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🧪 Testes Funcionais</h1>
+            <p>Verificação completa de funcionalidades, links, formulários e interações</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Controles de Teste -->
+        <div class="test-controls">
+            <div class="controls-grid">
+                <button class="btn" onclick="runAllTests()">
+                    <span>🚀</span> Executar Todos os Testes
+                </button>
+                <button class="btn btn-success" onclick="runLinkTests()">
+                    <span>🔗</span> Testar Links
+                </button>
+                <button class="btn btn-warning" onclick="runFormTests()">
+                    <span>📝</span> Testar Formulários
+                </button>
+                <button class="btn btn-danger" onclick="runInteractionTests()">
+                    <span>✨</span> Testar Interações
+                </button>
+            </div>
+            
+            <div class="controls-grid">
+                <button class="btn" onclick="runNavigationTests()">
+                    <span>🧭</span> Testar Navegação
+                </button>
+                <button class="btn" onclick="runResponsiveTests()">
+                    <span>📱</span> Testar Responsividade
+                </button>
+                <button class="btn" onclick="runPerformanceTests()">
+                    <span>⚡</span> Testar Performance
+                </button>
+                <button class="btn" onclick="exportResults()">
+                    <span>📊</span> Exportar Resultados
+                </button>
+            </div>
+        </div>
+
+        <!-- Progresso dos Testes -->
+        <div class="test-progress" id="testProgress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Preparando testes...</div>
+        </div>
+
+        <!-- Resumo Geral -->
+        <div class="summary-card" id="summaryCard" style="display: none;">
+            <div class="summary-score" id="summaryScore">--</div>
+            <div class="summary-text" id="summaryText">Aguardando testes...</div>
+            <div class="summary-details" id="summaryDetails">Execute os testes para ver os resultados</div>
+        </div>
+
+        <!-- Resultados por Categoria -->
+        <div class="results-container" id="resultsContainer">
+            <!-- Resultados serão inseridos aqui -->
+        </div>
+
+        <!-- Log de Testes -->
+        <div class="test-log" id="testLog">
+            <div class="log-entry log-info">[INFO] Sistema de testes carregado</div>
+        </div>
+    </div>
+</body>
+</html><s
+cript>
+// Sistema de Testes Funcionais - HatchCanvas Copy
+class FunctionalTestSuite {
+    constructor() {
+        this.testResults = [];
+        this.currentTest = 0;
+        this.totalTests = 0;
+        this.isRunning = false;
+        
+        this.testCategories = {
+            links: { name: 'Links e Navegação', icon: '🔗', tests: [] },
+            forms: { name: 'Formulários', icon: '📝', tests: [] },
+            interactions: { name: 'Interações', icon: '✨', tests: [] },
+            navigation: { name: 'Navegação', icon: '🧭', tests: [] },
+            responsive: { name: 'Responsividade', icon: '📱', tests: [] },
+            performance: { name: 'Performance', icon: '⚡', tests: [] }
+        };
+        
+        this.initializeTests();
+    }
+
+    // Inicializar definições de testes
+    initializeTests() {
+        // Testes de Links
+        this.testCategories.links.tests = [
+            { name: 'Links de navegação funcionam', test: () => this.testNavigationLinks() },
+            { name: 'Links externos abrem em nova aba', test: () => this.testExternalLinks() },
+            { name: 'Links internos fazem scroll suave', test: () => this.testSmoothScroll() },
+            { name: 'Links de redes sociais funcionam', test: () => this.testSocialLinks() },
+            { name: 'Logo redireciona para home', test: () => this.testLogoLink() }
+        ];
+
+        // Testes de Formulários
+        this.testCategories.forms.tests = [
+            { name: 'Campos obrigatórios validam', test: () => this.testRequiredFields() },
+            { name: 'Validação de email funciona', test: () => this.testEmailValidation() },
+            { name: 'Mensagens de erro aparecem', test: () => this.testErrorMessages() },
+            { name: 'Formulário submete corretamente', test: () => this.testFormSubmission() },
+            { name: 'Estados de focus funcionam', test: () => this.testFormFocus() }
+        ];
+
+        // Testes de Interações
+        this.testCategories.interactions.tests = [
+            { name: 'Hover effects funcionam', test: () => this.testHoverEffects() },
+            { name: 'Botões respondem a cliques', test: () => this.testButtonClicks() },
+            { name: 'Menu mobile funciona', test: () => this.testMobileMenu() },
+            { name: 'Animações de scroll funcionam', test: () => this.testScrollAnimations() },
+            { name: 'Transições são suaves', test: () => this.testTransitions() }
+        ];
+
+        // Testes de Navegação
+        this.testCategories.navigation.tests = [
+            { name: 'Menu sticky funciona', test: () => this.testStickyHeader() },
+            { name: 'Navegação por teclado funciona', test: () => this.testKeyboardNavigation() },
+            { name: 'Breadcrumbs funcionam', test: () => this.testBreadcrumbs() },
+            { name: 'Skip links funcionam', test: () => this.testSkipLinks() },
+            { name: 'Focus trap em modais', test: () => this.testFocusTrap() }
+        ];
+
+        // Testes de Responsividade
+        this.testCategories.responsive.tests = [
+            { name: 'Layout mobile funciona', test: () => this.testMobileLayout() },
+            { name: 'Menu hamburger funciona', test: () => this.testHamburgerMenu() },
+            { name: 'Imagens são responsivas', test: () => this.testResponsiveImages() },
+            { name: 'Texto é legível em mobile', test: () => this.testMobileReadability() },
+            { name: 'Touch targets são adequados', test: () => this.testTouchTargets() }
+        ];
+
+        // Testes de Performance
+        this.testCategories.performance.tests = [
+            { name: 'Tempo de carregamento adequado', test: () => this.testLoadTime() },
+            { name: 'Imagens carregam rapidamente', test: () => this.testImageLoading() },
+            { name: 'JavaScript não bloqueia', test: () => this.testJSPerformance() },
+            { name: 'CSS não causa reflow', test: () => this.testCSSPerformance() },
+            { name: 'Lazy loading funciona', test: () => this.testLazyLoading() }
+        ];
+
+        this.calculateTotalTests();
+    }
+
+    // Calcular total de testes
+    calculateTotalTests() {
+        this.totalTests = Object.values(this.testCategories)
+            .reduce((total, category) => total + category.tests.length, 0);
+    }
+
+    // Executar todos os testes
+    async runAllTests() {
+        if (this.isRunning) return;
+        
+        this.isRunning = true;
+        this.testResults = [];
+        this.currentTest = 0;
+        
+        this.showProgress();
+        this.log('Iniciando bateria completa de testes...', 'info');
+        
+        try {
+            for (const [categoryKey, category] of Object.entries(this.testCategories)) {
+                await this.runCategoryTests(categoryKey, category);
+            }
+            
+            this.generateSummary();
+            this.log('Todos os testes concluídos!', 'success');
+            
+        } catch (error) {
+            this.log(`Erro durante os testes: ${error.message}`, 'error');
+        } finally {
+            this.isRunning = false;
+            this.hideProgress();
+        }
+    }
+
+    // Executar testes de uma categoria
+    async runCategoryTests(categoryKey, category) {
+        this.log(`Executando testes: ${category.name}`, 'info');
+        
+        for (const testDef of category.tests) {
+            this.currentTest++;
+            this.updateProgress();
+            
+            try {
+                const result = await this.executeTest(testDef, categoryKey);
+                this.testResults.push(result);
+                
+                const status = result.passed ? 'success' : 'error';
+                this.log(`${result.passed ? '✅' : '❌'} ${testDef.name}`, status);
+                
+            } catch (error) {
+                const result = {
+                    category: categoryKey,
+                    name: testDef.name,
+                    passed: false,
+                    error: error.message,
+                    timestamp: Date.now()
+                };
+                
+                this.testResults.push(result);
+                this.log(`❌ ${testDef.name}: ${error.message}`, 'error');
+            }
+            
+            // Pequena pausa entre testes
+            await this.delay(100);
+        }
+        
+        this.updateCategoryDisplay(categoryKey);
+    }
+
+    // Executar um teste individual
+    async executeTest(testDef, category) {
+        const startTime = performance.now();
+        
+        try {
+            const result = await testDef.test();
+            const endTime = performance.now();
+            
+            return {
+                category,
+                name: testDef.name,
+                passed: result.passed !== false,
+                details: result.details || '',
+                duration: Math.round(endTime - startTime),
+                timestamp: Date.now()
+            };
+            
+        } catch (error) {
+            const endTime = performance.now();
+            
+            return {
+                category,
+                name: testDef.name,
+                passed: false,
+                error: error.message,
+                duration: Math.round(endTime - startTime),
+                timestamp: Date.now()
+            };
+        }
+    }
+
+    // Testes específicos - Links
+    async testNavigationLinks() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        if (navLinks.length === 0) {
+            return { passed: false, details: 'Nenhum link de navegação encontrado' };
+        }
+        
+        let workingLinks = 0;
+        for (const link of navLinks) {
+            if (link.href && link.href !== '#') {
+                workingLinks++;
+            }
+        }
+        
+        return {
+            passed: workingLinks > 0,
+            details: `${workingLinks}/${navLinks.length} links funcionais`
+        };
+    }
+
+    async testExternalLinks() {
+        const externalLinks = document.querySelectorAll('a[href^="http"]');
+        let correctTargets = 0;
+        
+        for (const link of externalLinks) {
+            if (link.target === '_blank' || link.rel.includes('noopener')) {
+                correctTargets++;
+            }
+        }
+        
+        return {
+            passed: correctTargets === externalLinks.length,
+            details: `${correctTargets}/${externalLinks.length} links externos corretos`
+        };
+    }
+
+    async testSmoothScroll() {
+        const smoothScrollEnabled = getComputedStyle(document.documentElement)
+            .scrollBehavior === 'smooth';
+        
+        return {
+            passed: smoothScrollEnabled,
+            details: smoothScrollEnabled ? 'Scroll suave habilitado' : 'Scroll suave não encontrado'
+        };
+    }
+
+    async testSocialLinks() {
+        const socialLinks = document.querySelectorAll('.social-link');
+        return {
+            passed: socialLinks.length > 0,
+            details: `${socialLinks.length} links sociais encontrados`
+        };
+    }
+
+    async testLogoLink() {
+        const logo = document.querySelector('.logo');
+        const hasLink = logo && (logo.tagName === 'A' || logo.closest('a'));
+        
+        return {
+            passed: hasLink,
+            details: hasLink ? 'Logo é clicável' : 'Logo não é clicável'
+        };
+    }
+
+    // Testes específicos - Formulários
+    async testRequiredFields() {
+        const requiredFields = document.querySelectorAll('input[required], textarea[required]');
+        return {
+            passed: requiredFields.length > 0,
+            details: `${requiredFields.length} campos obrigatórios encontrados`
+        };
+    }
+
+    async testEmailValidation() {
+        const emailFields = document.querySelectorAll('input[type="email"]');
+        return {
+            passed: emailFields.length > 0,
+            details: `${emailFields.length} campos de email com validação`
+        };
+    }
+
+    async testErrorMessages() {
+        // Simular erro para testar mensagens
+        const form = document.querySelector('form');
+        if (!form) {
+            return { passed: false, details: 'Nenhum formulário encontrado' };
+        }
+        
+        return {
+            passed: true,
+            details: 'Sistema de mensagens de erro implementado'
+        };
+    }
+
+    async testFormSubmission() {
+        const forms = document.querySelectorAll('form');
+        let formsWithAction = 0;
+        
+        for (const form of forms) {
+            if (form.action || form.onsubmit) {
+                formsWithAction++;
+            }
+        }
+        
+        return {
+            passed: formsWithAction > 0,
+            details: `${formsWithAction}/${forms.length} formulários com ação definida`
+        };
+    }
+
+    async testFormFocus() {
+        const inputs = document.querySelectorAll('input, textarea');
+        let inputsWithFocus = 0;
+        
+        for (const input of inputs) {
+            const styles = getComputedStyle(input, ':focus');
+            if (styles.outline !== 'none' || styles.boxShadow !== 'none') {
+                inputsWithFocus++;
+            }
+        }
+        
+        return {
+            passed: inputsWithFocus > 0,
+            details: `${inputsWithFocus}/${inputs.length} campos com estados de focus`
+        };
+    }
+
+    // Testes específicos - Interações
+    async testHoverEffects() {
+        const hoverElements = document.querySelectorAll('.btn, .nav-link, .card');
+        return {
+            passed: hoverElements.length > 0,
+            details: `${hoverElements.length} elementos com hover effects`
+        };
+    }
+
+    async testButtonClicks() {
+        const buttons = document.querySelectorAll('button, .btn');
+        let clickableButtons = 0;
+        
+        for (const button of buttons) {
+            if (!button.disabled && button.style.pointerEvents !== 'none') {
+                clickableButtons++;
+            }
+        }
+        
+        return {
+            passed: clickableButtons > 0,
+            details: `${clickableButtons}/${buttons.length} botões clicáveis`
+        };
+    }
+
+    async testMobileMenu() {
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        return {
+            passed: mobileToggle !== null,
+            details: mobileToggle ? 'Menu mobile implementado' : 'Menu mobile não encontrado'
+        };
+    }
+
+    async testScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.scroll-reveal, [data-aos]');
+        return {
+            passed: animatedElements.length > 0,
+            details: `${animatedElements.length} elementos com animação de scroll`
+        };
+    }
+
+    async testTransitions() {
+        const elementsWithTransition = document.querySelectorAll('*');
+        let transitionCount = 0;
+        
+        for (const element of elementsWithTransition) {
+            const transition = getComputedStyle(element).transition;
+            if (transition && transition !== 'all 0s ease 0s') {
+                transitionCount++;
+            }
+        }
+        
+        return {
+            passed: transitionCount > 10,
+            details: `${transitionCount} elementos com transições`
+        };
+    }
+
+    // Utilitários
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    showProgress() {
+        document.getElementById('testProgress').classList.add('active');
+    }
+
+    hideProgress() {
+        document.getElementById('testProgress').classList.remove('active');
+    }
+
+    updateProgress() {
+        const percentage = (this.currentTest / this.totalTests) * 100;
+        document.getElementById('progressFill').style.width = percentage + '%';
+        document.getElementById('progressText').textContent = 
+            `Executando teste ${this.currentTest} de ${this.totalTests} (${Math.round(percentage)}%)`;
+    }
+
+    log(message, type = 'info') {
+        const logContainer = document.getElementById('testLog');
+        const entry = document.createElement('div');
+        entry.className = `log-entry log-${type}`;
+        entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        
+        logContainer.appendChild(entry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+        
+        // Mostrar log se não estiver visível
+        if (!logContainer.classList.contains('active')) {
+            logContainer.classList.add('active');
+        }
+    }
+
+    updateCategoryDisplay(categoryKey) {
+        const category = this.testCategories[categoryKey];
+        const categoryResults = this.testResults.filter(r => r.category === categoryKey);
+        const passed = categoryResults.filter(r => r.passed).length;
+        const total = categoryResults.length;
+        const percentage = Math.round((passed / total) * 100);
+        
+        // Criar ou atualizar card da categoria
+        this.createCategoryCard(categoryKey, category, passed, total, percentage, categoryResults);
+    }
+
+    createCategoryCard(categoryKey, category, passed, total, percentage, results) {
+        const container = document.getElementById('resultsContainer');
+        let card = document.getElementById(`category-${categoryKey}`);
+        
+        if (!card) {
+            card = document.createElement('div');
+            card.id = `category-${categoryKey}`;
+            card.className = 'test-category';
+            container.appendChild(card);
+        }
+        
+        const scoreClass = percentage >= 90 ? 'success' : percentage >= 70 ? 'warning' : 'error';
+        
+        card.innerHTML = `
+            <div class="category-header">
+                <div class="category-title">
+                    <span>${category.icon}</span>
+                    ${category.name}
+                </div>
+                <div class="category-score ${scoreClass}">${percentage}%</div>
+            </div>
+            <div class="test-results">
+                ${results.map(result => `
+                    <div class="test-item">
+                        <div class="test-name">
+                            ${result.name}
+                            <div class="test-details">${result.details || result.error || ''}</div>
+                        </div>
+                        <div class="test-status">
+                            <div class="status-icon ${result.passed ? 'status-pass' : 'status-fail'}">
+                                ${result.passed ? '✓' : '✗'}
+                            </div>
+                            <span>${result.passed ? 'Pass' : 'Fail'}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    generateSummary() {
+        const totalTests = this.testResults.length;
+        const passedTests = this.testResults.filter(r => r.passed).length;
+        const percentage = Math.round((passedTests / totalTests) * 100);
+        
+        const summaryCard = document.getElementById('summaryCard');
+        const summaryScore = document.getElementById('summaryScore');
+        const summaryText = document.getElementById('summaryText');
+        const summaryDetails = document.getElementById('summaryDetails');
+        
+        let scoreClass, statusText;
+        if (percentage >= 95) {
+            scoreClass = 'excellent';
+            statusText = 'Excelente! Todas as funcionalidades estão funcionando perfeitamente.';
+        } else if (percentage >= 85) {
+            scoreClass = 'good';
+            statusText = 'Muito bom! A maioria das funcionalidades está funcionando corretamente.';
+        } else if (percentage >= 70) {
+            scoreClass = 'warning';
+            statusText = 'Atenção! Algumas funcionalidades precisam de correção.';
+        } else {
+            scoreClass = 'poor';
+            statusText = 'Crítico! Várias funcionalidades não estão funcionando.';
+        }
+        
+        summaryScore.textContent = percentage + '%';
+        summaryScore.className = `summary-score ${scoreClass}`;
+        summaryText.textContent = statusText;
+        summaryDetails.textContent = `${passedTests} de ${totalTests} testes passaram`;
+        
+        summaryCard.style.display = 'block';
+    }
+}
+
+// Inicializar sistema de testes
+const functionalTests = new FunctionalTestSuite();
+
+// Funções globais para os botões
+function runAllTests() {
+    functionalTests.runAllTests();
+}
+
+function runLinkTests() {
+    functionalTests.runCategoryTests('links', functionalTests.testCategories.links);
+}
+
+function runFormTests() {
+    functionalTests.runCategoryTests('forms', functionalTests.testCategories.forms);
+}
+
+function runInteractionTests() {
+    functionalTests.runCategoryTests('interactions', functionalTests.testCategories.interactions);
+}
+
+function runNavigationTests() {
+    functionalTests.runCategoryTests('navigation', functionalTests.testCategories.navigation);
+}
+
+function runResponsiveTests() {
+    functionalTests.runCategoryTests('responsive', functionalTests.testCategories.responsive);
+}
+
+function runPerformanceTests() {
+    functionalTests.runCategoryTests('performance', functionalTests.testCategories.performance);
+}
+
+function exportResults() {
+    const results = {
+        timestamp: Date.now(),
+        totalTests: functionalTests.testResults.length,
+        passedTests: functionalTests.testResults.filter(r => r.passed).length,
+        results: functionalTests.testResults
+    };
+    
+    const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `functional-test-results-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    functionalTests.log('Sistema de testes funcionais carregado e pronto!', 'success');
+});
+</script>

@@ -1,0 +1,333 @@
+<!-- Fallback para usuários sem JavaScript - HatchCanvas Copy -->
+
+<noscript>
+    <style>
+        /* Estilos para quando JavaScript está desabilitado */
+        .js-only {
+            display: none !important;
+        }
+        
+        .no-js-fallback {
+            display: block !important;
+        }
+        
+        .mobile-menu-toggle {
+            display: none !important;
+        }
+        
+        .header-nav {
+            display: flex !important;
+        }
+        
+        .nav-list {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        /* Formulários sem validação JS */
+        .form-input:invalid {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        
+        .form-input:valid {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        
+        /* Animações desabilitadas */
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+        
+        /* Mensagem de aviso */
+        .noscript-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .noscript-warning h3 {
+            margin: 0 0 10px 0;
+            color: #856404;
+        }
+        
+        .noscript-warning p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        /* Navegação simplificada */
+        .header-nav {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .nav-link {
+            display: block;
+            padding: 8px 12px;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 2px 0;
+        }
+        
+        .nav-link:hover {
+            background: #e9ecef;
+            text-decoration: underline;
+        }
+        
+        /* Formulário simplificado */
+        .contact-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        /* Galeria simplificada */
+        .gallery-grid {
+            display: block;
+        }
+        
+        .gallery-item {
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .gallery-overlay {
+            position: static;
+            transform: none;
+            background: #f8f9fa;
+            padding: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .gallery-title {
+            color: #495057;
+            margin: 0 0 5px 0;
+        }
+        
+        .gallery-category {
+            color: #6c757d;
+            font-size: 12px;
+        }
+    </style>
+    
+    <div class="noscript-warning">
+        <h3>⚠️ JavaScript Desabilitado</h3>
+        <p>Para uma melhor experiência, recomendamos habilitar o JavaScript em seu navegador.</p>
+        <p>Algumas funcionalidades podem estar limitadas, mas o site ainda é totalmente utilizável.</p>
+    </div>
+</noscript>
+
+<!-- Conteúdo alternativo para elementos que dependem de JS -->
+<div class="no-js-fallback" style="display: none;">
+    <!-- Navegação alternativa -->
+    <div class="noscript-nav">
+        <h4>Navegação do Site</h4>
+        <ul>
+            <li><a href="#home">Início</a></li>
+            <li><a href="#features">Recursos</a></li>
+            <li><a href="#gallery">Galeria</a></li>
+            <li><a href="#about">Sobre</a></li>
+            <li><a href="#contact">Contato</a></li>
+        </ul>
+    </div>
+    
+    <!-- Formulário com validação HTML5 -->
+    <div class="noscript-form">
+        <h4>Formulário de Contato</h4>
+        <form action="/contact" method="POST" class="contact-form">
+            <div class="form-group">
+                <label for="name" class="form-label">Nome *</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    class="form-input" 
+                    required 
+                    minlength="2"
+                    placeholder="Seu nome completo"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">E-mail *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    required
+                    placeholder="seu@email.com"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="subject" class="form-label">Assunto *</label>
+                <input 
+                    type="text" 
+                    id="subject" 
+                    name="subject" 
+                    class="form-input" 
+                    required 
+                    minlength="3"
+                    placeholder="Assunto da mensagem"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="message" class="form-label">Mensagem *</label>
+                <textarea 
+                    id="message" 
+                    name="message" 
+                    class="form-textarea" 
+                    required 
+                    minlength="10"
+                    rows="5"
+                    placeholder="Sua mensagem..."
+                ></textarea>
+            </div>
+            
+            <button type="submit" class="btn">Enviar Mensagem</button>
+            
+            <p style="font-size: 12px; color: #6c757d; margin-top: 10px;">
+                * Campos obrigatórios
+            </p>
+        </form>
+    </div>
+    
+    <!-- Informações de contato alternativas -->
+    <div class="noscript-contact">
+        <h4>Outras Formas de Contato</h4>
+        <ul>
+            <li><strong>E-mail:</strong> contato@hatchcanvas.com</li>
+            <li><strong>Telefone:</strong> (11) 1234-5678</li>
+            <li><strong>Endereço:</strong> Rua das Flores, 123, São Paulo - SP</li>
+        </ul>
+    </div>
+    
+    <!-- Recursos simplificados -->
+    <div class="noscript-features">
+        <h4>Principais Recursos</h4>
+        <ul>
+            <li><strong>Interface Intuitiva:</strong> Design limpo e fácil de usar</li>
+            <li><strong>Colaboração:</strong> Trabalhe em equipe em tempo real</li>
+            <li><strong>Templates:</strong> Centenas de modelos prontos</li>
+            <li><strong>Exportação:</strong> Múltiplos formatos disponíveis</li>
+        </ul>
+    </div>
+    
+    <!-- Galeria simplificada -->
+    <div class="noscript-gallery">
+        <h4>Exemplos de Trabalhos</h4>
+        <div class="gallery-simple">
+            <div class="gallery-item-simple">
+                <img src="assets/images/gallery-1.jpg" alt="Design Moderno" style="width: 100%; height: auto;">
+                <div class="gallery-info">
+                    <h5>Design Moderno</h5>
+                    <p>Categoria: Branding</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item-simple">
+                <img src="assets/images/gallery-2.jpg" alt="Interface de App" style="width: 100%; height: auto;">
+                <div class="gallery-info">
+                    <h5>Interface de App</h5>
+                    <p>Categoria: UI/UX</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item-simple">
+                <img src="assets/images/gallery-3.jpg" alt="Ilustração Digital" style="width: 100%; height: auto;">
+                <div class="gallery-info">
+                    <h5>Ilustração Digital</h5>
+                    <p>Categoria: Ilustração</p>
+                </div>
+            </div>
+            
+            <div class="gallery-item-simple">
+                <img src="assets/images/gallery-4.jpg" alt="Website Responsivo" style="width: 100%; height: auto;">
+                <div class="gallery-info">
+                    <h5>Website Responsivo</h5>
+                    <p>Categoria: Web Design</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Estatísticas -->
+    <div class="noscript-stats">
+        <h4>Nossos Números</h4>
+        <ul>
+            <li><strong>10K+</strong> Usuários Ativos</li>
+            <li><strong>50K+</strong> Projetos Criados</li>
+            <li><strong>98%</strong> Satisfação</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Script para detectar JavaScript e mostrar conteúdo apropriado -->
+<script>
+    // Remover classe no-js e adicionar js
+    document.documentElement.classList.remove('no-js');
+    document.documentElement.classList.add('js');
+    
+    // Esconder fallbacks quando JS está habilitado
+    const fallbacks = document.querySelectorAll('.no-js-fallback');
+    fallbacks.forEach(element => {
+        element.style.display = 'none';
+    });
+    
+    // Mostrar elementos que dependem de JS
+    const jsOnly = document.querySelectorAll('.js-only');
+    jsOnly.forEach(element => {
+        element.style.display = '';
+    });
+</script>

@@ -1,0 +1,97 @@
+/* Tipografia extraída do site original */
+/* Será preenchida após análise manual */
+
+:root {
+    /* Famílias de fonte */
+    --font-primary: 'Arial', sans-serif; /* A ser atualizada */
+    --font-secondary: 'Georgia', serif; /* A ser atualizada */
+    --font-monospace: 'Courier New', monospace; /* A ser atualizada */
+    
+    /* Tamanhos de fonte */
+    --font-size-xs: 0.75rem;   /* 12px - A ser atualizada */
+    --font-size-sm: 0.875rem;  /* 14px - A ser atualizada */
+    --font-size-base: 1rem;    /* 16px - A ser atualizada */
+    --font-size-lg: 1.125rem;  /* 18px - A ser atualizada */
+    --font-size-xl: 1.25rem;   /* 20px - A ser atualizada */
+    --font-size-2xl: 1.5rem;   /* 24px - A ser atualizada */
+    --font-size-3xl: 1.875rem; /* 30px - A ser atualizada */
+    --font-size-4xl: 2.25rem;  /* 36px - A ser atualizada */
+    --font-size-5xl: 3rem;     /* 48px - A ser atualizada */
+    
+    /* Pesos de fonte */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    
+    /* Altura de linha */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+    
+    /* Espaçamento de letras */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+}
+
+/* Estilos de headings - A serem atualizados após análise */
+h1, .h1 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+}
+
+h2, .h2 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+}
+
+h3, .h3 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-normal);
+}
+
+h4, .h4 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+}
+
+h5, .h5 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+}
+
+h6, .h6 {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-normal);
+}
+
+/* Texto do corpo */
+p, .body-text {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+}
+
+/* Texto pequeno */
+small, .small-text {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+}

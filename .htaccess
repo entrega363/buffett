@@ -1,0 +1,127 @@
+# Configurações de Cache e Otimização - HatchCanvas Copy
+
+# Habilitar compressão GZIP
+<IfModule mod_deflate.c>
+    # Comprimir HTML, CSS, JavaScript, Text, XML e fontes
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+</IfModule>
+
+# Configurações de Cache
+<IfModule mod_expires.c>
+    ExpiresActive on
+    
+    # Imagens
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    
+    # CSS e JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Fontes
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresByType font/otf "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    
+    # HTML
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # Outros
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/x-javascript "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+</IfModule>
+
+# Cache Control Headers
+<IfModule mod_headers.c>
+    # Cache para 1 ano
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|svg|js|css|swf|woff|woff2|ttf|otf)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    
+    # Cache para 1 mês
+    <FilesMatch "\.(xml|txt)$">
+        Header set Cache-Control "max-age=2628000, public, must-revalidate"
+    </FilesMatch>
+    
+    # Cache para 1 hora
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=3600, must-revalidate"
+    </FilesMatch>
+    
+    # Remover ETags
+    Header unset ETag
+    FileETag None
+    
+    # Segurança
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# Compressão Brotli (se disponível)
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/plain
+    AddOutputFilterByType BROTLI_COMPRESS text/css
+    AddOutputFilterByType BROTLI_COMPRESS text/xml
+    AddOutputFilterByType BROTLI_COMPRESS text/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/json
+    AddOutputFilterByType BROTLI_COMPRESS application/xml
+    AddOutputFilterByType BROTLI_COMPRESS application/rss+xml
+    AddOutputFilterByType BROTLI_COMPRESS application/atom+xml
+    AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+# Prevenção de hotlinking
+RewriteEngine on
+RewriteCond %{HTTP_REFERER} !^$
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?hatchcanvas\.com [NC]
+RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?localhost [NC]
+RewriteRule \.(jpg|jpeg|png|gif|svg)$ - [NC,F,L]
+
+# Redirecionamento para HTTPS (opcional)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Configurações de MIME Types
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType text/css .css
+    AddType image/svg+xml .svg
+    AddType font/woff .woff
+    AddType font/woff2 .woff2
+    AddType application/font-woff .woff
+    AddType application/font-woff2 .woff2
+</IfModule>
