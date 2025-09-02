@@ -28,6 +28,17 @@
         .service-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
         .service-price { font-size: 1.2rem; font-weight: 600; color: #4caf50; }
         .btn-add { background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+        .selected-services { background: #e3f2fd; border-radius: 12px; padding: 20px; margin: 20px 0; display: none; }
+        .selected-services.show { display: block; }
+        .selected-services h3 { color: #1976d2; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .clear-btn { background: none; border: none; color: #f44336; cursor: pointer; font-size: 0.9rem; }
+        .service-item { background: white; border-radius: 8px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .service-info { flex: 1; }
+        .service-name { font-weight: 600; margin-bottom: 5px; }
+        .service-calc { font-size: 0.9rem; color: #666; }
+        .remove-btn { background: none; border: none; color: #f44336; cursor: pointer; font-size: 0.9rem; }
+        .total-section { background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 15px; text-align: center; }
+        .total-amount { font-size: 1.3rem; font-weight: bold; color: #2e7d32; }
     </style>
 </head>
 <body>
@@ -47,13 +58,47 @@
     <div class="content">
         <div id="catalogo" class="section">
             <h2>Nossos Serviços</h2>
+            
             <div class="service-card">
                 <div class="service-content">
                     <h3 class="service-title">Buffet Completo</h3>
                     <p>Salgados, doces, bebidas e serviço completo</p>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                         <span class="service-price">R$ 45/pessoa</span>
-                        <button class="btn-add">Adicionar</button>
+                        <button class="btn-add" onclick="addService('Buffet Completo', 45, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-content">
+                    <h3 class="service-title">Bolo Personalizado</h3>
+                    <p>Bolos temáticos e personalizados para sua festa</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 120/pessoa</span>
+                        <button class="btn-add" onclick="addService('Bolo Personalizado', 120, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-content">
+                    <h3 class="service-title">Decoração Temática</h3>
+                    <p>Decoração completa para todos os tipos de festa</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 200/pessoa</span>
+                        <button class="btn-add" onclick="addService('Decoração Temática', 200, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-content">
+                    <h3 class="service-title">Serviço de Garçons</h3>
+                    <p>Equipe profissional para atendimento</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 25/pessoa</span>
+                        <button class="btn-add" onclick="addService('Serviço de Garçons', 25, 'pessoa')">Adicionar</button>
                     </div>
                 </div>
             </div>
@@ -71,28 +116,48 @@
                 </div>
                 
                 <div>
-                    <label>Número de Convidados: <span id="guestCount">50</span></label>
-                    <input type="range" min="20" max="500" value="50" id="guestSlider" style="width: 100%; margin: 10px 0;" oninput="updateGuestCount(this.value)">
+                    <label>Número de Convidados: <span id="guestCount">59</span></label>
+                    <input type="range" min="20" max="500" value="59" id="guestSlider" style="width: 100%; margin: 10px 0;" oninput="updateGuestCount(this.value)">
                     <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-top: 5px;">
                         <span>20</span>
                         <span>500</span>
                     </div>
                 </div>
 
-                <div class="package-card">
-                    <div class="package-header">
-                        <div class="package-name">Pacote Básico</div>
-                        <div class="package-price">R$ 35/pessoa</div>
+                <!-- Seção de Serviços Selecionados -->
+                <div id="selectedServices" class="selected-services">
+                    <h3>
+                        Serviços Selecionados
+                        <button class="clear-btn" onclick="clearAllServices()">Limpar</button>
+                    </h3>
+                    <div id="servicesList"></div>
+                    <div class="total-section">
+                        <div>Total do Orçamento</div>
+                        <div class="total-amount" id="totalAmount">R$ 0</div>
                     </div>
-                    <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
                 </div>
 
-                <div class="package-card">
-                    <div class="package-header">
-                        <div class="package-name">Pacote Completo</div>
-                        <div class="package-price">R$ 55/pessoa</div>
+                <div style="margin-top: 20px;">
+                    <label style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        Escolha seu Pacote
+                        <button style="background: none; border: none; color: #9c27b0; cursor: pointer; font-size: 0.9rem;" onclick="showPackages()">Voltar aos Pacotes</button>
+                    </label>
+                    
+                    <div class="package-card" onclick="selectPackage(this, 'Pacote Básico', 35)">
+                        <div class="package-header">
+                            <div class="package-name">Pacote Básico</div>
+                            <div class="package-price">R$ 35/pessoa</div>
+                        </div>
+                        <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
                     </div>
-                    <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
+
+                    <div class="package-card" onclick="selectPackage(this, 'Pacote Completo', 55)">
+                        <div class="package-header">
+                            <div class="package-name">Pacote Completo</div>
+                            <div class="package-price">R$ 55/pessoa</div>
+                        </div>
+                        <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,6 +189,8 @@
     </div>
 
     <script>
+        let selectedServices = [];
+        
         function showTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
@@ -133,6 +200,86 @@
         
         function updateGuestCount(value) {
             document.getElementById('guestCount').textContent = value;
+            updateServiceCalculations();
+        }
+        
+        function addService(name, price, unit) {
+            // Verificar se o serviço já foi adicionado
+            if (selectedServices.find(service => service.name === name)) {
+                alert('Este serviço já foi adicionado!');
+                return;
+            }
+            
+            selectedServices.push({
+                name: name,
+                price: price,
+                unit: unit
+            });
+            
+            updateServicesDisplay();
+            showTab('simulador');
+        }
+        
+        function removeService(serviceName) {
+            selectedServices = selectedServices.filter(service => service.name !== serviceName);
+            updateServicesDisplay();
+        }
+        
+        function clearAllServices() {
+            selectedServices = [];
+            updateServicesDisplay();
+        }
+        
+        function updateServicesDisplay() {
+            const servicesList = document.getElementById('servicesList');
+            const selectedServicesDiv = document.getElementById('selectedServices');
+            
+            if (selectedServices.length === 0) {
+                selectedServicesDiv.classList.remove('show');
+                return;
+            }
+            
+            selectedServicesDiv.classList.add('show');
+            
+            const guestCount = parseInt(document.getElementById('guestCount').textContent);
+            let total = 0;
+            
+            servicesList.innerHTML = selectedServices.map(service => {
+                const serviceTotal = service.price * guestCount;
+                total += serviceTotal;
+                
+                return `
+                    <div class="service-item">
+                        <div class="service-info">
+                            <div class="service-name">${service.name}</div>
+                            <div class="service-calc">R$ ${service.price}/${service.unit} = R$ ${serviceTotal.toLocaleString('pt-BR')}</div>
+                        </div>
+                        <button class="remove-btn" onclick="removeService('${service.name}')">Remover</button>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('totalAmount').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
+        }
+        
+        function updateServiceCalculations() {
+            if (selectedServices.length > 0) {
+                updateServicesDisplay();
+            }
+        }
+        
+        function selectPackage(element, packageName, price) {
+            document.querySelectorAll('.package-card').forEach(c => {
+                c.style.borderColor = '#e0e0e0';
+                c.style.background = 'white';
+            });
+            element.style.borderColor = '#9c27b0';
+            element.style.background = '#f8f4ff';
+        }
+        
+        function showPackages() {
+            // Função para voltar aos pacotes (pode ser implementada conforme necessário)
+            console.log('Voltando aos pacotes...');
         }
         
         // Adicionar interatividade aos tipos de evento
@@ -141,18 +288,6 @@
                 type.addEventListener('click', function() {
                     document.querySelectorAll('.event-type').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
-                });
-            });
-            
-            // Adicionar interatividade aos pacotes
-            document.querySelectorAll('.package-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    document.querySelectorAll('.package-card').forEach(c => {
-                        c.style.borderColor = '#e0e0e0';
-                        c.style.background = 'white';
-                    });
-                    this.style.borderColor = '#9c27b0';
-                    this.style.background = '#f8f4ff';
                 });
             });
         });
