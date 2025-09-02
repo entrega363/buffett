@@ -1,0 +1,24 @@
+{
+  "name": "hatchcanvas-buffet",
+  "version": "1.0.0",
+  "description": "HatchCanvas website copy - Buffet Sobral",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "python -m http.server 8000"
+  },
+  "keywords": [
+    "hatchcanvas",
+    "buffet",
+    "website",
+    "static"
+  ],
+  "author": "buffetsobral1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/buffetsobral1/buffet.git"
+  },
+  "homepage": "https://github.com/buffetsobral1/buffet#readme"
+}
