@@ -1,20 +1,4 @@
-# Vercel ignore file
-node_modules/
-.git/
+node_modules
+.git
 *.log
-.DS_Store
-Thumbs.db
-
-# Development files
-*.bat
-*.sh
-LOCAL-TESTING-GUIDE.md
-DEPLOY-GUIDE.md
-INSTRUCOES-UPLOAD.md
-
-# Test files (optional - remove if you want tests deployed)
-tests/
-validation/
-
-# Analysis files (optional)
-analysis/
+test.html
