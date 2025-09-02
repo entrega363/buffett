@@ -71,8 +71,12 @@
                 </div>
                 
                 <div>
-                    <label>Número de Convidados: 50</label>
-                    <input type="range" min="20" max="500" value="50" style="width: 100%; margin: 10px 0;">
+                    <label>Número de Convidados: <span id="guestCount">50</span></label>
+                    <input type="range" min="20" max="500" value="50" id="guestSlider" style="width: 100%; margin: 10px 0;" oninput="updateGuestCount(this.value)">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        <span>20</span>
+                        <span>500</span>
+                    </div>
                 </div>
 
                 <div class="package-card">
@@ -126,6 +130,33 @@
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
         }
+        
+        function updateGuestCount(value) {
+            document.getElementById('guestCount').textContent = value;
+        }
+        
+        // Adicionar interatividade aos tipos de evento
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.event-type').forEach(type => {
+                type.addEventListener('click', function() {
+                    document.querySelectorAll('.event-type').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Adicionar interatividade aos pacotes
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.package-card').forEach(c => {
+                        c.style.borderColor = '#e0e0e0';
+                        c.style.background = 'white';
+                    });
+                    this.style.borderColor = '#9c27b0';
+                    this.style.background = '#f8f4ff';
+                });
+            });
+        });
+        
         console.log('Buffet Sobral carregado!');
     </script>
 </body>
