@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffet Sobral</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; padding: 20px; text-align: center; }
+        .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        .nav-tabs { background: white; display: flex; }
+        .nav-tab { flex: 1; padding: 15px; text-align: center; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; }
+        .nav-tab.active { color: #9c27b0; border-bottom-color: #9c27b0; background: #f8f4ff; }
+        .content { padding: 20px; max-width: 600px; margin: 0 auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .simulator-form { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .event-types { display: flex; gap: 10px; margin: 20px 0; }
+        .event-type { flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; }
+        .event-type.active { background: #9c27b0; color: white; border-color: #9c27b0; }
+        .package-card { background: white; border-radius: 12px; padding: 20px; margin: 15px 0; border: 2px solid #e0e0e0; cursor: pointer; }
+        .package-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .package-name { font-size: 1.2rem; font-weight: 600; }
+        .package-price { font-size: 1.1rem; font-weight: 600; color: #4caf50; }
+        .service-card { background: white; border-radius: 12px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .service-content { padding: 20px; }
+        .service-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
+        .service-price { font-size: 1.2rem; font-weight: 600; color: #4caf50; }
+        .btn-add { background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎂 Buffet Sobral</h1>
+        <div>Festas inesquecíveis em Sobral e região</div>
+        <div>📍 Sobral - CE</div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab" onclick="showTab('catalogo')">📋 Catálogo</button>
+        <button class="nav-tab active" onclick="showTab('simulador')">💰 Simulador</button>
+        <button class="nav-tab" onclick="showTab('agenda')">📅 Agenda</button>
+        <button class="nav-tab" onclick="showTab('avaliacoes')">⭐ Avaliações</button>
+    </div>
+
+    <div class="content">
+        <div id="catalogo" class="section">
+            <h2>Nossos Serviços</h2>
+            <div class="service-card">
+                <div class="service-content">
+                    <h3 class="service-title">Buffet Completo</h3>
+                    <p>Salgados, doces, bebidas e serviço completo</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 45/pessoa</span>
+                        <button class="btn-add">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="simulador" class="section active">
+            <h2>Simule seu Orçamento</h2>
+            <div class="simulator-form">
+                <div>
+                    <label>Tipo de Evento</label>
+                    <div class="event-types">
+                        <div class="event-type active">Aniversário</div>
+                        <div class="event-type">Casamento</div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label>Número de Convidados: 50</label>
+                    <input type="range" min="20" max="500" value="50" style="width: 100%; margin: 10px 0;">
+                </div>
+
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-name">Pacote Básico</div>
+                        <div class="package-price">R$ 35/pessoa</div>
+                    </div>
+                    <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
+                </div>
+
+                <div class="package-card">
+                    <div class="package-header">
+                        <div class="package-name">Pacote Completo</div>
+                        <div class="package-price">R$ 55/pessoa</div>
+                    </div>
+                    <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="agenda" class="section">
+            <h2>Agenda de Disponibilidade</h2>
+            <div style="background: white; padding: 20px; border-radius: 12px;">
+                <p>📅 Janeiro 2024</p>
+                <p style="margin-top: 15px;">🟢 Disponível &nbsp; 🔴 Ocupado</p>
+            </div>
+        </div>
+
+        <div id="avaliacoes" class="section">
+            <h2>Avaliações dos Clientes</h2>
+            <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 1.5rem; color: #ffc107;">⭐⭐⭐⭐⭐</div>
+                <div>4.9/5 (127 avaliações)</div>
+            </div>
+            
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <strong>Ana Paula</strong>
+                    <span style="color: #999;">14/01/2024</span>
+                </div>
+                <div style="color: #ffc107; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
+                <p>Buffet maravilhoso! A festa do meu filho ficou perfeita. Recomendo demais!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        console.log('Buffet Sobral carregado!');
+    </script>
+</body>
+</html>
