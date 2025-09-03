@@ -223,6 +223,13 @@
         
         // Verificar se já está logado ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM carregado, verificando autenticação...');
+            checkAuth();
+        });
+        
+        // Fallback caso o DOMContentLoaded não funcione
+        window.addEventListener('load', function() {
+            console.log('Window carregada, verificando autenticação...');
             checkAuth();
         });
         
@@ -249,7 +256,11 @@
         function showDashboard() {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            loadServices();
+            
+            // Aguardar um momento para garantir que o DOM esteja pronto
+            setTimeout(() => {
+                loadServices();
+            }, 100);
         }
         
         // Função de login
@@ -299,6 +310,13 @@
         function loadServices() {
             const servicesList = document.getElementById('servicesList');
             const servicesData = getServicesData();
+            
+            console.log('Carregando serviços...', services.length);
+            
+            if (!servicesList) {
+                console.error('Elemento servicesList não encontrado');
+                return;
+            }
             
             servicesList.innerHTML = '<div class="services-grid">' + 
                 services.map(service => {
