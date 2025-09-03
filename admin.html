@@ -178,6 +178,143 @@
         .save-btn:hover { 
             background: #45a049; 
         }
+        
+        /* Estilos para adicionar novo serviço */
+        .add-service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .add-service-btn {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .add-service-btn:hover {
+            background: #1976d2;
+        }
+        
+        /* Modal para adicionar serviço */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            color: #9c27b0;
+            font-size: 1.3rem;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .modal-form label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .modal-form input,
+        .modal-form textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .modal-form input:focus,
+        .modal-form textarea:focus {
+            outline: none;
+            border-color: #9c27b0;
+        }
+        .modal-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f5f5f5;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+        .create-btn {
+            flex: 1;
+            padding: 12px;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .create-btn:hover {
+            background: #1976d2;
+        }
+        
+        /* Botão de remover serviço */
+        .remove-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .remove-btn:hover {
+            background: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -209,10 +346,54 @@
             <button class="logout-btn" onclick="logout()">Sair</button>
         </div>
         <div class="dashboard-content">
-            <h2>Gerenciar Serviços</h2>
+            <div class="add-service-header">
+                <h2>Gerenciar Serviços</h2>
+                <button class="add-service-btn" onclick="openAddServiceModal()">
+                    ➕ Adicionar Novo Serviço
+                </button>
+            </div>
             <div id="servicesList">
                 <!-- Serviços serão carregados aqui -->
             </div>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar novo serviço -->
+    <div id="addServiceModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">➕ Adicionar Novo Serviço</h3>
+                <button class="close-btn" onclick="closeAddServiceModal()">&times;</button>
+            </div>
+            <form class="modal-form" id="addServiceForm">
+                <div>
+                    <label for="newServiceName">Nome do Serviço:</label>
+                    <input type="text" id="newServiceName" required placeholder="Ex: Buffet Premium">
+                </div>
+                <div>
+                    <label for="newServiceDescription">Descrição:</label>
+                    <textarea id="newServiceDescription" required placeholder="Descreva o serviço oferecido..."></textarea>
+                </div>
+                <div>
+                    <label for="newServicePrice">Preço (R$/pessoa):</label>
+                    <input type="number" id="newServicePrice" required min="0" step="0.01" placeholder="0.00">
+                </div>
+                <div>
+                    <label for="newServiceIcon">Ícone/Emoji (opcional):</label>
+                    <input type="text" id="newServiceIcon" placeholder="🍽️" maxlength="2">
+                </div>
+                <div>
+                    <label for="newServiceImage">Imagem do Serviço (opcional):</label>
+                    <div class="image-preview" id="newServicePreview">
+                        <div class="image-placeholder">📷<br>Clique para adicionar imagem</div>
+                    </div>
+                    <input type="file" id="newServiceImage" accept="image/*" style="display: none;">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeAddServiceModal()">Cancelar</button>
+                    <button type="submit" class="create-btn">Criar Serviço</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -294,24 +475,42 @@
             document.getElementById('errorMessage').style.display = 'none';
         }
         
-        // Lista de serviços do buffet
-        const services = [
-            { id: "buffet-completo", name: "Buffet Completo", description: "Salgados, doces, bebidas e serviço completo", defaultPrice: 45 },
-            { id: "bolo-personalizado", name: "Bolo Personalizado", description: "Bolos temáticos e personalizados para sua festa", defaultPrice: 120 },
-            { id: "decoracao-tematica", name: "Decoração Temática", description: "Decoração completa para todos os tipos de festa", defaultPrice: 200 },
-            { id: "coffee-break", name: "Coffee Break Corporativo", description: "Café, salgados, doces e sucos para eventos empresariais", defaultPrice: 25 },
-            { id: "jantar-executivo", name: "Jantar Executivo", description: "Menu sofisticado para jantares corporativos e eventos formais", defaultPrice: 85 },
-            { id: "coquetel-confraternizacao", name: "Coquetel de Confraternização", description: "Finger foods, canapés e bebidas para eventos sociais", defaultPrice: 35 },
-            { id: "lanche-eventos", name: "Lanche para Eventos", description: "Sanduíches, salgados e refrigerantes para eventos casuais", defaultPrice: 18 },
-            { id: "churrasco-completo", name: "Churrasco Completo", description: "Carnes nobres, acompanhamentos e saladas para confraternizações", defaultPrice: 55 }
+        // Lista de serviços padrão do buffet
+        const defaultServices = [
+            { id: "buffet-completo", name: "Buffet Completo", description: "Salgados, doces, bebidas e serviço completo", defaultPrice: 45, isDefault: true },
+            { id: "bolo-personalizado", name: "Bolo Personalizado", description: "Bolos temáticos e personalizados para sua festa", defaultPrice: 120, isDefault: true },
+            { id: "decoracao-tematica", name: "Decoração Temática", description: "Decoração completa para todos os tipos de festa", defaultPrice: 200, isDefault: true },
+            { id: "coffee-break", name: "Coffee Break Corporativo", description: "Café, salgados, doces e sucos para eventos empresariais", defaultPrice: 25, isDefault: true },
+            { id: "jantar-executivo", name: "Jantar Executivo", description: "Menu sofisticado para jantares corporativos e eventos formais", defaultPrice: 85, isDefault: true },
+            { id: "coquetel-confraternizacao", name: "Coquetel de Confraternização", description: "Finger foods, canapés e bebidas para eventos sociais", defaultPrice: 35, isDefault: true },
+            { id: "lanche-eventos", name: "Lanche para Eventos", description: "Sanduíches, salgados e refrigerantes para eventos casuais", defaultPrice: 18, isDefault: true },
+            { id: "churrasco-completo", name: "Churrasco Completo", description: "Carnes nobres, acompanhamentos e saladas para confraternizações", defaultPrice: 55, isDefault: true }
         ];
+        
+        // Função para obter todos os serviços (padrão + personalizados)
+        function getAllServices() {
+            const customServices = getCustomServices();
+            return [...defaultServices, ...customServices];
+        }
+        
+        // Função para obter serviços personalizados
+        function getCustomServices() {
+            const data = localStorage.getItem('customServices');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        // Função para salvar serviços personalizados
+        function saveCustomServices(customServices) {
+            localStorage.setItem('customServices', JSON.stringify(customServices));
+        }
         
         // Função para carregar serviços
         function loadServices() {
             const servicesList = document.getElementById('servicesList');
             const servicesData = getServicesData();
+            const allServices = getAllServices();
             
-            console.log('Carregando serviços...', services.length);
+            console.log('Carregando serviços...', allServices.length);
             
             if (!servicesList) {
                 console.error('Elemento servicesList não encontrado');
@@ -319,7 +518,7 @@
             }
             
             servicesList.innerHTML = '<div class="services-grid">' + 
-                services.map(service => {
+                allServices.map(service => {
                     const currentData = servicesData[service.id] || {};
                     const currentPrice = currentData.price || service.defaultPrice;
                     const currentImage = currentData.image || '';
@@ -349,17 +548,20 @@
                             <button class="save-btn" onclick="saveService('${service.id}')">
                                 💾 Salvar Alterações
                             </button>
+                            ${!service.isDefault ? `<button class="remove-btn" onclick="removeService('${service.id}')">🗑️ Remover Serviço</button>` : ''}
                         </div>
                     `;
                 }).join('') + 
             '</div>';
             
             // Adicionar event listeners para preview de imagem
-            services.forEach(service => {
+            allServices.forEach(service => {
                 const preview = document.getElementById(`preview-${service.id}`);
-                preview.addEventListener('click', () => {
-                    document.getElementById(`image-${service.id}`).click();
-                });
+                if (preview) {
+                    preview.addEventListener('click', () => {
+                        document.getElementById(`image-${service.id}`).click();
+                    });
+                }
             });
         }
         
@@ -425,7 +627,8 @@
         
         // Função auxiliar para obter nome do serviço
         function getServiceName(serviceId) {
-            const service = services.find(s => s.id === serviceId);
+            const allServices = getAllServices();
+            const service = allServices.find(s => s.id === serviceId);
             return service ? service.name : serviceId;
         }
         
@@ -454,6 +657,143 @@
                 document.body.removeChild(notification);
             }, 3000);
         }
+        
+        // Funções para gerenciar modal de adicionar serviço
+        function openAddServiceModal() {
+            document.getElementById('addServiceModal').style.display = 'flex';
+            
+            // Configurar preview de imagem do modal
+            const preview = document.getElementById('newServicePreview');
+            const imageInput = document.getElementById('newServiceImage');
+            
+            preview.addEventListener('click', () => {
+                imageInput.click();
+            });
+            
+            imageInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.style.backgroundImage = `url(${e.target.result})`;
+                        preview.classList.add('has-image');
+                        preview.innerHTML = '';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        function closeAddServiceModal() {
+            document.getElementById('addServiceModal').style.display = 'none';
+            
+            // Limpar formulário
+            document.getElementById('addServiceForm').reset();
+            const preview = document.getElementById('newServicePreview');
+            preview.style.backgroundImage = '';
+            preview.classList.remove('has-image');
+            preview.innerHTML = '<div class="image-placeholder">📷<br>Clique para adicionar imagem</div>';
+        }
+        
+        // Função para gerar ID único para novo serviço
+        function generateServiceId(name) {
+            return name.toLowerCase()
+                      .replace(/[^a-z0-9\s]/g, '')
+                      .replace(/\s+/g, '-')
+                      .substring(0, 30) + '-' + Date.now();
+        }
+        
+        // Função para adicionar novo serviço
+        document.getElementById('addServiceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('newServiceName').value.trim();
+            const description = document.getElementById('newServiceDescription').value.trim();
+            const price = parseFloat(document.getElementById('newServicePrice').value);
+            const icon = document.getElementById('newServiceIcon').value.trim() || '🍽️';
+            const imageInput = document.getElementById('newServiceImage');
+            
+            if (!name || !description || !price || price <= 0) {
+                alert('Por favor, preencha todos os campos obrigatórios corretamente.');
+                return;
+            }
+            
+            const serviceId = generateServiceId(name);
+            const newService = {
+                id: serviceId,
+                name: name,
+                description: description,
+                defaultPrice: price,
+                icon: icon,
+                isDefault: false
+            };
+            
+            // Salvar serviço personalizado
+            const customServices = getCustomServices();
+            customServices.push(newService);
+            saveCustomServices(customServices);
+            
+            // Salvar imagem se foi fornecida
+            if (imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const servicesData = getServicesData();
+                    if (!servicesData[serviceId]) {
+                        servicesData[serviceId] = {};
+                    }
+                    servicesData[serviceId].image = e.target.result;
+                    servicesData[serviceId].price = price;
+                    saveServicesData(servicesData);
+                    
+                    // Recarregar serviços e fechar modal
+                    loadServices();
+                    closeAddServiceModal();
+                    showSuccessMessage(`Serviço "${name}" criado com sucesso!`);
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                // Salvar apenas os dados básicos
+                const servicesData = getServicesData();
+                if (!servicesData[serviceId]) {
+                    servicesData[serviceId] = {};
+                }
+                servicesData[serviceId].price = price;
+                saveServicesData(servicesData);
+                
+                // Recarregar serviços e fechar modal
+                loadServices();
+                closeAddServiceModal();
+                showSuccessMessage(`Serviço "${name}" criado com sucesso!`);
+            }
+        });
+        
+        // Função para remover serviço personalizado
+        function removeService(serviceId) {
+            const serviceName = getServiceName(serviceId);
+            
+            if (confirm(`Tem certeza que deseja remover o serviço "${serviceName}"?`)) {
+                // Remover da lista de serviços personalizados
+                const customServices = getCustomServices();
+                const updatedServices = customServices.filter(service => service.id !== serviceId);
+                saveCustomServices(updatedServices);
+                
+                // Remover dados do serviço
+                const servicesData = getServicesData();
+                delete servicesData[serviceId];
+                saveServicesData(servicesData);
+                
+                // Recarregar serviços
+                loadServices();
+                showSuccessMessage(`Serviço "${serviceName}" removido com sucesso!`);
+            }
+        }
+        
+        // Fechar modal ao clicar fora dele
+        document.getElementById('addServiceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddServiceModal();
+            }
+        });
     </script>
 </body>
 </html>
