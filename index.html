@@ -334,11 +334,76 @@
         </div>
 
         <div id="agenda" class="section">
-            <h2>Agenda de Disponibilidade</h2>
-            <div style="background: white; padding: 20px; border-radius: 12px;">
-                <p>📅 Janeiro 2024</p>
-                <p style="margin-top: 15px;">🟢 Disponível &nbsp; 🔴 Ocupado</p>
+            <h2>📅 Nossa Agenda</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">Confira nossa disponibilidade e agende seu evento</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                <!-- Calendário -->
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <button onclick="changeMonth(-1)" style="background: #9c27b0; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">‹</button>
+                        <h3 id="currentMonth">Janeiro 2025</h3>
+                        <button onclick="changeMonth(1)" style="background: #9c27b0; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">›</button>
+                    </div>
+                    
+                    <div id="calendar" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 20px;">
+                        <!-- Calendário será gerado aqui -->
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; justify-content: center; font-size: 0.9rem;">
+                        <span>🟢 Disponível</span>
+                        <span>🔴 Reservado</span>
+                        <span>🟣 Selecionado</span>
+                    </div>
+                </div>
+                
+                <!-- Formulário -->
+                <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <h3>📝 Solicitar Agendamento</h3>
+                    
+                    <div id="selectedDate" style="display: none; background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center;">
+                        <strong>Data selecionada: <span id="selectedDateText"></span></strong>
+                    </div>
+                    
+                    <form id="agendaForm" onsubmit="submitBooking(event)" style="display: flex; flex-direction: column; gap: 15px;">
+                        <input type="text" id="clientName" placeholder="Seu nome completo" required style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <input type="email" id="clientEmail" placeholder="seu@email.com" required style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <input type="tel" id="clientPhone" placeholder="(85) 99999-9999" required style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        
+                        <select id="eventType" required style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                            <option value="">Tipo de evento</option>
+                            <option value="aniversario">🎂 Aniversário</option>
+                            <option value="casamento">💒 Casamento</option>
+                            <option value="formatura">🎓 Formatura</option>
+                            <option value="corporativo">🏢 Corporativo</option>
+                        </select>
+                        
+                        <input type="number" id="guestCount" placeholder="Número de convidados" min="1" required style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        
+                        <textarea id="eventDetails" placeholder="Detalhes do evento (opcional)" rows="3" style="padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; resize: vertical;"></textarea>
+                        
+                        <button type="submit" style="background: linear-gradient(135deg, #9c27b0, #e91e63); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer;">
+                            📅 Solicitar Agendamento
+                        </button>
+                    </form>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #9c27b0; margin-bottom: 10px;">📞 Contato Direto</h4>
+                        <a href="tel:+5585999999999" style="display: block; color: #9c27b0; text-decoration: none; margin: 5px 0;">📱 (85) 99999-9999</a>
+                        <a href="mailto:contato@buffetsobral.com" style="display: block; color: #9c27b0; text-decoration: none; margin: 5px 0;">📧 contato@buffetsobral.com</a>
+                    </div>
+                </div>
             </div>
+            
+            <!-- Responsividade -->
+            <style>
+                @media (max-width: 768px) {
+                    #agenda > div:first-of-type {
+                        grid-template-columns: 1fr !important;
+                        gap: 20px !important;
+                    }
+                }
+            </style>
         </div>
 
         <div id="avaliacoes" class="section">
@@ -786,6 +851,150 @@
         
         // Executar validação após carregamento completo
         setTimeout(validateImageImplementation, 2000);
+        
+        // Sistema de Agenda Simples
+        let currentDate = new Date();
+        let selectedDate = null;
+        let bookedDates = ['2025-01-05', '2025-01-12', '2025-01-19', '2025-01-26']; // Datas de exemplo
+        
+        function generateCalendar() {
+            const calendar = document.getElementById('calendar');
+            const monthElement = document.getElementById('currentMonth');
+            
+            if (!calendar || !monthElement) return;
+            
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                              'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            monthElement.textContent = `${monthNames[month]} ${year}`;
+            
+            calendar.innerHTML = '';
+            
+            // Cabeçalhos dos dias
+            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.style.cssText = 'padding: 8px; text-align: center; font-weight: 600; color: #666; background: #f5f5f5;';
+                dayElement.textContent = day;
+                calendar.appendChild(dayElement);
+            });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const today = new Date();
+            
+            // Dias vazios do mês anterior
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.style.cssText = 'padding: 8px;';
+                calendar.appendChild(emptyDay);
+            }
+            
+            // Dias do mês
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const date = new Date(year, month, day);
+                const dateString = date.toISOString().split('T')[0];
+                const dayElement = document.createElement('div');
+                
+                let style = 'padding: 8px; text-align: center; cursor: pointer; border-radius: 4px; transition: all 0.2s;';
+                let bgColor = '#e8f5e8'; // Verde para disponível
+                
+                if (date < today.setHours(0,0,0,0)) {
+                    bgColor = '#f5f5f5';
+                    style += 'color: #ccc; cursor: not-allowed;';
+                } else if (bookedDates.includes(dateString)) {
+                    bgColor = '#ffebee';
+                    style += 'color: #c62828; cursor: not-allowed;';
+                } else if (selectedDate && dateString === selectedDate) {
+                    bgColor = '#9c27b0';
+                    style += 'color: white; transform: scale(1.1);';
+                } else {
+                    style += 'color: #2e7d32;';
+                    dayElement.onclick = () => selectDate(dateString, date);
+                }
+                
+                dayElement.style.cssText = style + `background: ${bgColor};`;
+                dayElement.textContent = day;
+                calendar.appendChild(dayElement);
+            }
+        }
+        
+        function selectDate(dateString, dateObj) {
+            selectedDate = dateString;
+            generateCalendar();
+            
+            const selectedDateDiv = document.getElementById('selectedDate');
+            const selectedDateText = document.getElementById('selectedDateText');
+            
+            if (selectedDateDiv && selectedDateText) {
+                selectedDateText.textContent = dateObj.toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                selectedDateDiv.style.display = 'block';
+            }
+        }
+        
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            generateCalendar();
+        }
+        
+        function submitBooking(event) {
+            event.preventDefault();
+            
+            if (!selectedDate) {
+                alert('Por favor, selecione uma data no calendário.');
+                return;
+            }
+            
+            const formData = {
+                name: document.getElementById('clientName').value,
+                email: document.getElementById('clientEmail').value,
+                phone: document.getElementById('clientPhone').value,
+                eventType: document.getElementById('eventType').value,
+                guests: document.getElementById('guestCount').value,
+                details: document.getElementById('eventDetails').value,
+                date: selectedDate
+            };
+            
+            const eventTypes = {
+                'aniversario': 'Aniversário',
+                'casamento': 'Casamento',
+                'formatura': 'Formatura',
+                'corporativo': 'Corporativo'
+            };
+            
+            const message = `🎉 *AGENDAMENTO BUFFET SOBRAL*\\n\\n` +
+                `👤 *Cliente:* ${formData.name}\\n` +
+                `📧 *Email:* ${formData.email}\\n` +
+                `📱 *Telefone:* ${formData.phone}\\n\\n` +
+                `📅 *Data:* ${new Date(formData.date).toLocaleDateString('pt-BR')}\\n` +
+                `🎊 *Evento:* ${eventTypes[formData.eventType]}\\n` +
+                `👥 *Convidados:* ${formData.guests}\\n\\n` +
+                `📝 *Detalhes:* ${formData.details || 'Nenhum detalhe adicional'}`;
+            
+            const whatsappUrl = `https://wa.me/5585999999999?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            
+            // Marcar data como reservada e limpar formulário
+            bookedDates.push(selectedDate);
+            selectedDate = null;
+            document.getElementById('agendaForm').reset();
+            document.getElementById('selectedDate').style.display = 'none';
+            generateCalendar();
+            
+            alert('Agendamento enviado! Você será redirecionado para o WhatsApp.');
+        }
+        
+        // Inicializar calendário quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(generateCalendar, 100);
+        });
     </script>
 </body>
 </html>
