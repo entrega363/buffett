@@ -16,14 +16,95 @@
         .section { display: none; }
         .section.active { display: block; }
         .simulator-form { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .event-types { display: flex; gap: 10px; margin: 20px 0; }
-        .event-type { flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; }
+        .event-types { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0; }
+        .event-type { padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; text-align: center; cursor: pointer; font-size: 0.9rem; }
+        @media (min-width: 768px) {
+            .event-types { grid-template-columns: repeat(4, 1fr); }
+        }
         .event-type.active { background: #9c27b0; color: white; border-color: #9c27b0; }
         .package-card { background: white; border-radius: 12px; padding: 20px; margin: 15px 0; border: 2px solid #e0e0e0; cursor: pointer; }
         .package-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .package-name { font-size: 1.2rem; font-weight: 600; }
         .package-price { font-size: 1.1rem; font-weight: 600; color: #4caf50; }
-        .service-card { background: white; border-radius: 12px; margin: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .service-card { background: white; border-radius: 12px; margin: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .service-image { 
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-image:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .service-image-placeholder {
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            width: 100%;
+            height: 200px;
+            border-radius: 12px 12px 0 0;
+            margin-bottom: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .service-image-placeholder:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        .service-image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .service-image:hover .service-image-overlay,
+        .service-image-placeholder:hover .service-image-overlay {
+            transform: translateY(0);
+        }
+        .service-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        @media (max-width: 767px) {
+            .service-image, .service-image-placeholder {
+                height: 150px;
+                border-radius: 8px 8px 0 0;
+            }
+        }
+        @media (min-width: 768px) {
+            .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .service-card { margin: 0; }
+            .service-image, .service-image-placeholder {
+                height: 180px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .service-image, .service-image-placeholder {
+                height: 200px;
+            }
+        }
         .service-content { padding: 20px; }
         .service-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 8px; }
         .service-price { font-size: 1.2rem; font-weight: 600; color: #4caf50; }
@@ -39,6 +120,8 @@
         .remove-btn { background: none; border: none; color: #f44336; cursor: pointer; font-size: 0.9rem; }
         .total-section { background: #f8f9fa; border-radius: 8px; padding: 15px; margin-top: 15px; text-align: center; }
         .total-amount { font-size: 1.3rem; font-weight: bold; color: #2e7d32; }
+        .whatsapp-btn { background: #25d366; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .whatsapp-btn:hover { background: #128c7e; }
         .service-slider-container { margin-top: 10px; }
         .service-slider { width: 100%; height: 4px; border-radius: 2px; background: #e0e0e0; outline: none; -webkit-appearance: none; }
         .service-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #2196f3; cursor: pointer; }
@@ -64,7 +147,12 @@
         <div id="catalogo" class="section">
             <h2>Nossos Serviços</h2>
             
+            <div class="services-grid">
             <div class="service-card">
+                <div class="service-image-placeholder" data-service="buffet-completo" role="img" aria-label="Imagem do serviço Buffet Completo">
+                    🍽️
+                    <div class="service-image-overlay">Buffet completo com variedade</div>
+                </div>
                 <div class="service-content">
                     <h3 class="service-title">Buffet Completo</h3>
                     <p>Salgados, doces, bebidas e serviço completo</p>
@@ -76,6 +164,10 @@
             </div>
 
             <div class="service-card">
+                <div class="service-image-placeholder" data-service="bolo-personalizado" role="img" aria-label="Imagem do serviço Bolo Personalizado">
+                    🎂
+                    <div class="service-image-overlay">Bolos únicos e personalizados</div>
+                </div>
                 <div class="service-content">
                     <h3 class="service-title">Bolo Personalizado</h3>
                     <p>Bolos temáticos e personalizados para sua festa</p>
@@ -87,6 +179,10 @@
             </div>
 
             <div class="service-card">
+                <div class="service-image-placeholder" data-service="decoracao-tematica" role="img" aria-label="Imagem do serviço Decoração Temática">
+                    🎨
+                    <div class="service-image-overlay">Decoração criativa e temática</div>
+                </div>
                 <div class="service-content">
                     <h3 class="service-title">Decoração Temática</h3>
                     <p>Decoração completa para todos os tipos de festa</p>
@@ -98,14 +194,79 @@
             </div>
 
             <div class="service-card">
+                <div class="service-image-placeholder" data-service="coffee-break" role="img" aria-label="Imagem do serviço Coffee Break Corporativo">
+                    ☕
+                    <div class="service-image-overlay">Coffee break profissional</div>
+                </div>
                 <div class="service-content">
-                    <h3 class="service-title">Serviço de Garçons</h3>
-                    <p>Equipe profissional para atendimento</p>
+                    <h3 class="service-title">Coffee Break Corporativo</h3>
+                    <p>Café, salgados, doces e sucos para eventos empresariais</p>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
                         <span class="service-price">R$ 25/pessoa</span>
-                        <button class="btn-add" onclick="addService('Serviço de Garçons', 25, 'pessoa')">Adicionar</button>
+                        <button class="btn-add" onclick="addService('Coffee Break Corporativo', 25, 'pessoa')">Adicionar</button>
                     </div>
                 </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image-placeholder" data-service="jantar-executivo" role="img" aria-label="Imagem do serviço Jantar Executivo">
+                    🥂
+                    <div class="service-image-overlay">Jantar sofisticado e elegante</div>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Jantar Executivo</h3>
+                    <p>Menu sofisticado para jantares corporativos e eventos formais</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 85/pessoa</span>
+                        <button class="btn-add" onclick="addService('Jantar Executivo', 85, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image-placeholder" data-service="coquetel-confraternizacao" role="img" aria-label="Imagem do serviço Coquetel de Confraternização">
+                    🍸
+                    <div class="service-image-overlay">Coquetel social e descontraído</div>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Coquetel de Confraternização</h3>
+                    <p>Finger foods, canapés e bebidas para eventos sociais</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 35/pessoa</span>
+                        <button class="btn-add" onclick="addService('Coquetel de Confraternização', 35, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image-placeholder" data-service="lanche-eventos" role="img" aria-label="Imagem do serviço Lanche para Eventos">
+                    🥪
+                    <div class="service-image-overlay">Lanches práticos e saborosos</div>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Lanche para Eventos</h3>
+                    <p>Sanduíches, salgados e refrigerantes para eventos casuais</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 18/pessoa</span>
+                        <button class="btn-add" onclick="addService('Lanche para Eventos', 18, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="service-card">
+                <div class="service-image-placeholder" data-service="churrasco-completo" role="img" aria-label="Imagem do serviço Churrasco Completo">
+                    🔥
+                    <div class="service-image-overlay">Churrasco tradicional e saboroso</div>
+                </div>
+                <div class="service-content">
+                    <h3 class="service-title">Churrasco Completo</h3>
+                    <p>Carnes nobres, acompanhamentos e saladas para confraternizações</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span class="service-price">R$ 55/pessoa</span>
+                        <button class="btn-add" onclick="addService('Churrasco Completo', 55, 'pessoa')">Adicionar</button>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -117,6 +278,8 @@
                     <div class="event-types">
                         <div class="event-type active">Aniversário</div>
                         <div class="event-type">Casamento</div>
+                        <div class="event-type">Formatura</div>
+                        <div class="event-type">Corporativo</div>
                     </div>
                 </div>
                 
@@ -139,6 +302,9 @@
                     <div class="total-section">
                         <div>Total do Orçamento</div>
                         <div class="total-amount" id="totalAmount">R$ 0</div>
+                        <button class="whatsapp-btn" onclick="shareWhatsApp()" id="whatsappBtn" style="display: none;">
+                            📱 Fechar Orçamento no WhatsApp
+                        </button>
                     </div>
                 </div>
 
@@ -242,13 +408,16 @@
         function updateServicesDisplay() {
             const servicesList = document.getElementById('servicesList');
             const selectedServicesDiv = document.getElementById('selectedServices');
+            const whatsappBtn = document.getElementById('whatsappBtn');
             
             if (selectedServices.length === 0) {
                 selectedServicesDiv.classList.remove('show');
+                whatsappBtn.style.display = 'none';
                 return;
             }
             
             selectedServicesDiv.classList.add('show');
+            whatsappBtn.style.display = 'flex';
             
             let total = 0;
             
@@ -324,7 +493,299 @@
             });
         });
         
+        function shareWhatsApp() {
+            const guestCount = document.getElementById('guestCount').textContent;
+            const totalAmount = document.getElementById('totalAmount').textContent;
+            const selectedEventType = document.querySelector('.event-type.active').textContent;
+            
+            let message = `🎉 *Orçamento Buffet Sobral* 🎉\n\n`;
+            message += `📋 *Tipo de Evento:* ${selectedEventType}\n`;
+            message += `👥 *Número de Convidados:* ${guestCount} pessoas\n\n`;
+            message += `🍽️ *Serviços Selecionados:*\n`;
+            
+            selectedServices.forEach(service => {
+                const serviceTotal = service.price * service.quantity;
+                message += `• ${service.name}\n`;
+                message += `  ${service.quantity} pessoas × R$ ${service.price} = R$ ${serviceTotal.toLocaleString('pt-BR')}\n\n`;
+            });
+            
+            message += `💰 *TOTAL: ${totalAmount}*\n\n`;
+            message += `📍 Buffet Sobral - CE\n`;
+            message += `📞 Entre em contato para confirmar!`;
+            
+            const whatsappUrl = `https://wa.me/5588999999999?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+        
+        // Função para carregar dados do painel administrativo
+        function loadAdminData() {
+            const servicesData = localStorage.getItem('servicesData');
+            if (servicesData) {
+                const data = JSON.parse(servicesData);
+                updateServicesFromAdmin(data);
+            }
+        }
+        
+        // Função para atualizar serviços com dados do admin
+        function updateServicesFromAdmin(adminData) {
+            // Mapeamento dos IDs do admin para os elementos do site
+            const serviceMapping = {
+                'buffet-completo': { name: 'Buffet Completo', defaultPrice: 45 },
+                'bolo-personalizado': { name: 'Bolo Personalizado', defaultPrice: 120 },
+                'decoracao-tematica': { name: 'Decoração Temática', defaultPrice: 200 },
+                'coffee-break': { name: 'Coffee Break Corporativo', defaultPrice: 25 },
+                'jantar-executivo': { name: 'Jantar Executivo', defaultPrice: 85 },
+                'coquetel-confraternizacao': { name: 'Coquetel de Confraternização', defaultPrice: 35 },
+                'lanche-eventos': { name: 'Lanche para Eventos', defaultPrice: 18 },
+                'churrasco-completo': { name: 'Churrasco Completo', defaultPrice: 55 }
+            };
+            
+            Object.keys(serviceMapping).forEach(serviceId => {
+                const serviceData = adminData[serviceId];
+                const mapping = serviceMapping[serviceId];
+                const serviceElement = document.querySelector(`[data-service="${serviceId}"]`);
+                
+                if (serviceElement && serviceData) {
+                    // Atualizar preço se foi modificado
+                    if (serviceData.price && serviceData.price !== mapping.defaultPrice) {
+                        const serviceCard = serviceElement.closest('.service-card');
+                        const priceElement = serviceCard.querySelector('.service-price');
+                        if (priceElement) {
+                            priceElement.textContent = `R$ ${serviceData.price}/pessoa`;
+                        }
+                        
+                        // Atualizar também no JavaScript para o simulador
+                        updateServicePrice(mapping.name, serviceData.price);
+                    }
+                    
+                    // Adicionar imagem se foi carregada
+                    if (serviceData.image) {
+                        addServiceImage(serviceElement.closest('.service-card'), serviceData.image);
+                    }
+                }
+            });
+        }
+        
+        // Função para atualizar preço no simulador
+        function updateServicePrice(serviceName, newPrice) {
+            // Atualizar nos botões de adicionar serviço
+            const buttons = document.querySelectorAll('button[onclick*="addService"]');
+            buttons.forEach(button => {
+                const onclick = button.getAttribute('onclick');
+                if (onclick.includes(serviceName)) {
+                    // Extrair parâmetros atuais
+                    const match = onclick.match(/addService\('([^']+)',\s*(\d+),\s*'([^']+)'\)/);
+                    if (match) {
+                        const [, name, , unit] = match;
+                        button.setAttribute('onclick', `addService('${name}', ${newPrice}, '${unit}')`);
+                    }
+                }
+            });
+        }
+        
+        // Função para adicionar imagem ao serviço
+        function addServiceImage(serviceElement, imageData) {
+            const placeholder = serviceElement.querySelector('.service-image-placeholder');
+            if (placeholder) {
+                // Substituir placeholder por imagem real
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'service-image';
+                imageContainer.setAttribute('data-service', placeholder.getAttribute('data-service'));
+                
+                // Criar elemento img para detectar erros de carregamento
+                const img = new Image();
+                img.onload = function() {
+                    imageContainer.style.backgroundImage = `url(${imageData})`;
+                    // Manter o overlay original
+                    const overlay = placeholder.querySelector('.service-image-overlay');
+                    if (overlay) {
+                        imageContainer.appendChild(overlay.cloneNode(true));
+                    }
+                    placeholder.parentNode.replaceChild(imageContainer, placeholder);
+                };
+                img.onerror = function() {
+                    console.warn('Erro ao carregar imagem para serviço:', placeholder.getAttribute('data-service'));
+                    // Manter placeholder em caso de erro
+                };
+                img.src = imageData;
+            }
+        }
+        
+        // Função para detectar imagens quebradas e substituir por placeholder
+        function handleImageError(serviceId) {
+            const serviceElement = document.querySelector(`[data-service="${serviceId}"]`);
+            if (serviceElement && serviceElement.classList.contains('service-image')) {
+                // Substituir imagem quebrada por placeholder
+                const placeholder = createServicePlaceholder(serviceId);
+                serviceElement.parentNode.replaceChild(placeholder, serviceElement);
+            }
+        }
+        
+        // Função para criar placeholder baseado no ID do serviço
+        function createServicePlaceholder(serviceId) {
+            const serviceIcons = {
+                'buffet-completo': { icon: '🍽️', text: 'Buffet completo com variedade', alt: 'Imagem do serviço Buffet Completo' },
+                'bolo-personalizado': { icon: '🎂', text: 'Bolos únicos e personalizados', alt: 'Imagem do serviço Bolo Personalizado' },
+                'decoracao-tematica': { icon: '🎨', text: 'Decoração criativa e temática', alt: 'Imagem do serviço Decoração Temática' },
+                'coffee-break': { icon: '☕', text: 'Coffee break profissional', alt: 'Imagem do serviço Coffee Break Corporativo' },
+                'jantar-executivo': { icon: '🥂', text: 'Jantar sofisticado e elegante', alt: 'Imagem do serviço Jantar Executivo' },
+                'coquetel-confraternizacao': { icon: '🍸', text: 'Coquetel social e descontraído', alt: 'Imagem do serviço Coquetel de Confraternização' },
+                'lanche-eventos': { icon: '🥪', text: 'Lanches práticos e saborosos', alt: 'Imagem do serviço Lanche para Eventos' },
+                'churrasco-completo': { icon: '🔥', text: 'Churrasco tradicional e saboroso', alt: 'Imagem do serviço Churrasco Completo' }
+            };
+            
+            const serviceData = serviceIcons[serviceId] || { icon: '🍽️', text: 'Serviço de buffet', alt: 'Imagem do serviço' };
+            
+            const placeholder = document.createElement('div');
+            placeholder.className = 'service-image-placeholder';
+            placeholder.setAttribute('data-service', serviceId);
+            placeholder.setAttribute('role', 'img');
+            placeholder.setAttribute('aria-label', serviceData.alt);
+            placeholder.innerHTML = `
+                ${serviceData.icon}
+                <div class="service-image-overlay">${serviceData.text}</div>
+            `;
+            
+            return placeholder;
+        }
+        
+        // Função para implementar lazy loading de imagens
+        function setupLazyLoading() {
+            if ('IntersectionObserver' in window) {
+                const imageObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const imageElement = entry.target;
+                            const backgroundImage = window.getComputedStyle(imageElement).backgroundImage;
+                            
+                            if (backgroundImage && backgroundImage !== 'none') {
+                                // Imagem já está carregada, apenas observar
+                                observer.unobserve(imageElement);
+                            }
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.service-image, .service-image-placeholder').forEach(img => {
+                    imageObserver.observe(img);
+                });
+            }
+        }
+        
+        // Função para monitorar erros de imagem
+        function setupImageErrorHandling() {
+            // Monitorar todas as imagens de serviço
+            document.querySelectorAll('.service-image').forEach(imageElement => {
+                const serviceId = imageElement.getAttribute('data-service');
+                
+                // Verificar se a imagem de background carregou corretamente
+                const backgroundImage = window.getComputedStyle(imageElement).backgroundImage;
+                if (backgroundImage && backgroundImage !== 'none') {
+                    const imageUrl = backgroundImage.slice(5, -2); // Remove url(" e ")
+                    
+                    const testImg = new Image();
+                    testImg.onerror = function() {
+                        console.warn(`Erro ao carregar imagem para serviço ${serviceId}:`, imageUrl);
+                        handleImageError(serviceId);
+                    };
+                    testImg.src = imageUrl;
+                }
+            });
+        }
+        
+        // Função para log de erros
+        function logImageError(serviceId, imageUrl, error) {
+            const errorData = {
+                timestamp: new Date().toISOString(),
+                serviceId: serviceId,
+                imageUrl: imageUrl,
+                error: error.message || 'Erro desconhecido'
+            };
+            
+            console.error('Erro de imagem registrado:', errorData);
+            
+            // Salvar no localStorage para debugging (opcional)
+            const errorLog = JSON.parse(localStorage.getItem('imageErrors') || '[]');
+            errorLog.push(errorData);
+            
+            // Manter apenas os últimos 10 erros
+            if (errorLog.length > 10) {
+                errorLog.shift();
+            }
+            
+            localStorage.setItem('imageErrors', JSON.stringify(errorLog));
+        }
+        
+        // Carregar dados do admin quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdminData();
+            
+            // Configurar lazy loading
+            setupLazyLoading();
+            
+            // Configurar monitoramento de erros após um pequeno delay
+            setTimeout(setupImageErrorHandling, 1000);
+        });
+        
+        // Função de teste para validar implementação
+        function validateImageImplementation() {
+            const results = {
+                placeholdersFound: 0,
+                placeholdersWithIcons: 0,
+                placeholdersWithOverlay: 0,
+                placeholdersWithAccessibility: 0,
+                cssClassesPresent: false
+            };
+            
+            // Verificar placeholders
+            const placeholders = document.querySelectorAll('.service-image-placeholder');
+            results.placeholdersFound = placeholders.length;
+            
+            placeholders.forEach(placeholder => {
+                // Verificar ícones
+                if (placeholder.textContent.match(/[🍽️🎂🎨☕🥂🍸🥪🔥]/)) {
+                    results.placeholdersWithIcons++;
+                }
+                
+                // Verificar overlay
+                if (placeholder.querySelector('.service-image-overlay')) {
+                    results.placeholdersWithOverlay++;
+                }
+                
+                // Verificar acessibilidade
+                if (placeholder.getAttribute('role') === 'img' && placeholder.getAttribute('aria-label')) {
+                    results.placeholdersWithAccessibility++;
+                }
+            });
+            
+            // Verificar se classes CSS estão presentes
+            const styleElement = document.querySelector('style');
+            if (styleElement && styleElement.textContent.includes('.service-image-placeholder')) {
+                results.cssClassesPresent = true;
+            }
+            
+            console.log('🎨 Validação das Melhorias CSS das Imagens:', results);
+            
+            // Verificar se implementação está completa
+            const isComplete = results.placeholdersFound === 8 && 
+                             results.placeholdersWithIcons === 8 && 
+                             results.placeholdersWithOverlay === 8 && 
+                             results.placeholdersWithAccessibility === 8 && 
+                             results.cssClassesPresent;
+            
+            if (isComplete) {
+                console.log('✅ Implementação das melhorias CSS concluída com sucesso!');
+            } else {
+                console.warn('⚠️ Alguns elementos da implementação podem estar faltando.');
+            }
+            
+            return results;
+        }
+        
         console.log('Buffet Sobral carregado!');
+        
+        // Executar validação após carregamento completo
+        setTimeout(validateImageImplementation, 2000);
     </script>
 </body>
 </html>
