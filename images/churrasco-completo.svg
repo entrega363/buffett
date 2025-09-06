@@ -1,0 +1,36 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#ffebee" />
+  
+  <!-- Churrasqueira -->
+  <rect x="100" y="180" width="200" height="20" fill="#795548" rx="5" />
+  <rect x="120" y="160" width="160" height="20" fill="#6d4c41" rx="5" />
+  
+  <!-- Carnes no churrasco -->
+  <ellipse cx="150" cy="150" rx="20" ry="10" fill="#ff5722" />
+  <ellipse cx="200" cy="150" rx="20" ry="10" fill="#ff5722" />
+  <ellipse cx="250" cy="150" rx="20" ry="10" fill="#ff5722" />
+  
+  <!-- Espeto -->
+  <rect x="140" y="140" width="3" height="40" fill="#9e9e9e" />
+  <rect x="190" y="140" width="3" height="40" fill="#9e9e9e" />
+  <rect x="240" y="140" width="3" height="40" fill="#9e9e9e" />
+  
+  <!-- Acompanhamentos -->
+  <rect x="80" y="120" width="30" height="20" fill="#4caf50" rx="5" />
+  <rect x="130" y="120" width="30" height="20" fill="#4caf50" rx="5" />
+  <rect x="180" y="120" width="30" height="20" fill="#4caf50" rx="5" />
+  <rect x="230" y="120" width="30" height="20" fill="#4caf50" rx="5" />
+  <rect x="280" y="120" width="30" height="20" fill="#4caf50" rx="5" />
+  
+  <!-- Saladas -->
+  <circle cx="95" cy="110" r="8" fill="#8bc34a" />
+  <circle cx="145" cy="110" r="8" fill="#8bc34a" />
+  <circle cx="195" cy="110" r="8" fill="#8bc34a" />
+  <circle cx="245" cy="110" r="8" fill="#8bc34a" />
+  <circle cx="295" cy="110" r="8" fill="#8bc34a" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">CHURRASCO COMPLETO</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Carnes e acompanhamentos</text>
+</svg>

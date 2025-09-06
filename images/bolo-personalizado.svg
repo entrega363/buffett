@@ -1,0 +1,30 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#fff0f5" />
+  
+  <!-- Bolo -->
+  <ellipse cx="200" cy="180" rx="120" ry="30" fill="#d4a5a5" />
+  <ellipse cx="200" cy="150" rx="100" ry="25" fill="#e2b4b4" />
+  <ellipse cx="200" cy="125" rx="80" ry="20" fill="#f0c5c5" />
+  
+  <!-- Decorações do bolo -->
+  <circle cx="180" cy="120" r="5" fill="#ff6b6b" />
+  <circle cx="200" cy="115" r="5" fill="#4ecdc4" />
+  <circle cx="220" cy="120" r="5" fill="#ffd166" />
+  
+  <rect x="195" y="100" width="10" height="20" fill="#9c27b0" rx="2" />
+  
+  <!-- Velas -->
+  <rect x="198" y="90" width="2" height="15" fill="#ff9f1c" />
+  <rect x="208" y="95" width="2" height="15" fill="#ff9f1c" />
+  <rect x="188" y="95" width="2" height="15" fill="#ff9f1c" />
+  
+  <!-- Chamas das velas -->
+  <path d="M199 90 Q200 85 201 90" fill="#ffeb3b" />
+  <path d="M209 95 Q210 90 211 95" fill="#ffeb3b" />
+  <path d="M189 95 Q190 90 191 95" fill="#ffeb3b" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">BOLO PERSONALIZADO</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Temático e decorado</text>
+</svg>

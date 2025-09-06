@@ -1,0 +1,34 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#e3f2fd" />
+  
+  <!-- Mesa de coquetel -->
+  <rect x="50" y="180" width="300" height="15" fill="#8d6e63" rx="5" />
+  
+  <!-- Canapés -->
+  <rect x="80" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  <rect x="120" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  <rect x="160" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  <rect x="200" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  <rect x="240" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  <rect x="280" y="160" width="20" height="10" fill="#ff9f1c" rx="3" />
+  
+  <!-- Finger foods -->
+  <circle cx="90" cy="140" r="6" fill="#4ecdc4" />
+  <circle cx="130" cy="140" r="6" fill="#ffd166" />
+  <circle cx="170" cy="140" r="6" fill="#ef476f" />
+  <circle cx="210" cy="140" r="6" fill="#118ab2" />
+  <circle cx="250" cy="140" r="6" fill="#9d4edd" />
+  <circle cx="290" cy="140" r="6" fill="#06d6a0" />
+  
+  <!-- Bebidas -->
+  <rect x="100" y="120" width="15" height="15" fill="#a2d2ff" rx="3" />
+  <rect x="140" y="120" width="15" height="15" fill="#a2d2ff" rx="3" />
+  <rect x="180" y="120" width="15" height="15" fill="#a2d2ff" rx="3" />
+  <rect x="220" y="120" width="15" height="15" fill="#a2d2ff" rx="3" />
+  <rect x="260" y="120" width="15" height="15" fill="#a2d2ff" rx="3" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">COQUETEL</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Confraternização social</text>
+</svg>

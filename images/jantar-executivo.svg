@@ -1,0 +1,31 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#fff8e1" />
+  
+  <!-- Mesa elegante -->
+  <rect x="50" y="170" width="300" height="10" fill="#5d4037" rx="5" />
+  
+  <!-- Prato principal -->
+  <ellipse cx="200" cy="160" rx="50" ry="15" fill="#e0e0e0" />
+  <ellipse cx="200" cy="155" rx="45" ry="12" fill="#ffffff" />
+  
+  <!-- Comida no prato -->
+  <ellipse cx="200" cy="150" rx="30" ry="8" fill="#795548" />
+  <circle cx="190" cy="145" r="3" fill="#ff5722" />
+  <circle cx="210" cy="145" r="3" fill="#ff5722" />
+  
+  <!-- Talheres -->
+  <rect x="160" y="165" width="3" height="20" fill="#9e9e9e" />
+  <rect x="237" y="165" width="3" height="20" fill="#9e9e9e" />
+  
+  <ellipse cx="155" cy="165" rx="5" ry="2" fill="#9e9e9e" />
+  <ellipse cx="245" cy="165" rx="5" ry="2" fill="#9e9e9e" />
+  
+  <!-- Copo de vinho -->
+  <path d="M280 130 Q285 160 290 170 Q295 160 300 130 Z" fill="#bbdefb" />
+  <rect x="288" y="170" width="24" height="5" fill="#9e9e9e" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">JANTAR EXECUTIVO</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Sofisticado e elegante</text>
+</svg>

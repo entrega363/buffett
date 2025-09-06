@@ -283,7 +283,7 @@
             <div class="services-grid">
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="buffet-completo" role="img" aria-label="Imagem do serviço Buffet Completo">
-                    🍽️
+                    <img src="images/buffet-completo.svg" alt="Imagem do serviço Buffet Completo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Buffet Completo</h3>
@@ -297,7 +297,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="bolo-personalizado" role="img" aria-label="Imagem do serviço Bolo Personalizado">
-                    🎂
+                    <img src="images/bolo-personalizado.svg" alt="Imagem do serviço Bolo Personalizado" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Bolo Personalizado</h3>
@@ -311,7 +311,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="decoracao-tematica" role="img" aria-label="Imagem do serviço Decoração Temática">
-                    🎨
+                    <img src="images/decoracao-tematica.svg" alt="Imagem do serviço Decoração Temática" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Decoração Temática</h3>
@@ -325,7 +325,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="coffee-break" role="img" aria-label="Imagem do serviço Coffee Break Corporativo">
-                    ☕
+                    <img src="images/coffee-break.svg" alt="Imagem do serviço Coffee Break Corporativo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Coffee Break Corporativo</h3>
@@ -339,7 +339,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="jantar-executivo" role="img" aria-label="Imagem do serviço Jantar Executivo">
-                    🥂
+                    <img src="images/jantar-executivo.svg" alt="Imagem do serviço Jantar Executivo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Jantar Executivo</h3>
@@ -353,7 +353,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="coquetel-confraternizacao" role="img" aria-label="Imagem do serviço Coquetel de Confraternização">
-                    🍸
+                    <img src="images/coquetel-confraternizacao.svg" alt="Imagem do serviço Coquetel de Confraternização" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Coquetel de Confraternização</h3>
@@ -367,7 +367,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="lanche-eventos" role="img" aria-label="Imagem do serviço Lanche para Eventos">
-                    🥪
+                    <img src="images/lanche-eventos.svg" alt="Imagem do serviço Lanche para Eventos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Lanche para Eventos</h3>
@@ -381,7 +381,7 @@
 
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="churrasco-completo" role="img" aria-label="Imagem do serviço Churrasco Completo">
-                    🔥
+                    <img src="images/churrasco-completo.svg" alt="Imagem do serviço Churrasco Completo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Churrasco Completo</h3>
@@ -1005,26 +1005,53 @@
         
         // Função para criar placeholder baseado no ID do serviço
         function createServicePlaceholder(serviceId) {
-            const serviceIcons = {
-                'buffet-completo': { icon: '🍽️', text: 'Buffet completo com variedade', alt: 'Imagem do serviço Buffet Completo' },
-                'bolo-personalizado': { icon: '🎂', text: 'Bolos únicos e personalizados', alt: 'Imagem do serviço Bolo Personalizado' },
-                'decoracao-tematica': { icon: '🎨', text: 'Decoração criativa e temática', alt: 'Imagem do serviço Decoração Temática' },
-                'coffee-break': { icon: '☕', text: 'Coffee break profissional', alt: 'Imagem do serviço Coffee Break Corporativo' },
-                'jantar-executivo': { icon: '🥂', text: 'Jantar sofisticado e elegante', alt: 'Imagem do serviço Jantar Executivo' },
-                'coquetel-confraternizacao': { icon: '🍸', text: 'Coquetel social e descontraído', alt: 'Imagem do serviço Coquetel de Confraternização' },
-                'lanche-eventos': { icon: '🥪', text: 'Lanches práticos e saborosos', alt: 'Imagem do serviço Lanche para Eventos' },
-                'churrasco-completo': { icon: '🔥', text: 'Churrasco tradicional e saboroso', alt: 'Imagem do serviço Churrasco Completo' }
+            const serviceData = {
+                'buffet-completo': { 
+                    image: 'images/buffet-completo.svg', 
+                    alt: 'Imagem do serviço Buffet Completo' 
+                },
+                'bolo-personalizado': { 
+                    image: 'images/bolo-personalizado.svg', 
+                    alt: 'Imagem do serviço Bolo Personalizado' 
+                },
+                'decoracao-tematica': { 
+                    image: 'images/decoracao-tematica.svg', 
+                    alt: 'Imagem do serviço Decoração Temática' 
+                },
+                'coffee-break': { 
+                    image: 'images/coffee-break.svg', 
+                    alt: 'Imagem do serviço Coffee Break Corporativo' 
+                },
+                'jantar-executivo': { 
+                    image: 'images/jantar-executivo.svg', 
+                    alt: 'Imagem do serviço Jantar Executivo' 
+                },
+                'coquetel-confraternizacao': { 
+                    image: 'images/coquetel-confraternizacao.svg', 
+                    alt: 'Imagem do serviço Coquetel de Confraternização' 
+                },
+                'lanche-eventos': { 
+                    image: 'images/lanche-eventos.svg', 
+                    alt: 'Imagem do serviço Lanche para Eventos' 
+                },
+                'churrasco-completo': { 
+                    image: 'images/churrasco-completo.svg', 
+                    alt: 'Imagem do serviço Churrasco Completo' 
+                }
             };
             
-            const serviceData = serviceIcons[serviceId] || { icon: '🍽️', text: 'Serviço de buffet', alt: 'Imagem do serviço' };
+            const serviceInfo = serviceData[serviceId] || { 
+                image: 'images/buffet-completo.svg', 
+                alt: 'Imagem do serviço' 
+            };
             
             const placeholder = document.createElement('div');
             placeholder.className = 'service-image-placeholder';
             placeholder.setAttribute('data-service', serviceId);
             placeholder.setAttribute('role', 'img');
-            placeholder.setAttribute('aria-label', serviceData.alt);
+            placeholder.setAttribute('aria-label', serviceInfo.alt);
             placeholder.innerHTML = `
-                ${serviceData.icon}
+                <img src="${serviceInfo.image}" alt="${serviceInfo.alt}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
             `;
             
             return placeholder;
