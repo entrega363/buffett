@@ -450,7 +450,7 @@
                     </h3>
                     <div id="servicesList"></div>
                     <div id="noServicesMessage" style="text-align: center; color: #666; padding: 20px; display: none;">
-                        <p>Selecione um serviço para começar</p>
+                        <p>Nenhum serviço selecionado</p>
                     </div>
                     <div id="addServicesButtonContainer" style="text-align: center; margin: 20px 0 10px;">
                         <button class="btn-add" onclick="showCatalog()" id="addServicesButton" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
@@ -1109,6 +1109,9 @@
             
             // Configurar monitoramento de erros após um pequeno delay
             setTimeout(setupImageErrorHandling, 1000);
+            
+            // Inicializar a exibição dos serviços selecionados
+            updateServicesDisplay();
         });
         
         // Carregar configurações dos pacotes
@@ -1325,6 +1328,9 @@
                     setTimeout(generateCalendar, 100);
                 }
             });
+            
+            // Garantir que a exibição de serviços seja atualizada na inicialização
+            setTimeout(updateServicesDisplay, 100);
         });
         
         // Funções para galeria de imagens
