@@ -599,7 +599,22 @@
         function showTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Encontrar e ativar a aba correspondente
+            const tabToActivate = Array.from(document.querySelectorAll('.nav-tab')).find(tab => {
+                const tabText = tab.textContent.trim();
+                if (tabName === 'catalogo') return tabText.includes('Catálogo');
+                if (tabName === 'simulador') return tabText.includes('Simulador');
+                if (tabName === 'agenda') return tabText.includes('Agenda');
+                if (tabName === 'avaliacoes') return tabText.includes('Avaliações');
+                if (tabName === 'videos') return tabText.includes('Vídeos');
+                return false;
+            });
+            
+            if (tabToActivate) {
+                tabToActivate.classList.add('active');
+            }
+            
             document.getElementById(tabName).classList.add('active');
             
             // Carregar vídeos em destaque quando a aba for aberta
@@ -685,6 +700,18 @@
                 `;
             }).join('');
             
+            // Adicionar botão "Adicionar mais serviços" se houver serviços selecionados
+            if (selectedServices.length > 0) {
+                const addButton = document.createElement('div');
+                addButton.style.cssText = 'text-align: center; margin: 20px 0 10px;';
+                addButton.innerHTML = `
+                    <button class="btn-add" onclick="showCatalog()" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
+                        ➕ Adicionar mais serviços
+                    </button>
+                `;
+                servicesList.parentNode.insertBefore(addButton, servicesList.nextSibling);
+            }
+            
             document.getElementById('totalAmount').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
         }
         
@@ -706,6 +733,15 @@
                 service.quantity = parseInt(newQuantity);
                 updateServicesDisplay();
             }
+        }
+        
+        // Função para mostrar o catálogo de serviços
+        function showCatalog() {
+            // Mostrar a aba do catálogo
+            showTab('catalogo');
+            
+            // Rolar para o topo do catálogo
+            document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
         }
         
         function selectPackage(element, packageName, price) {
