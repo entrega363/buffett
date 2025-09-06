@@ -879,7 +879,25 @@
             message += `📍 Buffet Sobral - CE\n`;
             message += `📞 Entre em contato para confirmar!`;
             
-            const whatsappUrl = `https://wa.me/5588999999999?text=${encodeURIComponent(message)}`;
+            // Obter número do WhatsApp configurado no painel administrativo
+            let whatsappNumber = '5588999999999'; // Número padrão
+            const contactData = localStorage.getItem('contactInfo');
+            if (contactData) {
+                try {
+                    const contactInfo = JSON.parse(contactData);
+                    if (contactInfo.whatsappNumber) {
+                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)
+                        const cleanNumber = contactInfo.whatsappNumber.replace(/\D/g, '');
+                        if (cleanNumber.length >= 10) {
+                            whatsappNumber = '55' + cleanNumber;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar número do WhatsApp:', e);
+                }
+            }
+            
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
         
@@ -896,6 +914,60 @@
             
             // Carregar configurações dos pacotes
             loadPackagesConfig();
+            
+            // Carregar informações de contato
+            loadContactInfo();
+        }
+        
+        // Função para carregar informações de contato
+        function loadContactInfo() {
+            const contactData = localStorage.getItem('contactInfo');
+            if (contactData) {
+                try {
+                    const data = JSON.parse(contactData);
+                    updateContactInfoOnPage(data);
+                } catch (e) {
+                    console.error('Erro ao carregar informações de contato:', e);
+                }
+            }
+        }
+        
+        // Função para atualizar informações de contato na página
+        function updateContactInfoOnPage(contactInfo) {
+            // Atualizar número do WhatsApp nos botões de orçamento
+            const whatsappButtons = document.querySelectorAll('[onclick*="shareWhatsApp"]');
+            whatsappButtons.forEach(button => {
+                const onclick = button.getAttribute('onclick');
+                if (onclick && contactInfo.whatsappNumber) {
+                    // Extrair o número atual do onclick
+                    const match = onclick.match(/https:\/\/wa\.me\/(\d+)/);
+                    if (match) {
+                        // Substituir o número antigo pelo novo número
+                        const formattedNumber = contactInfo.whatsappNumber.replace(/\D/g, '');
+                        const newOnclick = onclick.replace(/https:\/\/wa\.me\/\d+/, `https://wa.me/${formattedNumber}`);
+                        button.setAttribute('onclick', newOnclick);
+                    }
+                }
+            });
+            
+            // Atualizar email de contato se existir
+            if (contactInfo.contactEmail) {
+                const emailElements = document.querySelectorAll('[href^="mailto:"]');
+                emailElements.forEach(element => {
+                    element.href = `mailto:${contactInfo.contactEmail}`;
+                    element.textContent = contactInfo.contactEmail;
+                });
+            }
+            
+            // Atualizar telefone de contato se existir
+            if (contactInfo.contactPhone) {
+                const phoneElements = document.querySelectorAll('[href^="tel:"]');
+                phoneElements.forEach(element => {
+                    const formattedPhone = contactInfo.contactPhone.replace(/\D/g, '');
+                    element.href = `tel:+55${formattedPhone}`;
+                    element.textContent = contactInfo.contactPhone;
+                });
+            }
         }
         
         // Função para carregar eventos dos serviços
@@ -1070,22 +1142,7 @@
         }
         
         // Função para compartilhar pacote no WhatsApp
-        function sharePackageWhatsApp(packageName, price) {
-            const guestCount = document.getElementById('guestCount').textContent;
-            const selectedEventType = document.querySelector('.event-type.active').textContent;
-            
-            let message = `🎉 *Orçamento Buffet Sobral* 🎉\n\n`;
-            message += `📋 *Tipo de Evento:* ${selectedEventType}\n`;
-            message += `👥 *Número de Convidados:* ${guestCount} pessoas\n\n`;
-            message += `📦 *Pacote Selecionado: ${packageName}*\n`;
-            message += `💰 *Preço: R$ ${price}/pessoa*\n\n`;
-            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*\n\n`;
-            message += `📍 Buffet Sobral - CE\n`;
-            message += `📞 Entre em contato para confirmar!`;
-            
-            const whatsappUrl = `https://wa.me/5588999999999?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
+        function sharePackageWhatsApp(packageName, price) {\n            const guestCount = document.getElementById('guestCount').textContent;\n            const selectedEventType = document.querySelector('.event-type.active').textContent;\n            \n            let message = `🎉 *Orçamento Buffet Sobral* 🎉\\n\\n`;\n            message += `📋 *Tipo de Evento:* ${selectedEventType}\\n`;\n            message += `👥 *Número de Convidados:* ${guestCount} pessoas\\n\\n`;\n            message += `📦 *Pacote Selecionado: ${packageName}*\\n`;\n            message += `💰 *Preço: R$ ${price}/pessoa*\\n\\n`;\n            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*\\n\\n`;\n            message += `📍 Buffet Sobral - CE\\n`;\n            message += `📞 Entre em contato para confirmar!`;\n            \n            // Obter número do WhatsApp configurado no painel administrativo\n            let whatsappNumber = '5588999999999'; // Número padrão\n            const contactData = localStorage.getItem('contactInfo');\n            if (contactData) {\n                try {\n                    const contactInfo = JSON.parse(contactData);\n                    if (contactInfo.whatsappNumber) {\n                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)\n                        const cleanNumber = contactInfo.whatsappNumber.replace(/\\D/g, '');\n                        if (cleanNumber.length >= 10) {\n                            whatsappNumber = '55' + cleanNumber;\n                        }\n                    }\n                } catch (e) {\n                    console.error('Erro ao carregar número do WhatsApp:', e);\n                }\n            }\n            \n            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;\n            window.open(whatsappUrl, '_blank');\n        }
         
         // Função para atualizar serviços com dados do admin
         function updateServicesFromAdmin(adminData) {

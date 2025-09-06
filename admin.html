@@ -752,6 +752,59 @@
             </div>
         </div>
     </div>
+    
+    <!-- Seção de Configuração de Contato -->
+    <div id="contactSection" class="admin-section">
+        <div class="admin-header">
+            <h3 class="admin-title">
+                📞 Configuração de Contato
+            </h3>
+        </div>
+        <div class="contact-config">
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="whatsappNumber">Número do WhatsApp do Buffet:</label>
+                    <input type="text" id="whatsappNumber" placeholder="(85) 99999-9999" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        Insira o número do WhatsApp que receberá os orçamentos (formato: (85) 99999-9999)
+                    </p>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="contactEmail">Email de Contato:</label>
+                    <input type="email" id="contactEmail" placeholder="contato@buffetsobral.com" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        Insira o email que receberá as mensagens de contato
+                    </p>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="contactPhone">Telefone de Contato:</label>
+                    <input type="text" id="contactPhone" placeholder="(85) 99999-9999" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                        Insira o telefone principal para contato (opcional)
+                    </p>
+                </div>
+            </div>
+            
+            <button class="save-btn" onclick="saveContactInfo()" style="margin-top: 15px;">
+                💾 Salvar Informações de Contato
+            </button>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 12px; border-left: 4px solid #2196f3;">
+                <h4 style="color: #0d47a1; margin-bottom: 10px;">ℹ️ Instruções</h4>
+                <ol style="padding-left: 20px; color: #0d47a1; font-size: 0.9rem;">
+                    <li>O número do WhatsApp será usado para enviar orçamentos diretamente para o buffet</li>
+                    <li>O email e telefone serão exibidos no site para contato adicional</li>
+                    <li>Salve as configurações clicando no botão "Salvar Informações de Contato"</li>
+                </ol>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal para adicionar novo serviço -->
     <div id="addServiceModal" class="modal-overlay">
@@ -1922,6 +1975,34 @@
                 closeAddServiceModal();
             }
         });
+        
+        // Função para carregar informações de contato
+        function loadContactInfo() {
+            const contactData = localStorage.getItem('contactInfo');
+            if (contactData) {
+                try {
+                    const data = JSON.parse(contactData);
+                    document.getElementById('whatsappNumber').value = data.whatsappNumber || '';
+                    document.getElementById('contactEmail').value = data.contactEmail || '';
+                    document.getElementById('contactPhone').value = data.contactPhone || '';
+                } catch (e) {
+                    console.error('Erro ao carregar informações de contato:', e);
+                }
+            }
+        }
+        
+        // Função para salvar informações de contato
+        function saveContactInfo() {
+            const contactInfo = {
+                whatsappNumber: document.getElementById('whatsappNumber').value.trim(),
+                contactEmail: document.getElementById('contactEmail').value.trim(),
+                contactPhone: document.getElementById('contactPhone').value.trim(),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+            showSuccessMessage('Informações de contato salvas com sucesso!');
+        }
     </script>
 </body>
 </html>
