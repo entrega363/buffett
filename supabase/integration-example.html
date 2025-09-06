@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exemplo de Integração com Supabase</title>
+</head>
+<body>
+    <h1>Exemplo de Integração com Supabase</h1>
+    
+    <div id="services-list">
+        <!-- Serviços serão carregados aqui -->
+    </div>
+    
+    <button onclick="loadServicesFromSupabase()">Carregar Serviços do Supabase</button>
+    
+    <script type="module">
+        // Importar cliente do Supabase
+        import supabase from './client.js';
+        import { ServicesService } from './services.js';
+        
+        // Função para carregar serviços do Supabase
+        async function loadServicesFromSupabase() {
+            try {
+                const services = await ServicesService.getAll();
+                displayServices(services);
+                console.log('Serviços carregados com sucesso:', services);
+            } catch (error) {
+                console.error('Erro ao carregar serviços:', error);
+                alert('Erro ao carregar serviços: ' + error.message);
+            }
+        }
+        
+        // Função para exibir serviços na página
+        function displayServices(services) {
+            const servicesList = document.getElementById('services-list');
+            
+            if (services.length === 0) {
+                servicesList.innerHTML = '<p>Nenhum serviço encontrado.</p>';
+                return;
+            }
+            
+            servicesList.innerHTML = `
+                <h2>Serviços (${services.length})</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                    ${services.map(service => `
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; background: white;">
+                            <h3>${service.name}</h3>
+                            <p>${service.description}</p>
+                            <p><strong>Preço:</strong> R$ ${service.price}/pessoa</p>
+                            ${service.image_url ? 
+                                `<img src="${service.image_url}" alt="${service.name}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;">` : 
+                                '<div style="height: 150px; background: #f5f5f5; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #999;">Sem imagem</div>'
+                            }
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Carregar serviços automaticamente quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadServicesFromSupabase();
+        });
+    </script>
+</body>
+</html>
