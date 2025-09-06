@@ -592,6 +592,48 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Seção de Configuração de Streaming ao Vivo -->
+            <div id="streamingSection" class="admin-section">
+                <div class="admin-header">
+                    <h3 class="admin-title">
+                        🎥 Configuração de Streaming ao Vivo
+                    </h3>
+                </div>
+                <div class="streaming-config">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="youtubeChannelId">ID do Canal do YouTube:</label>
+                            <input type="text" id="youtubeChannelId" placeholder="UC_your_channel_id" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                                Insira o ID do seu canal do YouTube para habilitar o streaming ao vivo no site
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="streamingStatus">Status do Streaming:</label>
+                            <select id="streamingStatus" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                                <option value="enabled">Habilitado</option>
+                                <option value="disabled">Desabilitado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="saveStreamingConfig()" style="margin-top: 15px;">
+                        💾 Salvar Configurações de Streaming
+                    </button>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <h4 style="color: #0d47a1; margin-bottom: 10px;">ℹ️ Instruções para Configuração</h4>
+                        <ol style="padding-left: 20px; color: #0d47a1; font-size: 0.9rem;">
+                            <li>Encontre o ID do seu canal do YouTube na URL do seu canal (após "/channel/")</li>
+                            <li>Crie uma transmissão ao vivo no YouTube Studio</li>
+                            <li>Defina o status como "Habilitado" para mostrar o streaming no site</li>
+                            <li>Salve as configurações clicando no botão acima</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1378,6 +1420,74 @@
                     showSuccessMessage(`Foto "${photoName}" excluída com sucesso!`);
                 }
             }
+        }
+        
+        // Funções para gerenciamento de configurações de streaming ao vivo
+        function saveStreamingConfig() {
+            const channelId = document.getElementById('youtubeChannelId').value.trim();
+            const status = document.getElementById('streamingStatus').value;
+            
+            if (!channelId) {
+                alert('Por favor, insira o ID do canal do YouTube.');
+                return;
+            }
+            
+            const streamingConfig = {
+                channelId: channelId,
+                status: status,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('streamingConfig', JSON.stringify(streamingConfig));
+            showSuccessMessage('Configurações de streaming salvas com sucesso!');
+        }
+        
+        function loadStreamingConfig() {
+            const configData = localStorage.getItem('streamingConfig');
+            if (configData) {
+                const config = JSON.parse(configData);
+                document.getElementById('youtubeChannelId').value = config.channelId || '';
+                document.getElementById('streamingStatus').value = config.status || 'disabled';
+            }
+        }
+        
+        // Carregar configurações de streaming ao iniciar o dashboard
+        function loadDashboardData() {
+            loadServices();
+            loadBookings();
+            loadContactInfo();
+            loadSpacePhotos();
+            loadStreamingConfig(); // Carregar configurações de streaming
+            
+            // Verificar se é master admin para mostrar seção de administradores
+            const authData = JSON.parse(localStorage.getItem('adminAuth'));
+            if (authData && authData.adminRole === 'master') {
+                document.getElementById('adminSection').style.display = 'block';
+                loadAdmins();
+            }
+        }
+        
+        // Substituir a chamada loadDashboardData() existente
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            
+            // Verificar se é master admin para mostrar seção de administradores
+            const authData = JSON.parse(localStorage.getItem('adminAuth'));
+            if (authData && authData.adminRole === 'master') {
+                document.getElementById('adminSection').style.display = 'block';
+            }
+            
+            // Atualizar título do dashboard com nome do admin
+            if (authData && authData.adminName) {
+                const titleElement = document.querySelector('.dashboard-title');
+                titleElement.innerHTML = `🎂 Painel Administrativo - Buffet Sobral<br><small style="font-size: 0.8rem; opacity: 0.8;">Logado como: ${authData.adminName} ${authData.adminRole === 'master' ? '(Master)' : ''}</small>`;
+            }
+            
+            // Aguardar um momento para garantir que o DOM esteja pronto
+            setTimeout(() => {
+                loadDashboardData(); // Carregar todos os dados, incluindo streaming
+            }, 100);
         }
         
         // Fechar modal ao clicar fora dele
