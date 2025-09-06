@@ -62,23 +62,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
         }
-        .service-image-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            color: white;
-            padding: 15px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .service-image:hover .service-image-overlay,
-        .service-image-placeholder:hover .service-image-overlay {
-            transform: translateY(0);
-        }
         .service-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             will-change: transform;
@@ -301,7 +284,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="buffet-completo" role="img" aria-label="Imagem do serviço Buffet Completo">
                     🍽️
-                    <div class="service-image-overlay">Buffet completo com variedade</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Buffet Completo</h3>
@@ -316,7 +298,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="bolo-personalizado" role="img" aria-label="Imagem do serviço Bolo Personalizado">
                     🎂
-                    <div class="service-image-overlay">Bolos únicos e personalizados</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Bolo Personalizado</h3>
@@ -331,7 +312,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="decoracao-tematica" role="img" aria-label="Imagem do serviço Decoração Temática">
                     🎨
-                    <div class="service-image-overlay">Decoração criativa e temática</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Decoração Temática</h3>
@@ -346,7 +326,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="coffee-break" role="img" aria-label="Imagem do serviço Coffee Break Corporativo">
                     ☕
-                    <div class="service-image-overlay">Coffee break profissional</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Coffee Break Corporativo</h3>
@@ -361,7 +340,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="jantar-executivo" role="img" aria-label="Imagem do serviço Jantar Executivo">
                     🥂
-                    <div class="service-image-overlay">Jantar sofisticado e elegante</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Jantar Executivo</h3>
@@ -376,7 +354,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="coquetel-confraternizacao" role="img" aria-label="Imagem do serviço Coquetel de Confraternização">
                     🍸
-                    <div class="service-image-overlay">Coquetel social e descontraído</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Coquetel de Confraternização</h3>
@@ -391,7 +368,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="lanche-eventos" role="img" aria-label="Imagem do serviço Lanche para Eventos">
                     🥪
-                    <div class="service-image-overlay">Lanches práticos e saborosos</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Lanche para Eventos</h3>
@@ -406,7 +382,6 @@
             <div class="service-card">
                 <div class="service-image-placeholder" data-service="churrasco-completo" role="img" aria-label="Imagem do serviço Churrasco Completo">
                     🔥
-                    <div class="service-image-overlay">Churrasco tradicional e saboroso</div>
                 </div>
                 <div class="service-content">
                     <h3 class="service-title">Churrasco Completo</h3>
@@ -980,11 +955,6 @@
                 const img = new Image();
                 img.onload = function() {
                     imageContainer.style.backgroundImage = `url(${imageData})`;
-                    // Manter o overlay original
-                    const overlay = placeholder.querySelector('.service-image-overlay');
-                    if (overlay) {
-                        imageContainer.appendChild(overlay.cloneNode(true));
-                    }
                     placeholder.parentNode.replaceChild(imageContainer, placeholder);
                 };
                 img.onerror = function() {
@@ -1027,7 +997,6 @@
             placeholder.setAttribute('aria-label', serviceData.alt);
             placeholder.innerHTML = `
                 ${serviceData.icon}
-                <div class="service-image-overlay">${serviceData.text}</div>
             `;
             
             return placeholder;
@@ -1139,10 +1108,7 @@
                     results.placeholdersWithIcons++;
                 }
                 
-                // Verificar overlay
-                if (placeholder.querySelector('.service-image-overlay')) {
-                    results.placeholdersWithOverlay++;
-                }
+                // Verificar overlay (removido)
                 
                 // Verificar acessibilidade
                 if (placeholder.getAttribute('role') === 'img' && placeholder.getAttribute('aria-label')) {
