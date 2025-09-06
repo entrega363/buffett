@@ -290,6 +290,7 @@
         <button class="nav-tab active" onclick="showTab('simulador')">💰 Simulador</button>
         <button class="nav-tab" onclick="showTab('agenda')">📅 Agenda</button>
         <button class="nav-tab" onclick="showTab('avaliacoes')">⭐ Avaliações</button>
+        <button class="nav-tab" onclick="showTab('videos')">🎬 Vídeos</button>
     </div>
 
     <div class="content">
@@ -571,6 +572,16 @@
                 <p>Buffet maravilhoso! A festa do meu filho ficou perfeita. Recomendo demais!</p>
             </div>
         </div>
+        
+        <div id="videos" class="section">
+            <h2>Vídeos em Destaque</h2>
+            <div id="featuredVideosContainer">
+                <!-- Vídeos em destaque serão carregados aqui -->
+                <p style="text-align: center; color: #666; padding: 40px 20px;">
+                    Nenhum vídeo adicionado ainda. Volte mais tarde!
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -581,6 +592,11 @@
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
+            
+            // Carregar vídeos em destaque quando a aba for aberta
+            if (tabName === 'videos') {
+                loadFeaturedVideos();
+            }
         }
         
         function updateGuestCount(value) {
@@ -1355,6 +1371,91 @@
             document.getElementById('liveCameraModal').style.display = 'flex';
         }
         
+        // Funções para vídeos em destaque
+        function loadFeaturedVideos() {
+            const videosContainer = document.getElementById('featuredVideosContainer');
+            if (!videosContainer) return;
+            
+            const featuredVideos = JSON.parse(localStorage.getItem('featuredVideos') || '[]');
+            
+            if (featuredVideos.length === 0) {
+                videosContainer.innerHTML = `
+                    <p style="text-align: center; color: #666; padding: 40px 20px;">
+                        Nenhum vídeo adicionado ainda. Volte mais tarde!
+                    </p>
+                `;
+                return;
+            }
+            
+            videosContainer.innerHTML = `
+                <div class="services-grid">
+                    ${featuredVideos.map(video => `
+                        <div class="service-card">
+                            <div style="position: relative; padding-top: 56.25%; border-radius: 12px 12px 0 0; overflow: hidden;">
+                                <iframe 
+                                    src="https://www.youtube.com/embed/${video.videoId}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen 
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                                </iframe>
+                            </div>
+                            <div class="service-content">
+                                <h3 class="service-title">${video.title}</h3>
+                                <button class="btn-add" onclick="showVideoModal('${video.videoId}', '${video.title}')">
+                                    Assistir em tela cheia
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        function showVideoModal(videoId, title) {
+            // Criar o modal se não existir
+            if (!document.getElementById('videoModal')) {
+                const modal = document.createElement('div');
+                modal.id = 'videoModal';
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 800px; width: 90%;">
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="videoModalTitle"></h2>
+                            <button class="close-btn" onclick="closeVideoModal()">&times;</button>
+                        </div>
+                        <div style="position: relative; padding-top: 56.25%; border-radius: 8px; overflow: hidden;">
+                            <iframe 
+                                id="videoModalFrame"
+                                src="" 
+                                frameborder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen 
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                            </iframe>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Atualizar título e src do vídeo
+            document.getElementById('videoModalTitle').textContent = title;
+            document.getElementById('videoModalFrame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            
+            // Mostrar o modal
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+        
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Pausar o vídeo quando fechar o modal
+                document.getElementById('videoModalFrame').src = '';
+            }
+        }
+        
         function closeLiveCamera() {
             const modal = document.getElementById('liveCameraModal');
             if (modal) {
@@ -1367,6 +1468,7 @@
             const galleryModal = document.getElementById('galleryModal');
             const imageViewer = document.getElementById('imageViewer');
             const liveCameraModal = document.getElementById('liveCameraModal');
+            const videoModal = document.getElementById('videoModal');
             
             if (galleryModal && e.target === galleryModal) {
                 closeGalleryModal();
@@ -1378,6 +1480,10 @@
             
             if (liveCameraModal && e.target === liveCameraModal) {
                 closeLiveCamera();
+            }
+            
+            if (videoModal && e.target === videoModal) {
+                closeVideoModal();
             }
         });
     </script>
