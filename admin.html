@@ -635,46 +635,46 @@
                 </div>
             </div>
             
-            <!-- Seção de Vídeos em Destaque do YouTube -->
-            <div id="featuredVideosSection" class="admin-section">
+            <!-- Seção de Avaliações dos Clientes -->
+            <div id="reviewsSection" class="admin-section">
                 <div class="admin-header">
                     <h3 class="admin-title">
-                        🎬 Vídeos em Destaque do YouTube
+                        ⭐ Avaliações dos Clientes
                     </h3>
                 </div>
-                <div class="featured-videos-config">
+                <div class="reviews-config">
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="youtubeVideoUrl">URL do Vídeo do YouTube:</label>
-                            <input type="text" id="youtubeVideoUrl" placeholder="https://www.youtube.com/watch?v=VIDEO_ID" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            <label for="whatsappNumber">Número do WhatsApp para Avaliações:</label>
+                            <input type="text" id="whatsappNumber" placeholder="(85) 99999-9999" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
                             <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
-                                Insira o link completo do vídeo do YouTube que deseja destacar no site
+                                Insira o número do WhatsApp que os clientes usarão para enviar avaliações
                             </p>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-col">
-                            <label for="videoTitle">Título do Vídeo (opcional):</label>
-                            <input type="text" id="videoTitle" placeholder="Nosso Espaço - Tour Virtual" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            <label for="reviewMessage">Mensagem Padrão para Avaliação:</label>
+                            <textarea id="reviewMessage" rows="4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">Olá! Gostaríamos muito da sua opinião sobre nosso buffet. Por favor, nos avalie com estrelas de 1 a 5 e deixe um comentário opcional sobre sua experiência. Sua opinião é muito importante para nós!</textarea>
                         </div>
                     </div>
-                    <button class="save-btn" onclick="addFeaturedVideo()" style="margin-top: 15px;">
-                        ➕ Adicionar Vídeo em Destaque
+                    <button class="save-btn" onclick="saveReviewSettings()" style="margin-top: 15px;">
+                        💾 Salvar Configurações de Avaliações
                     </button>
                     
                     <div style="margin-top: 30px;">
-                        <h4 style="color: #9c27b0; margin-bottom: 15px;">Vídeos Adicionados</h4>
-                        <div id="featuredVideosList">
-                            <!-- Lista de vídeos em destaque será carregada aqui -->
-                            <p id="noFeaturedVideosMessage" style="text-align: center; color: #666; padding: 20px;">
-                                Nenhum vídeo adicionado. Insira o link de um vídeo do YouTube acima.
+                        <h4 style="color: #9c27b0; margin-bottom: 15px;">Avaliações Recebidas</h4>
+                        <div id="reviewsList">
+                            <!-- Lista de avaliações será carregada aqui -->
+                            <p id="noReviewsMessage" style="text-align: center; color: #666; padding: 20px;">
+                                Nenhuma avaliação recebida ainda.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Seção de Gerenciamento de Pacotes -->
+            <!-- Seção de Vídeos em Destaque do YouTube -->
             <div id="packagesSection" class="admin-section">
                 <div class="admin-header">
                     <h3 class="admin-title">
@@ -1548,6 +1548,98 @@
             }
         }
         
+        // Funções para gerenciamento de avaliações
+        function saveReviewSettings() {
+            const whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+            const reviewMessage = document.getElementById('reviewMessage').value.trim();
+            
+            if (!whatsappNumber) {
+                alert('Por favor, insira o número do WhatsApp.');
+                return;
+            }
+            
+            const reviewSettings = {
+                whatsappNumber: whatsappNumber,
+                reviewMessage: reviewMessage,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('reviewSettings', JSON.stringify(reviewSettings));
+            showSuccessMessage('Configurações de avaliações salvas com sucesso!');
+        }
+        
+        function loadReviewSettings() {
+            const settingsData = localStorage.getItem('reviewSettings');
+            if (settingsData) {
+                try {
+                    const settings = JSON.parse(settingsData);
+                    document.getElementById('whatsappNumber').value = settings.whatsappNumber || '';
+                    document.getElementById('reviewMessage').value = settings.reviewMessage || 'Olá! Gostaríamos muito da sua opinião sobre nosso buffet. Por favor, nos avalie com estrelas de 1 a 5 e deixe um comentário opcional sobre sua experiência. Sua opinião é muito importante para nós!';
+                } catch (e) {
+                    console.error('Erro ao carregar configurações de avaliações:', e);
+                }
+            }
+        }
+        
+        function getReviews() {
+            const data = localStorage.getItem('reviews');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveReviews(reviews) {
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+        }
+        
+        function loadReviews() {
+            const reviews = getReviews();
+            const reviewsList = document.getElementById('reviewsList');
+            const noReviewsMessage = document.getElementById('noReviewsMessage');
+            
+            if (!reviewsList) return;
+            
+            if (reviews.length === 0) {
+                if (noReviewsMessage) noReviewsMessage.style.display = 'block';
+                reviewsList.innerHTML = '<p id="noReviewsMessage" style="text-align: center; color: #666; padding: 20px;">Nenhuma avaliação recebida ainda.</p>';
+                return;
+            }
+            
+            if (noReviewsMessage) noReviewsMessage.style.display = 'none';
+            
+            // Ordenar avaliações por data (mais recente primeiro)
+            reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            reviewsList.innerHTML = reviews.map(review => {
+                // Converter número de estrelas em ícones
+                const stars = '⭐'.repeat(review.stars) + '☆'.repeat(5 - review.stars);
+                
+                return `
+                    <div class="service-card" style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <strong>${review.name || 'Cliente'}</strong>
+                            <span style="color: #999;">${new Date(review.date).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                        <div style="color: #ffc107; margin-bottom: 10px; font-size: 1.2rem;">
+                            ${stars}
+                        </div>
+                        ${review.comment ? `<p style="margin: 0 0 15px 0; color: #333;">${review.comment}</p>` : ''}
+                        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                            <button class="remove-btn" onclick="removeReview('${review.id}')" style="margin: 0; padding: 6px 12px; font-size: 0.8rem;">
+                                Remover
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function removeReview(reviewId) {
+            const reviews = getReviews();
+            const updatedReviews = reviews.filter(review => review.id !== reviewId);
+            saveReviews(updatedReviews);
+            loadReviews();
+            showSuccessMessage('Avaliação removida com sucesso!');
+        }
+        
         // Funções para gerenciamento de vídeos em destaque
         function addFeaturedVideo() {
             const videoUrl = document.getElementById('youtubeVideoUrl').value.trim();
@@ -1705,6 +1797,8 @@
             loadStreamingConfig(); // Carregar configurações de streaming
             loadFeaturedVideos(); // Carregar vídeos em destaque
             loadPackagesConfig(); // Carregar configurações dos pacotes
+            loadReviewSettings(); // Carregar configurações de avaliações
+            loadReviews(); // Carregar avaliações recebidas
             
             // Verificar se é master admin para mostrar seção de administradores
             const authData = JSON.parse(localStorage.getItem('adminAuth'));

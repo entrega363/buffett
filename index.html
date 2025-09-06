@@ -550,18 +550,20 @@
 
         <div id="avaliacoes" class="section">
             <h2>Avaliações dos Clientes</h2>
-            <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 1.5rem; color: #ffc107;">⭐⭐⭐⭐⭐</div>
-                <div>4.9/5 (127 avaliações)</div>
+            <div id="reviewsContainer">
+                <!-- Avaliações serão carregadas aqui -->
+                <p style="text-align: center; color: #666; padding: 40px 20px;">
+                    Carregando avaliações...
+                </p>
             </div>
             
-            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <strong>Ana Paula</strong>
-                    <span style="color: #999;">14/01/2024</span>
-                </div>
-                <div style="color: #ffc107; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
-                <p>Buffet maravilhoso! A festa do meu filho ficou perfeita. Recomendo demais!</p>
+            <div style="margin-top: 30px; text-align: center;">
+                <button class="btn-add" onclick="requestReview()" style="background: #4CAF50; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 10px;">
+                    📱 Avalie nosso buffet
+                </button>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                    Compartilhe sua experiência conosco pelo WhatsApp
+                </p>
             </div>
         </div>
         
@@ -604,6 +606,32 @@
             if (tabName === 'videos') {
                 loadFeaturedVideos();
             }
+            
+            // Carregar avaliações quando a aba for aberta
+            if (tabName === 'avaliacoes') {
+                loadReviews();
+            }
+        }
+        
+        // Função para solicitar avaliação via WhatsApp
+        function requestReview() {
+            // Obter configurações de avaliações do localStorage
+            const reviewSettings = localStorage.getItem('reviewSettings');
+            let whatsappNumber = '5585999999999'; // Número padrão
+            let reviewMessage = 'Olá! Gostaríamos muito da sua opinião sobre nosso buffet. Por favor, nos avalie com estrelas de 1 a 5 e deixe um comentário opcional sobre sua experiência. Sua opinião é muito importante para nós!';
+            
+            if (reviewSettings) {
+                try {
+                    const settings = JSON.parse(reviewSettings);
+                    whatsappNumber = settings.whatsappNumber.replace(/\D/g, '') || whatsappNumber;
+                    reviewMessage = settings.reviewMessage || reviewMessage;
+                } catch (e) {
+                    console.error('Erro ao carregar configurações de avaliações:', e);
+                }
+            }
+            
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(reviewMessage)}`;
+            window.open(whatsappUrl, '_blank');
         }
         
         function updateGuestCount(value) {
@@ -1543,6 +1571,55 @@
             `;
         }
         
+        // Funções para avaliações
+        function loadReviews() {
+            const reviewsContainer = document.getElementById('reviewsContainer');
+            if (!reviewsContainer) return;
+            
+            const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+            
+            if (reviews.length === 0) {
+                reviewsContainer.innerHTML = `
+                    <p style="text-align: center; color: #666; padding: 40px 20px;">
+                        Nenhuma avaliação recebida ainda. Seja o primeiro a avaliar nosso buffet!
+                    </p>
+                `;
+                return;
+            }
+            
+            // Calcular média de estrelas
+            const totalStars = reviews.reduce((sum, review) => sum + review.stars, 0);
+            const averageStars = (totalStars / reviews.length).toFixed(1);
+            
+            // Ordenar avaliações por data (mais recente primeiro)
+            reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            reviewsContainer.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 1.5rem; color: #ffc107;">${'⭐'.repeat(Math.floor(averageStars))}${'☆'.repeat(5 - Math.floor(averageStars))}</div>
+                    <div>${averageStars}/5 (${reviews.length} avaliações)</div>
+                </div>
+                
+                ${reviews.map(review => {
+                    // Converter número de estrelas em ícones
+                    const stars = '⭐'.repeat(review.stars) + '☆'.repeat(5 - review.stars);
+                    
+                    return `
+                        <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <strong>${review.name || 'Cliente'}</strong>
+                                <span style="color: #999;">${new Date(review.date).toLocaleDateString('pt-BR')}</span>
+                            </div>
+                            <div style="color: #ffc107; margin-bottom: 10px;">
+                                ${stars}
+                            </div>
+                            ${review.comment ? `<p>${review.comment}</p>` : ''}
+                        </div>
+                    `;
+                }).join('')}
+            `;
+        }
+        
         function showVideoModal(videoId, title) {
             // Criar o modal se não existir
             if (!document.getElementById('videoModal')) {
@@ -1593,6 +1670,50 @@
                 modal.style.display = 'none';
             }
         }
+        
+        // Função para processar avaliações recebidas via WhatsApp
+        function processReviewFromUrl() {
+            // Esta função seria chamada quando o usuário volta do WhatsApp após enviar uma avaliação
+            // Na prática, isso seria implementado com um webhook ou sistema de backend
+            // Por enquanto, vamos simular a adição de uma avaliação
+            
+            // Verificar se há parâmetros de avaliação na URL (simulação)
+            const urlParams = new URLSearchParams(window.location.search);
+            const reviewStars = urlParams.get('review_stars');
+            const reviewComment = urlParams.get('review_comment');
+            const reviewerName = urlParams.get('reviewer_name') || 'Cliente';
+            
+            if (reviewStars) {
+                // Criar objeto de avaliação
+                const review = {
+                    id: 'review-' + Date.now(),
+                    name: reviewerName,
+                    stars: parseInt(reviewStars),
+                    comment: reviewComment || '',
+                    date: new Date().toISOString()
+                };
+                
+                // Obter avaliações existentes
+                const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
+                
+                // Adicionar nova avaliação
+                reviews.push(review);
+                
+                // Salvar avaliações atualizadas
+                localStorage.setItem('reviews', JSON.stringify(reviews));
+                
+                // Mostrar mensagem de agradecimento
+                alert('Obrigado pela sua avaliação! Sua opinião é muito importante para nós.');
+                
+                // Remover parâmetros da URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+        
+        // Processar avaliações ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            processReviewFromUrl();
+        });
         
         // Fechar modais ao clicar fora deles
         document.addEventListener('click', function(e) {
