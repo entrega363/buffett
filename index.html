@@ -22,6 +22,17 @@
             .event-types { grid-template-columns: repeat(4, 1fr); }
         }
         .event-type.active { background: #9c27b0; color: white; border-color: #9c27b0; }
+        
+        /* Estilos para os filtros do catálogo */
+        .catalog-filters {
+            margin-bottom: 20px;
+        }
+        .catalog-filters label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
         .package-card { background: white; border-radius: 12px; padding: 20px; margin: 15px 0; border: 2px solid #e0e0e0; cursor: pointer; }
         .package-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .package-name { font-size: 1.2rem; font-weight: 600; }
@@ -280,8 +291,20 @@
         <div id="catalogo" class="section">
             <h2>Nossos Serviços</h2>
             
+            <!-- Filtros por tipo de evento -->
+            <div style="margin-bottom: 20px;">
+                <label>Tipo de Evento:</label>
+                <div class="event-types" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 10px 0;">
+                    <div class="event-type active" data-event="all">Todos</div>
+                    <div class="event-type" data-event="birthday">Aniversário</div>
+                    <div class="event-type" data-event="wedding">Casamento</div>
+                    <div class="event-type" data-event="graduation">Formatura</div>
+                    <div class="event-type" data-event="corporate">Corporativo</div>
+                </div>
+            </div>
+            
             <div class="services-grid">
-            <div class="service-card">
+            <div class="service-card" data-events="birthday,wedding,graduation,corporate,all">
                 <div class="service-image-placeholder" data-service="buffet-completo" role="img" aria-label="Imagem do serviço Buffet Completo">
                     <img src="/images/buffet-completo.svg" alt="Imagem do serviço Buffet Completo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -295,7 +318,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="birthday,wedding,graduation,all">
                 <div class="service-image-placeholder" data-service="bolo-personalizado" role="img" aria-label="Imagem do serviço Bolo Personalizado">
                     <img src="/images/bolo-personalizado.svg" alt="Imagem do serviço Bolo Personalizado" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -309,7 +332,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="birthday,wedding,graduation,all">
                 <div class="service-image-placeholder" data-service="decoracao-tematica" role="img" aria-label="Imagem do serviço Decoração Temática">
                     <img src="/images/decoracao-tematica.svg" alt="Imagem do serviço Decoração Temática" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -323,7 +346,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="corporate,all">
                 <div class="service-image-placeholder" data-service="coffee-break" role="img" aria-label="Imagem do serviço Coffee Break Corporativo">
                     <img src="/images/coffee-break.svg" alt="Imagem do serviço Coffee Break Corporativo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -337,7 +360,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="wedding,corporate,all">
                 <div class="service-image-placeholder" data-service="jantar-executivo" role="img" aria-label="Imagem do serviço Jantar Executivo">
                     <img src="/images/jantar-executivo.svg" alt="Imagem do serviço Jantar Executivo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -351,7 +374,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="corporate,birthday,all">
                 <div class="service-image-placeholder" data-service="coquetel-confraternizacao" role="img" aria-label="Imagem do serviço Coquetel de Confraternização">
                     <img src="/images/coquetel-confraternizacao.svg" alt="Imagem do serviço Coquetel de Confraternização" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -365,7 +388,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="birthday,graduation,all">
                 <div class="service-image-placeholder" data-service="lanche-eventos" role="img" aria-label="Imagem do serviço Lanche para Eventos">
                     <img src="/images/lanche-eventos.svg" alt="Imagem do serviço Lanche para Eventos" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -379,7 +402,7 @@
                 </div>
             </div>
 
-            <div class="service-card">
+            <div class="service-card" data-events="birthday,wedding,graduation,all">
                 <div class="service-image-placeholder" data-service="churrasco-completo" role="img" aria-label="Imagem do serviço Churrasco Completo">
                     <img src="/images/churrasco-completo.svg" alt="Imagem do serviço Churrasco Completo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px 12px 0 0;">
                 </div>
@@ -786,9 +809,41 @@
                 type.addEventListener('click', function() {
                     document.querySelectorAll('.event-type').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
+                    // Filtrar serviços com base no tipo de evento selecionado
+                    filterServicesByEvent(this.dataset.event);
+                });
+            });
+            
+            // Adicionar interatividade aos filtros de evento no catálogo
+            document.querySelectorAll('.event-type[data-event]').forEach(filter => {
+                filter.addEventListener('click', function() {
+                    document.querySelectorAll('.event-type[data-event]').forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    filterServicesByEventType(this.dataset.event);
                 });
             });
         });
+        
+        // Função para filtrar serviços por tipo de evento
+        function filterServicesByEventType(eventType) {
+            const services = document.querySelectorAll('.service-card');
+            
+            services.forEach(service => {
+                const serviceEvents = service.dataset.events.split(',');
+                
+                if (eventType === 'all' || serviceEvents.includes(eventType)) {
+                    service.style.display = 'block';
+                } else {
+                    service.style.display = 'none';
+                }
+            });
+        }
+        
+        // Função para filtrar serviços por tipo de evento (mantida para compatibilidade)
+        function filterServicesByEvent(eventType) {
+            // Esta função é mantida para compatibilidade com o código existente
+            filterServicesByEventType(eventType);
+        }
         
         function shareWhatsApp() {
             const guestCount = document.getElementById('guestCount').textContent;
