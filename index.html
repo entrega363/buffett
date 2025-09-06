@@ -449,9 +449,12 @@
                         <button class="clear-btn" onclick="clearAllServices()">Limpar</button>
                     </h3>
                     <div id="servicesList"></div>
+                    <div id="noServicesMessage" style="text-align: center; color: #666; padding: 20px; display: none;">
+                        <p>Selecione um serviço para começar</p>
+                    </div>
                     <div id="addServicesButtonContainer" style="text-align: center; margin: 20px 0 10px;">
-                        <button class="btn-add" onclick="showCatalog()" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
-                            ➕ Adicionar mais serviços
+                        <button class="btn-add" onclick="showCatalog()" id="addServicesButton" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
+                            ➕ Adicionar serviços
                         </button>
                     </div>
                     <div class="total-section">
@@ -668,7 +671,8 @@
             const servicesList = document.getElementById('servicesList');
             const selectedServicesDiv = document.getElementById('selectedServices');
             const whatsappBtn = document.getElementById('whatsappBtn');
-            const addServicesButtonContainer = document.getElementById('addServicesButtonContainer');
+            const addServicesButton = document.getElementById('addServicesButton');
+            const noServicesMessage = document.getElementById('noServicesMessage');
             
             // Sempre mostrar a seção de serviços selecionados para que o botão esteja visível
             selectedServicesDiv.classList.add('show');
@@ -677,13 +681,24 @@
                 servicesList.innerHTML = '';
                 whatsappBtn.style.display = 'none';
                 // Mostrar mensagem indicando que não há serviços selecionados
-                if (addServicesButtonContainer) {
-                    addServicesButtonContainer.style.marginTop = '20px';
+                if (noServicesMessage) {
+                    noServicesMessage.style.display = 'block';
+                }
+                // Atualizar texto do botão para "Adicionar serviços"
+                if (addServicesButton) {
+                    addServicesButton.innerHTML = '➕ Adicionar serviços';
+                    addServicesButton.style.marginTop = '0';
                 }
             } else {
                 whatsappBtn.style.display = 'flex';
-                if (addServicesButtonContainer) {
-                    addServicesButtonContainer.style.marginTop = '20px';
+                // Esconder mensagem de "sem serviços"
+                if (noServicesMessage) {
+                    noServicesMessage.style.display = 'none';
+                }
+                // Atualizar texto do botão para "Adicionar mais serviços"
+                if (addServicesButton) {
+                    addServicesButton.innerHTML = '➕ Adicionar mais serviços';
+                    addServicesButton.style.marginTop = '20px';
                 }
                 
                 let total = 0;
