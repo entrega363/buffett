@@ -127,6 +127,147 @@
         .service-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #2196f3; cursor: pointer; }
         .service-quantity { font-size: 0.9rem; color: #1976d2; font-weight: 600; margin-bottom: 5px; }
         .slider-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #999; margin-top: 3px; }
+        
+        /* Estilos para modais */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            color: #9c27b0;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        /* Estilos para galeria de imagens */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        .gallery-item.placeholder {
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            color: white;
+            font-size: 3rem;
+        }
+        
+        /* Estilos para visualização de imagem em destaque */
+        .image-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-viewer-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .image-viewer-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 8px;
+        }
+        .image-viewer-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .image-viewer-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-viewer-prev {
+            left: 20px;
+        }
+        .image-viewer-next {
+            right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +275,14 @@
         <h1>🎂 Buffet Sobral</h1>
         <div>Festas inesquecíveis em Sobral e região</div>
         <div>📍 Sobral - CE</div>
+        <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn-add" onclick="showGalleryModal()" style="background: #fff; color: #9c27b0; border: 2px solid #9c27b0; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                📸 Fotos do Espaço
+            </button>
+            <button class="btn-add" onclick="showLiveCamera()" style="background: #9c27b0; color: #fff; border: 2px solid #9c27b0; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                🎥 Câmera ao Vivo
+            </button>
+        </div>
     </div>
 
     <div class="nav-tabs">
@@ -994,6 +1143,216 @@
         // Inicializar calendário quando a página carregar
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(generateCalendar, 100);
+            
+            // Listener para atualizações de calendário
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'calendarUpdate') {
+                    setTimeout(generateCalendar, 100);
+                }
+            });
+        });
+        
+        // Funções para galeria de imagens
+        function showGalleryModal() {
+            // Criar o modal se não existir
+            if (!document.getElementById('galleryModal')) {
+                const modal = document.createElement('div');
+                modal.id = 'galleryModal';
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">📸 Fotos do Nosso Espaço</h2>
+                            <button class="close-btn" onclick="closeGalleryModal()">&times;</button>
+                        </div>
+                        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                            Conheça nosso buffet através destas fotos
+                        </p>
+                        <div class="gallery-grid" id="galleryGrid">
+                            <!-- Imagens serão carregadas aqui -->
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Carregar imagens da galeria
+            loadGalleryImages();
+            
+            // Mostrar o modal
+            document.getElementById('galleryModal').style.display = 'flex';
+        }
+        
+        function closeGalleryModal() {
+            const modal = document.getElementById('galleryModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        function loadGalleryImages() {
+            const galleryGrid = document.getElementById('galleryGrid');
+            if (!galleryGrid) return;
+            
+            // Obter fotos do espaço do localStorage
+            const spacePhotos = JSON.parse(localStorage.getItem('spacePhotos') || '[]');
+            
+            if (spacePhotos.length === 0) {
+                // Se não houver fotos reais, mostrar placeholders
+                const images = [
+                    { id: 1, alt: "Salão Principal do Buffet", icon: "🍽️" },
+                    { id: 2, alt: "Área Externa com Jardim", icon: "🌳" },
+                    { id: 3, alt: "Cozinha Industrial", icon: "👨‍🍳" },
+                    { id: 4, alt: "Área Kids", icon: "🎠" },
+                    { id: 5, alt: "Churrasqueira", icon: "🔥" },
+                    { id: 6, alt: "Estacionamento", icon: "🚗" }
+                ];
+                
+                galleryGrid.innerHTML = images.map(img => `
+                    <div class="gallery-item placeholder" onclick="showImage(${img.id})">
+                        <span style="font-size: 3rem;">${img.icon}</span>
+                    </div>
+                `).join('');
+            } else {
+                // Mostrar fotos reais
+                galleryGrid.innerHTML = spacePhotos.map((photo, index) => `
+                    <div class="gallery-item">
+                        <img src="${photo.data}" alt="${photo.name}" onclick="showImage(${index})">
+                    </div>
+                `).join('');
+            }
+        }
+        
+        function showImage(imageIndex) {
+            // Criar visualizador de imagem se não existir
+            if (!document.getElementById('imageViewer')) {
+                const viewer = document.createElement('div');
+                viewer.id = 'imageViewer';
+                viewer.className = 'image-viewer';
+                viewer.innerHTML = `
+                    <button class="image-viewer-close" onclick="closeImageViewer()">&times;</button>
+                    <button class="image-viewer-nav image-viewer-prev" onclick="prevImage()">&#8249;</button>
+                    <div class="image-viewer-content">
+                        <img id="viewerImage" src="" alt="">
+                    </div>
+                    <button class="image-viewer-nav image-viewer-next" onclick="nextImage()">&#8250;</button>
+                `;
+                document.body.appendChild(viewer);
+            }
+            
+            // Obter fotos do espaço do localStorage
+            const spacePhotos = JSON.parse(localStorage.getItem('spacePhotos') || '[]');
+            
+            if (spacePhotos.length > 0 && imageIndex < spacePhotos.length) {
+                // Mostrar foto real
+                const photo = spacePhotos[imageIndex];
+                document.getElementById('viewerImage').src = photo.data;
+                document.getElementById('viewerImage').alt = photo.name;
+                document.getElementById('imageViewer').style.display = 'flex';
+                
+                // Armazenar o índice atual para navegação
+                document.getElementById('imageViewer').setAttribute('data-current-index', imageIndex);
+            } else {
+                // Mostrar placeholder (para o caso de não haver fotos reais)
+                document.getElementById('viewerImage').src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%239c27b0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='24' fill='white'%3EImagem ${imageIndex + 1}%3C/text%3E%3C/svg%3E";
+                document.getElementById('viewerImage').alt = "Imagem " + (imageIndex + 1);
+                document.getElementById('imageViewer').style.display = 'flex';
+                document.getElementById('imageViewer').setAttribute('data-current-index', imageIndex);
+            }
+        }
+        
+        function closeImageViewer() {
+            const viewer = document.getElementById('imageViewer');
+            if (viewer) {
+                viewer.style.display = 'none';
+            }
+        }
+        
+        function prevImage() {
+            const viewer = document.getElementById('imageViewer');
+            const currentIndex = parseInt(viewer.getAttribute('data-current-index') || '0');
+            const spacePhotos = JSON.parse(localStorage.getItem('spacePhotos') || '[]');
+            const totalImages = spacePhotos.length > 0 ? spacePhotos.length : 6; // 6 placeholders padrão
+            
+            const prevIndex = currentIndex > 0 ? currentIndex - 1 : totalImages - 1;
+            showImage(prevIndex);
+        }
+        
+        function nextImage() {
+            const viewer = document.getElementById('imageViewer');
+            const currentIndex = parseInt(viewer.getAttribute('data-current-index') || '0');
+            const spacePhotos = JSON.parse(localStorage.getItem('spacePhotos') || '[]');
+            const totalImages = spacePhotos.length > 0 ? spacePhotos.length : 6; // 6 placeholders padrão
+            
+            const nextIndex = currentIndex < totalImages - 1 ? currentIndex + 1 : 0;
+            showImage(nextIndex);
+        }
+        
+        // Função para câmera ao vivo
+        function showLiveCamera() {
+            // Criar o modal se não existir
+            if (!document.getElementById('liveCameraModal')) {
+                const modal = document.createElement('div');
+                modal.id = 'liveCameraModal';
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h2 class="modal-title">🎥 Câmera ao Vivo</h2>
+                            <button class="close-btn" onclick="closeLiveCamera()">&times;</button>
+                        </div>
+                        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                            Veja nosso buffet em tempo real
+                        </p>
+                        <div style="background: #000; border-radius: 8px; padding: 0; text-align: center; min-height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                            <!-- Substitua o ID do vídeo abaixo pelo ID da sua transmissão ao vivo do YouTube -->
+                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/live_stream?channel=UC_your_channel_id" frameborder="0" allowfullscreen style="border-radius: 8px 8px 0 0;"></iframe>
+                            <div style="padding: 15px; background: #f5f5f5; width: 100%; border-radius: 0 0 8px 8px;">
+                                <h3 style="color: #9c27b0; margin-bottom: 10px;">Transmissão ao Vivo</h3>
+                                <p style="color: #666; margin-bottom: 0;">
+                                    Assista nossa transmissão ao vivo 24 horas por dia e veja nosso buffet em tempo real!
+                                </p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196f3;">
+                            <p style="margin: 0; color: #0d47a1; font-size: 0.9rem;">
+                                <strong>ℹ️ Informação:</strong> Esta transmissão ao vivo mostra o espaço do nosso buffet em tempo real, 
+                                permitindo que você veja o ambiente e a movimentação antes de agendar seu evento.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Mostrar o modal
+            document.getElementById('liveCameraModal').style.display = 'flex';
+        }
+        
+        function closeLiveCamera() {
+            const modal = document.getElementById('liveCameraModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Fechar modais ao clicar fora deles
+        document.addEventListener('click', function(e) {
+            const galleryModal = document.getElementById('galleryModal');
+            const imageViewer = document.getElementById('imageViewer');
+            const liveCameraModal = document.getElementById('liveCameraModal');
+            
+            if (galleryModal && e.target === galleryModal) {
+                closeGalleryModal();
+            }
+            
+            if (imageViewer && e.target === imageViewer) {
+                closeImageViewer();
+            }
+            
+            if (liveCameraModal && e.target === liveCameraModal) {
+                closeLiveCamera();
+            }
         });
     </script>
 </body>

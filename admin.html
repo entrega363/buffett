@@ -457,6 +457,52 @@
         .admin-modal .modal-content {
             max-width: 450px;
         }
+        
+        /* Estilos para galeria de fotos */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .photo-item {
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 4/3;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+        .photo-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+        }
+        .photo-action-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .delete-photo-btn {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -511,6 +557,39 @@
                 </div>
                 <div id="adminsList">
                     <!-- Lista de administradores será carregada aqui -->
+                </div>
+            </div>
+            
+            <!-- Seção de Gerenciamento de Fotos do Espaço -->
+            <div id="photosSection" class="admin-section">
+                <div class="admin-header">
+                    <h3 class="admin-title">
+                        📸 Gerenciamento de Fotos do Espaço
+                    </h3>
+                </div>
+                <div class="photo-upload-section">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <label for="photoUpload">Selecionar Fotos:</label>
+                            <input type="file" id="photoUpload" accept="image/*" multiple style="padding: 10px; border: 2px dashed #e0e0e0; border-radius: 6px; width: 100%;">
+                            <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                                Selecione uma ou mais fotos do seu dispositivo (formatos suportados: JPG, PNG, GIF)
+                            </p>
+                        </div>
+                    </div>
+                    <button class="save-btn" onclick="uploadPhotos()" style="margin-top: 15px;">
+                        📤 Enviar Fotos
+                    </button>
+                </div>
+                
+                <div class="photo-gallery-section" style="margin-top: 30px;">
+                    <h4 style="color: #9c27b0; margin-bottom: 15px;">Fotos Atuais</h4>
+                    <div id="photoGallery" class="gallery-grid">
+                        <!-- Fotos serão carregadas aqui -->
+                        <p id="noPhotosMessage" style="text-align: center; color: #666; grid-column: 1 / -1; padding: 20px;">
+                            Nenhuma foto cadastrada. Envie fotos usando o formulário acima.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -650,6 +729,9 @@
             // Aguardar um momento para garantir que o DOM esteja pronto
             setTimeout(() => {
                 loadServices();
+                loadBookings(); // Carregar agendamentos
+                loadContactInfo(); // Carregar configurações de contato
+                loadSpacePhotos(); // Carregar fotos do espaço
                 if (authData && authData.adminRole === 'master') {
                     loadAdmins();
                 }
@@ -1194,6 +1276,107 @@
                 // Recarregar serviços
                 loadServices();
                 showSuccessMessage(`Serviço "${serviceName}" removido com sucesso!`);
+            }
+        }
+        
+        // Funções para gerenciamento de fotos do espaço
+        function uploadPhotos() {
+            const fileInput = document.getElementById('photoUpload');
+            const files = fileInput.files;
+            
+            if (files.length === 0) {
+                alert('Por favor, selecione pelo menos uma foto para enviar.');
+                return;
+            }
+            
+            // Obter fotos existentes
+            const existingPhotos = getSpacePhotos();
+            
+            // Processar cada arquivo
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Verificar se é uma imagem
+                if (!file.type.match('image.*')) {
+                    alert(`O arquivo "${file.name}" não é uma imagem válida.`);
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Criar ID único para a foto
+                    const photoId = 'photo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                    
+                    // Criar objeto da foto
+                    const photo = {
+                        id: photoId,
+                        name: file.name,
+                        data: e.target.result,
+                        uploadDate: new Date().toISOString()
+                    };
+                    
+                    // Adicionar à lista de fotos
+                    existingPhotos.push(photo);
+                    saveSpacePhotos(existingPhotos);
+                    
+                    // Atualizar galeria
+                    loadSpacePhotos();
+                    
+                    showSuccessMessage(`Foto "${file.name}" enviada com sucesso!`);
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // Limpar o input
+            fileInput.value = '';
+        }
+        
+        function getSpacePhotos() {
+            const data = localStorage.getItem('spacePhotos');
+            return data ? JSON.parse(data) : [];
+        }
+        
+        function saveSpacePhotos(photos) {
+            localStorage.setItem('spacePhotos', JSON.stringify(photos));
+        }
+        
+        function loadSpacePhotos() {
+            const photos = getSpacePhotos();
+            const gallery = document.getElementById('photoGallery');
+            const noPhotosMessage = document.getElementById('noPhotosMessage');
+            
+            if (!gallery) return;
+            
+            if (photos.length === 0) {
+                if (noPhotosMessage) noPhotosMessage.style.display = 'block';
+                gallery.innerHTML = '<p id="noPhotosMessage" style="text-align: center; color: #666; grid-column: 1 / -1; padding: 20px;">Nenhuma foto cadastrada. Envie fotos usando o formulário acima.</p>';
+                return;
+            }
+            
+            if (noPhotosMessage) noPhotosMessage.style.display = 'none';
+            
+            gallery.innerHTML = photos.map(photo => `
+                <div class="photo-item">
+                    <img src="${photo.data}" alt="${photo.name}">
+                    <div class="photo-actions">
+                        <button class="photo-action-btn delete-photo-btn" onclick="deletePhoto('${photo.id}')" title="Excluir foto">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function deletePhoto(photoId) {
+            const photos = getSpacePhotos();
+            const photoIndex = photos.findIndex(p => p.id === photoId);
+            
+            if (photoIndex !== -1) {
+                const photoName = photos[photoIndex].name;
+                if (confirm(`Tem certeza que deseja excluir a foto "${photoName}"?`)) {
+                    photos.splice(photoIndex, 1);
+                    saveSpacePhotos(photos);
+                    loadSpacePhotos();
+                    showSuccessMessage(`Foto "${photoName}" excluída com sucesso!`);
+                }
             }
         }
         

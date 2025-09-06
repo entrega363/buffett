@@ -1,0 +1,16 @@
+{
+  "name": "buffet-sobral",
+  "version": "1.0.0",
+  "description": "Site do Buffet Sobral",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve -s .",
+    "build": "echo 'Nenhum build necessário'"
+  },
+  "keywords": ["buffet", "sobral", "festas"],
+  "author": "Buffet Sobral",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}
