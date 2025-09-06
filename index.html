@@ -449,6 +449,11 @@
                         <button class="clear-btn" onclick="clearAllServices()">Limpar</button>
                     </h3>
                     <div id="servicesList"></div>
+                    <div id="addServicesButtonContainer" style="text-align: center; margin: 20px 0 10px;">
+                        <button class="btn-add" onclick="showCatalog()" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
+                            ➕ Adicionar mais serviços
+                        </button>
+                    </div>
                     <div class="total-section">
                         <div>Total do Orçamento</div>
                         <div class="total-amount" id="totalAmount">R$ 0</div>
@@ -663,56 +668,53 @@
             const servicesList = document.getElementById('servicesList');
             const selectedServicesDiv = document.getElementById('selectedServices');
             const whatsappBtn = document.getElementById('whatsappBtn');
+            const addServicesButtonContainer = document.getElementById('addServicesButtonContainer');
+            
+            // Sempre mostrar a seção de serviços selecionados para que o botão esteja visível
+            selectedServicesDiv.classList.add('show');
             
             if (selectedServices.length === 0) {
-                selectedServicesDiv.classList.remove('show');
+                servicesList.innerHTML = '';
                 whatsappBtn.style.display = 'none';
-                return;
-            }
-            
-            selectedServicesDiv.classList.add('show');
-            whatsappBtn.style.display = 'flex';
-            
-            let total = 0;
-            
-            servicesList.innerHTML = selectedServices.map(service => {
-                const serviceTotal = service.price * service.quantity;
-                total += serviceTotal;
+                // Mostrar mensagem indicando que não há serviços selecionados
+                if (addServicesButtonContainer) {
+                    addServicesButtonContainer.style.marginTop = '20px';
+                }
+            } else {
+                whatsappBtn.style.display = 'flex';
+                if (addServicesButtonContainer) {
+                    addServicesButtonContainer.style.marginTop = '20px';
+                }
                 
-                return `
-                    <div class="service-item">
-                        <div class="service-info">
-                            <div class="service-name">${service.name}</div>
-                            <div class="service-quantity">Quantidade: ${service.quantity} pessoas</div>
-                            <div class="service-slider-container">
-                                <input type="range" min="1" max="500" value="${service.quantity}" 
-                                       class="service-slider" 
-                                       oninput="updateServiceQuantity(${service.id}, this.value)">
-                                <div class="slider-labels">
-                                    <span>1</span>
-                                    <span>500</span>
+                let total = 0;
+                
+                servicesList.innerHTML = selectedServices.map(service => {
+                    const serviceTotal = service.price * service.quantity;
+                    total += serviceTotal;
+                    
+                    return `
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-name">${service.name}</div>
+                                <div class="service-quantity">Quantidade: ${service.quantity} pessoas</div>
+                                <div class="service-slider-container">
+                                    <input type="range" min="1" max="500" value="${service.quantity}" 
+                                           class="service-slider" 
+                                           oninput="updateServiceQuantity(${service.id}, this.value)">
+                                    <div class="slider-labels">
+                                        <span>1</span>
+                                        <span>500</span>
+                                    </div>
                                 </div>
+                                <div class="service-calc">R$ ${service.price}/${service.unit} = R$ ${serviceTotal.toLocaleString('pt-BR')}</div>
                             </div>
-                            <div class="service-calc">R$ ${service.price}/${service.unit} = R$ ${serviceTotal.toLocaleString('pt-BR')}</div>
+                            <button class="remove-btn" onclick="removeService('${service.name}')">Remover</button>
                         </div>
-                        <button class="remove-btn" onclick="removeService('${service.name}')">Remover</button>
-                    </div>
-                `;
-            }).join('');
-            
-            // Adicionar botão "Adicionar mais serviços" se houver serviços selecionados
-            if (selectedServices.length > 0) {
-                const addButton = document.createElement('div');
-                addButton.style.cssText = 'text-align: center; margin: 20px 0 10px;';
-                addButton.innerHTML = `
-                    <button class="btn-add" onclick="showCatalog()" style="background: #9c27b0; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px;">
-                        ➕ Adicionar mais serviços
-                    </button>
-                `;
-                servicesList.parentNode.insertBefore(addButton, servicesList.nextSibling);
+                    `;
+                }).join('');
+                
+                document.getElementById('totalAmount').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
             }
-            
-            document.getElementById('totalAmount').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
         }
         
         function updateServiceCalculations() {
