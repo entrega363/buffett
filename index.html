@@ -81,6 +81,20 @@
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(0,0,0,0.15);
         }
+        .service-events {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .service-event-label {
+            background: #9c27b0;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
         @media (max-width: 767px) {
             .service-image, .service-image-placeholder {
                 height: 150px;
@@ -877,8 +891,113 @@
                 updateServicesFromAdmin(data);
             }
             
+            // Carregar eventos dos serviços
+            loadServicesEvents();
+            
             // Carregar configurações dos pacotes
             loadPackagesConfig();
+        }
+        
+        // Função para carregar eventos dos serviços
+        function loadServicesEvents() {
+            const servicesEvents = localStorage.getItem('servicesEvents');
+            if (servicesEvents) {
+                try {
+                    const eventsData = JSON.parse(servicesEvents);
+                    updateServicesEventsFromAdmin(eventsData);
+                } catch (e) {
+                    console.error('Erro ao carregar eventos dos serviços:', e);
+                }
+            }
+        }
+        
+        // Função para atualizar eventos dos serviços com dados do admin
+        function updateServicesEventsFromAdmin(adminEventsData) {
+            // Mapeamento dos IDs do admin para os elementos do site
+            const serviceMapping = {
+                'buffet-completo': 'buffet-completo',
+                'bolo-personalizado': 'bolo-personalizado',
+                'decoracao-tematica': 'decoracao-tematica',
+                'coffee-break': 'coffee-break',
+                'jantar-executivo': 'jantar-executivo',
+                'coquetel-confraternizacao': 'coquetel-confraternizacao',
+                'lanche-eventos': 'lanche-eventos',
+                'churrasco-completo': 'churrasco-completo'
+            };
+            
+            // Atualizar eventos para cada serviço
+            Object.keys(serviceMapping).forEach(serviceId => {
+                const adminServiceId = serviceMapping[serviceId];
+                const serviceEvents = adminEventsData[adminServiceId] || [];
+                const serviceElement = document.querySelector(`[data-service="${serviceId}"]`);
+                
+                if (serviceElement) {
+                    const serviceCard = serviceElement.closest('.service-card');
+                    if (serviceCard) {
+                        // Atualizar atributo data-events
+                        serviceCard.setAttribute('data-events', serviceEvents.join(','));
+                        
+                        // Adicionar etiquetas visuais dos eventos (se ainda não existirem)
+                        addEventLabelsToService(serviceCard, serviceEvents);
+                    }
+                }
+            });
+        }
+        
+        // Função para adicionar etiquetas visuais dos eventos aos serviços
+        function addEventLabelsToService(serviceCard, events) {
+            // Remover etiquetas existentes se houver
+            const existingLabels = serviceCard.querySelector('.service-events');
+            if (existingLabels) {
+                existingLabels.remove();
+            }
+            
+            // Não adicionar etiquetas se não houver eventos ou se for "all"
+            if (!events || events.length === 0 || (events.length === 1 && events[0] === 'all')) {
+                return;
+            }
+            
+            // Mapeamento de eventos para nomes e cores
+            const eventNames = {
+                'birthday': { name: 'Aniversário', color: '#4CAF50' },
+                'wedding': { name: 'Casamento', color: '#E91E63' },
+                'graduation': { name: 'Formatura', color: '#2196F3' },
+                'corporate': { name: 'Corporativo', color: '#9C27B0' }
+            };
+            
+            // Criar container para as etiquetas
+            const eventsContainer = document.createElement('div');
+            eventsContainer.className = 'service-events';
+            eventsContainer.style.cssText = `
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin: 10px 0;
+            `;
+            
+            // Adicionar etiquetas para cada evento
+            events.forEach(event => {
+                if (event !== 'all' && eventNames[event]) {
+                    const eventLabel = document.createElement('span');
+                    eventLabel.className = 'service-event-label';
+                    eventLabel.textContent = eventNames[event].name;
+                    eventLabel.style.cssText = `
+                        background: ${eventNames[event].color};
+                        color: white;
+                        padding: 3px 8px;
+                        border-radius: 12px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    `;
+                    eventsContainer.appendChild(eventLabel);
+                }
+            });
+            
+            // Inserir as etiquetas após o título do serviço
+            const serviceContent = serviceCard.querySelector('.service-content');
+            if (serviceContent) {
+                serviceContent.insertBefore(eventsContainer, serviceContent.firstChild.nextSibling);
+            }
         }
         
         // Função para carregar configurações dos pacotes
@@ -1006,6 +1125,9 @@
                     }
                 }
             });
+            
+            // Carregar eventos dos serviços após atualizar os serviços
+            loadServicesEvents();
         }
         
         // Função para atualizar preço no simulador
