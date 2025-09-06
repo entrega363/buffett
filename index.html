@@ -466,20 +466,26 @@
                     
                     <div id="packagesContainer">
                         <!-- Pacotes serão carregados aqui -->
-                        <div class="package-card" onclick="selectPackage(this, 'Pacote Básico', 35)">
+                        <div class="package-card">
                             <div class="package-header">
                                 <div class="package-name">Pacote Básico</div>
                                 <div class="package-price">R$ 35/pessoa</div>
                             </div>
                             <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
+                            <button class="whatsapp-btn" onclick="selectPackageAndShareWhatsApp('Pacote Básico', 35)" style="margin-top: 15px; width: 100%;">
+                                📱 Fechar Orçamento no WhatsApp
+                            </button>
                         </div>
 
-                        <div class="package-card" onclick="selectPackage(this, 'Pacote Completo', 55)">
+                        <div class="package-card">
                             <div class="package-header">
                                 <div class="package-name">Pacote Completo</div>
                                 <div class="package-price">R$ 55/pessoa</div>
                             </div>
                             <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
+                            <button class="whatsapp-btn" onclick="selectPackageAndShareWhatsApp('Pacote Completo', 55)" style="margin-top: 15px; width: 100%;">
+                                📱 Fechar Orçamento no WhatsApp
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -707,8 +713,10 @@
                 c.style.borderColor = '#e0e0e0';
                 c.style.background = 'white';
             });
-            element.style.borderColor = '#9c27b0';
-            element.style.background = '#f8f4ff';
+            if (element) {
+                element.style.borderColor = '#9c27b0';
+                element.style.background = '#f8f4ff';
+            }
         }
         
         function showPackages() {
@@ -788,15 +796,15 @@
                 const basicPackage = adminData.basic;
                 const basicPackageElement = document.createElement('div');
                 basicPackageElement.className = 'package-card';
-                basicPackageElement.onclick = function() {
-                    selectPackage(this, basicPackage.name, basicPackage.price);
-                };
                 basicPackageElement.innerHTML = `
                     <div class="package-header">
                         <div class="package-name">${basicPackage.name}</div>
                         <div class="package-price">R$ ${basicPackage.price}/pessoa</div>
                     </div>
                     <div>${basicPackage.description.replace(/\n/g, '<br>')}</div>
+                    <button class="whatsapp-btn" onclick="selectPackageAndShareWhatsApp('${basicPackage.name}', ${basicPackage.price})" style="margin-top: 15px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 `;
                 packagesContainer.appendChild(basicPackageElement);
             }
@@ -806,18 +814,47 @@
                 const completePackage = adminData.complete;
                 const completePackageElement = document.createElement('div');
                 completePackageElement.className = 'package-card';
-                completePackageElement.onclick = function() {
-                    selectPackage(this, completePackage.name, completePackage.price);
-                };
                 completePackageElement.innerHTML = `
                     <div class="package-header">
                         <div class="package-name">${completePackage.name}</div>
                         <div class="package-price">R$ ${completePackage.price}/pessoa</div>
                     </div>
                     <div>${completePackage.description.replace(/\n/g, '<br>')}</div>
+                    <button class="whatsapp-btn" onclick="selectPackageAndShareWhatsApp('${completePackage.name}', ${completePackage.price})" style="margin-top: 15px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 `;
                 packagesContainer.appendChild(completePackageElement);
             }
+        }
+        
+        // Função para selecionar pacote e compartilhar no WhatsApp
+        function selectPackageAndShareWhatsApp(packageName, price) {
+            // Selecionar o pacote
+            selectPackage(null, packageName, price);
+            
+            // Compartilhar no WhatsApp após um pequeno delay para garantir que o pacote foi selecionado
+            setTimeout(() => {
+                sharePackageWhatsApp(packageName, price);
+            }, 500);
+        }
+        
+        // Função para compartilhar pacote no WhatsApp
+        function sharePackageWhatsApp(packageName, price) {
+            const guestCount = document.getElementById('guestCount').textContent;
+            const selectedEventType = document.querySelector('.event-type.active').textContent;
+            
+            let message = `🎉 *Orçamento Buffet Sobral* 🎉\n\n`;
+            message += `📋 *Tipo de Evento:* ${selectedEventType}\n`;
+            message += `👥 *Número de Convidados:* ${guestCount} pessoas\n\n`;
+            message += `📦 *Pacote Selecionado: ${packageName}*\n`;
+            message += `💰 *Preço: R$ ${price}/pessoa*\n\n`;
+            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*\n\n`;
+            message += `📍 Buffet Sobral - CE\n`;
+            message += `📞 Entre em contato para confirmar!`;
+            
+            const whatsappUrl = `https://wa.me/5588999999999?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
         
         // Função para atualizar serviços com dados do admin
