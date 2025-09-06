@@ -673,6 +673,64 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Seção de Gerenciamento de Pacotes -->
+            <div id="packagesSection" class="admin-section">
+                <div class="admin-header">
+                    <h3 class="admin-title">
+                        📦 Gerenciamento de Pacotes
+                    </h3>
+                </div>
+                <div class="packages-config">
+                    <div class="package-card" style="margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #9c27b0; margin-bottom: 15px;">Pacote Básico</h4>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="basicPackageName">Nome do Pacote:</label>
+                                <input type="text" id="basicPackageName" value="Pacote Básico" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                            <div class="form-col">
+                                <label for="basicPackagePrice">Preço (R$/pessoa):</label>
+                                <input type="number" id="basicPackagePrice" value="35" min="0" step="0.01" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="basicPackageDescription">Descrição:</label>
+                                <textarea id="basicPackageDescription" rows="3" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">✓ Buffet simples
+✓ Refrigerantes
+✓ Bolo básico</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="package-card" style="margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px;">
+                        <h4 style="color: #9c27b0; margin-bottom: 15px;">Pacote Completo</h4>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="completePackageName">Nome do Pacote:</label>
+                                <input type="text" id="completePackageName" value="Pacote Completo" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                            <div class="form-col">
+                                <label for="completePackagePrice">Preço (R$/pessoa):</label>
+                                <input type="number" id="completePackagePrice" value="55" min="0" step="0.01" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="completePackageDescription">Descrição:</label>
+                                <textarea id="completePackageDescription" rows="3" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem;">✓ Buffet completo
+✓ Bebidas variadas
+✓ Bolo personalizado</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="save-btn" onclick="savePackagesConfig()" style="margin-top: 15px;">
+                        💾 Salvar Configurações dos Pacotes
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1591,12 +1649,62 @@
             showSuccessMessage('Vídeo removido com sucesso!');
         }
         
+        // Funções para gerenciamento de pacotes
+        function savePackagesConfig() {
+            const basicPackage = {
+                name: document.getElementById('basicPackageName').value,
+                price: parseFloat(document.getElementById('basicPackagePrice').value),
+                description: document.getElementById('basicPackageDescription').value
+            };
+            
+            const completePackage = {
+                name: document.getElementById('completePackageName').value,
+                price: parseFloat(document.getElementById('completePackagePrice').value),
+                description: document.getElementById('completePackageDescription').value
+            };
+            
+            const packagesConfig = {
+                basic: basicPackage,
+                complete: completePackage,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('packagesConfig', JSON.stringify(packagesConfig));
+            showSuccessMessage('Configurações dos pacotes salvas com sucesso!');
+        }
+        
+        function loadPackagesConfig() {
+            const configData = localStorage.getItem('packagesConfig');
+            if (configData) {
+                try {
+                    const config = JSON.parse(configData);
+                    
+                    // Carregar pacote básico
+                    if (config.basic) {
+                        document.getElementById('basicPackageName').value = config.basic.name || 'Pacote Básico';
+                        document.getElementById('basicPackagePrice').value = config.basic.price || 35;
+                        document.getElementById('basicPackageDescription').value = config.basic.description || '✓ Buffet simples\n✓ Refrigerantes\n✓ Bolo básico';
+                    }
+                    
+                    // Carregar pacote completo
+                    if (config.complete) {
+                        document.getElementById('completePackageName').value = config.complete.name || 'Pacote Completo';
+                        document.getElementById('completePackagePrice').value = config.complete.price || 55;
+                        document.getElementById('completePackageDescription').value = config.complete.description || '✓ Buffet completo\n✓ Bebidas variadas\n✓ Bolo personalizado';
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar configurações dos pacotes:', e);
+                }
+            }
+        }
+        
         // Carregar configurações de streaming ao iniciar o dashboard
         function loadDashboardData() {
             loadServices();
             loadSpacePhotos();
             loadStreamingConfig(); // Carregar configurações de streaming
             loadFeaturedVideos(); // Carregar vídeos em destaque
+            loadPackagesConfig(); // Carregar configurações dos pacotes
             
             // Verificar se é master admin para mostrar seção de administradores
             const authData = JSON.parse(localStorage.getItem('adminAuth'));

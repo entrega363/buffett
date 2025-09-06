@@ -464,20 +464,23 @@
                         <button style="background: none; border: none; color: #9c27b0; cursor: pointer; font-size: 0.9rem;" onclick="showPackages()">Voltar aos Pacotes</button>
                     </label>
                     
-                    <div class="package-card" onclick="selectPackage(this, 'Pacote Básico', 35)">
-                        <div class="package-header">
-                            <div class="package-name">Pacote Básico</div>
-                            <div class="package-price">R$ 35/pessoa</div>
+                    <div id="packagesContainer">
+                        <!-- Pacotes serão carregados aqui -->
+                        <div class="package-card" onclick="selectPackage(this, 'Pacote Básico', 35)">
+                            <div class="package-header">
+                                <div class="package-name">Pacote Básico</div>
+                                <div class="package-price">R$ 35/pessoa</div>
+                            </div>
+                            <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
                         </div>
-                        <div>✓ Buffet simples<br>✓ Refrigerantes<br>✓ Bolo básico</div>
-                    </div>
 
-                    <div class="package-card" onclick="selectPackage(this, 'Pacote Completo', 55)">
-                        <div class="package-header">
-                            <div class="package-name">Pacote Completo</div>
-                            <div class="package-price">R$ 55/pessoa</div>
+                        <div class="package-card" onclick="selectPackage(this, 'Pacote Completo', 55)">
+                            <div class="package-header">
+                                <div class="package-name">Pacote Completo</div>
+                                <div class="package-price">R$ 55/pessoa</div>
+                            </div>
+                            <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
                         </div>
-                        <div>✓ Buffet completo<br>✓ Bebidas variadas<br>✓ Bolo personalizado</div>
                     </div>
                 </div>
             </div>
@@ -754,6 +757,67 @@
                 const data = JSON.parse(servicesData);
                 updateServicesFromAdmin(data);
             }
+            
+            // Carregar configurações dos pacotes
+            loadPackagesConfig();
+        }
+        
+        // Função para carregar configurações dos pacotes
+        function loadPackagesConfig() {
+            const packagesConfig = localStorage.getItem('packagesConfig');
+            if (packagesConfig) {
+                try {
+                    const config = JSON.parse(packagesConfig);
+                    updatePackagesFromAdmin(config);
+                } catch (e) {
+                    console.error('Erro ao carregar configurações dos pacotes:', e);
+                }
+            }
+        }
+        
+        // Função para atualizar pacotes com dados do admin
+        function updatePackagesFromAdmin(adminData) {
+            const packagesContainer = document.getElementById('packagesContainer');
+            if (!packagesContainer) return;
+            
+            // Limpar container
+            packagesContainer.innerHTML = '';
+            
+            // Adicionar pacote básico
+            if (adminData.basic) {
+                const basicPackage = adminData.basic;
+                const basicPackageElement = document.createElement('div');
+                basicPackageElement.className = 'package-card';
+                basicPackageElement.onclick = function() {
+                    selectPackage(this, basicPackage.name, basicPackage.price);
+                };
+                basicPackageElement.innerHTML = `
+                    <div class="package-header">
+                        <div class="package-name">${basicPackage.name}</div>
+                        <div class="package-price">R$ ${basicPackage.price}/pessoa</div>
+                    </div>
+                    <div>${basicPackage.description.replace(/\n/g, '<br>')}</div>
+                `;
+                packagesContainer.appendChild(basicPackageElement);
+            }
+            
+            // Adicionar pacote completo
+            if (adminData.complete) {
+                const completePackage = adminData.complete;
+                const completePackageElement = document.createElement('div');
+                completePackageElement.className = 'package-card';
+                completePackageElement.onclick = function() {
+                    selectPackage(this, completePackage.name, completePackage.price);
+                };
+                completePackageElement.innerHTML = `
+                    <div class="package-header">
+                        <div class="package-name">${completePackage.name}</div>
+                        <div class="package-price">R$ ${completePackage.price}/pessoa</div>
+                    </div>
+                    <div>${completePackage.description.replace(/\n/g, '<br>')}</div>
+                `;
+                packagesContainer.appendChild(completePackageElement);
+            }
         }
         
         // Função para atualizar serviços com dados do admin
@@ -955,6 +1019,11 @@
             
             // Configurar monitoramento de erros após um pequeno delay
             setTimeout(setupImageErrorHandling, 1000);
+        });
+        
+        // Carregar configurações dos pacotes
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPackagesConfig();
         });
         
         // Função de teste para validar implementação
