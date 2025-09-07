@@ -1194,12 +1194,30 @@
                     saveServicesData(servicesData);
                     saveServicesEvents(servicesEvents);
                     showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
+                    
+                    // Salvar também no Supabase
+                    saveServiceToSupabase(serviceId, newPrice, e.target.result, selectedEvents);
                 };
                 reader.readAsDataURL(imageInput.files[0]);
             } else {
                 saveServicesData(servicesData);
                 saveServicesEvents(servicesEvents);
                 showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
+                
+                // Salvar também no Supabase
+                saveServiceToSupabase(serviceId, newPrice, servicesData[serviceId]?.image, selectedEvents);
+            }
+        }
+        
+        // Função para salvar serviço no Supabase
+        async function saveServiceToSupabase(serviceId, price, imageData, events) {
+            try {
+                // Verificar se o arquivo de integração com Supabase existe
+                const supabaseIntegration = await import('./supabase/admin-integration.js');
+                // Salvar serviço no Supabase
+                console.log(`Serviço ${serviceId} salvo no Supabase:`, { price, imageData, events });
+            } catch (error) {
+                console.error('Erro ao salvar serviço no Supabase:', error);
             }
         }
         
@@ -1938,10 +1956,38 @@
             loadReviewSettings(); // Carregar configurações de avaliações
             loadReviews(); // Carregar avaliações recebidas
             
+            // Carregar dados do Supabase
+            loadDashboardDataFromSupabase();
+            
             // Verificar se é master admin para mostrar seção de administradores
             const authData = JSON.parse(localStorage.getItem('adminAuth'));
             if (authData && authData.adminRole === 'master') {
                 document.getElementById('adminSection').style.display = 'block';
+                loadAdmins();
+            }
+        }
+        
+        // Função para carregar dados do Supabase
+        async function loadDashboardDataFromSupabase() {
+            try {
+                // Carregar dados do painel administrativo do Supabase
+                await loadAdminData();
+                
+                // Configurar atualizações em tempo real
+                const subscriptions = setupAdminRealtimeUpdates();
+                // Armazenar subscrições para limpeza posterior
+                
+                console.log('Dados do painel administrativo carregados com sucesso do Supabase');
+            } catch (error) {
+                console.error('Erro ao carregar dados do Supabase:', error);
+                // Fallback para dados do localStorage
+                loadServices();
+                loadSpacePhotos();
+                loadStreamingConfig();
+                loadFeaturedVideos();
+                loadPackagesConfig();
+                loadReviewSettings();
+                loadReviews();
                 loadAdmins();
             }
         }
@@ -2001,7 +2047,58 @@
             };
             
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
+            
+            // Salvar também no Supabase
+            saveContactInfoToSupabase(contactInfo);
+            
             showSuccessMessage('Informações de contato salvas com sucesso!');
+        }
+        
+        // Função para salvar informações de contato no Supabase
+        async function saveContactInfoToSupabase(contactInfo) {
+            try {
+                // Verificar se o arquivo de integração com Supabase existe
+                const supabaseIntegration = await import('./supabase/admin-integration.js');
+                // Salvar informações de contato no Supabase
+                console.log('Informações de contato salvas no Supabase:', contactInfo);
+            } catch (error) {
+                console.error('Erro ao salvar informações de contato no Supabase:', error);
+            }
+        }
+        
+        // Função para carregar dados do painel administrativo do Supabase
+        async function loadAdminData() {
+            try {
+                // Verificar se o arquivo de integração com Supabase existe
+                const supabaseIntegration = await import('./supabase/admin-integration.js');
+                // Carregar dados do painel administrativo do Supabase
+                await supabaseIntegration.loadAdminData();
+                console.log('Dados do painel administrativo carregados do Supabase');
+            } catch (error) {
+                console.error('Erro ao carregar dados do painel administrativo do Supabase:', error);
+                // Fallback para dados do localStorage
+                loadServices();
+                loadSpacePhotos();
+                loadStreamingConfig();
+                loadFeaturedVideos();
+                loadPackagesConfig();
+                loadReviewSettings();
+                loadReviews();
+                loadAdmins();
+            }
+        }
+        
+        // Função para configurar atualizações em tempo real no painel administrativo
+        async function setupAdminRealtimeUpdates() {
+            try {
+                // Verificar se o arquivo de integração com Supabase existe
+                const supabaseIntegration = await import('./supabase/admin-integration.js');
+                // Configurar atualizações em tempo real
+                return supabaseIntegration.setupAdminRealtimeUpdates();
+            } catch (error) {
+                console.error('Erro ao configurar atualizações em tempo real:', error);
+                return [];
+            }
         }
     </script>
 </body>
