@@ -35,12 +35,18 @@ supabase/
    # Edite o arquivo .env com suas credenciais do Supabase
    ```
 
-3. **Instalar dependências**:
+3. **Criar tabelas no banco de dados**:
+   - Acesse o painel do Supabase
+   - Vá para a seção "SQL Editor"
+   - Cole o conteúdo do arquivo `tables.sql` e execute
+   - Opcionalmente, execute também o arquivo `seed.sql` para dados de exemplo
+
+4. **Instalar dependências**:
    ```bash
    npm install
    ```
 
-4. **Executar migração de dados**:
+5. **Executar migração de dados**:
    ```bash
    node migrate.js
    ```
@@ -57,6 +63,46 @@ O banco de dados contém as seguintes tabelas:
 - `photos` - Fotos do espaço
 - `videos` - Vídeos em destaque
 - `admins` - Administradores do sistema
+
+### Detalhes das Tabelas
+
+#### services
+- `id` (UUID) - Identificador único do serviço
+- `name` (VARCHAR) - Nome do serviço
+- `description` (TEXT) - Descrição do serviço
+- `price` (DECIMAL) - Preço por pessoa
+- `image_url` (TEXT) - URL da imagem do serviço
+- `category` (VARCHAR) - Categoria do serviço
+- `created_at` (TIMESTAMP) - Data de criação
+- `updated_at` (TIMESTAMP) - Data de atualização
+
+#### events
+- `id` (UUID) - Identificador único da associação
+- `service_id` (UUID) - Referência ao serviço
+- `event_type` (VARCHAR) - Tipo de evento (birthday, wedding, graduation, corporate)
+- `created_at` (TIMESTAMP) - Data de criação
+
+#### packages
+- `id` (UUID) - Identificador único do pacote
+- `name` (VARCHAR) - Nome do pacote
+- `price` (DECIMAL) - Preço por pessoa
+- `description` (TEXT) - Descrição do pacote
+- `created_at` (TIMESTAMP) - Data de criação
+- `updated_at` (TIMESTAMP) - Data de atualização
+
+## Criação de Tabelas
+
+Para criar as tabelas no banco de dados do Supabase, você pode usar os arquivos SQL fornecidos:
+
+1. **Arquivo `tables.sql`**: Contém o esquema completo do banco de dados
+2. **Arquivo `seed.sql`**: Contém dados de exemplo para testes
+
+### Como executar os arquivos SQL:
+
+1. Acesse o painel do Supabase
+2. Vá para a seção "SQL Editor"
+3. Cole o conteúdo do arquivo `tables.sql` e clique em "Run"
+4. Opcionalmente, cole o conteúdo do arquivo `seed.sql` e clique em "Run" para dados de exemplo
 
 ## Migração de Dados
 

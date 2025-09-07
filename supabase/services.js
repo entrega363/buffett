@@ -130,6 +130,17 @@ export const ContactService = {
 
 // Serviço de Eventos
 export const EventsService = {
+  // Obter todos os eventos
+  async getAll() {
+    const { data, error } = await supabase
+      .from(EventModel.table)
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data;
+  },
+
   // Obter eventos por serviço
   async getByService(serviceId) {
     const { data, error } = await supabase

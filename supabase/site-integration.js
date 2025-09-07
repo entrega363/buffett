@@ -16,6 +16,10 @@ export async function loadSiteData() {
     const services = await ServicesService.getAll();
     updateServicesOnPage(services);
     
+    // Carregar eventos dos serviços
+    const events = await EventsService.getAll();
+    updateServicesEventsOnPage(events);
+    
     // Carregar informações de contato
     const contactInfo = await ContactService.get();
     if (contactInfo) {
@@ -66,6 +70,91 @@ function updateServicesOnPage(services) {
       }
     }
   });
+}
+
+// Função para atualizar eventos dos serviços na página
+function updateServicesEventsOnPage(events) {
+  // Agrupar eventos por serviço
+  const eventsByService = {};
+  events.forEach(event => {
+    if (!eventsByService[event.service_id]) {
+      eventsByService[event.service_id] = [];
+    }
+    eventsByService[event.service_id].push(event.event_type);
+  });
+  
+  // Atualizar eventos para cada serviço
+  Object.keys(eventsByService).forEach(serviceId => {
+    const serviceEvents = eventsByService[serviceId];
+    const serviceElement = document.querySelector(`[data-service="${serviceId}"]`);
+    
+    if (serviceElement) {
+      const serviceCard = serviceElement.closest('.service-card');
+      if (serviceCard) {
+        // Atualizar atributo data-events
+        serviceCard.setAttribute('data-events', serviceEvents.join(','));
+        
+        // Adicionar etiquetas visuais dos eventos
+        addEventLabelsToService(serviceCard, serviceEvents);
+      }
+    }
+  });
+}
+
+// Função para adicionar etiquetas visuais dos eventos aos serviços
+function addEventLabelsToService(serviceCard, events) {
+  // Remover etiquetas existentes se houver
+  const existingLabels = serviceCard.querySelector('.service-events');
+  if (existingLabels) {
+    existingLabels.remove();
+  }
+  
+  // Não adicionar etiquetas se não houver eventos ou se for "all"
+  if (!events || events.length === 0 || (events.length === 1 && events[0] === 'all')) {
+    return;
+  }
+  
+  // Mapeamento de eventos para nomes e cores
+  const eventNames = {
+    'birthday': { name: 'Aniversário', color: '#4CAF50' },
+    'wedding': { name: 'Casamento', color: '#E91E63' },
+    'graduation': { name: 'Formatura', color: '#2196F3' },
+    'corporate': { name: 'Corporativo', color: '#9C27B0' }
+  };
+  
+  // Criar container para as etiquetas
+  const eventsContainer = document.createElement('div');
+  eventsContainer.className = 'service-events';
+  eventsContainer.style.cssText = `
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+  `;
+  
+  // Adicionar etiquetas para cada evento
+  events.forEach(event => {
+    if (event !== 'all' && eventNames[event]) {
+      const eventLabel = document.createElement('span');
+      eventLabel.className = 'service-event-label';
+      eventLabel.textContent = eventNames[event].name;
+      eventLabel.style.cssText = `
+        background: ${eventNames[event].color};
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 600;
+      `;
+      eventsContainer.appendChild(eventLabel);
+    }
+  });
+  
+  // Inserir as etiquetas após o conteúdo do serviço
+  const serviceContent = serviceCard.querySelector('.service-content');
+  if (serviceContent) {
+    serviceContent.insertBefore(eventsContainer, serviceContent.firstChild.nextSibling);
+  }
 }
 
 // Função para atualizar informações de contato na página

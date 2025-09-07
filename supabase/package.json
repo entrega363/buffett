@@ -3,23 +3,16 @@
   "version": "1.0.0",
   "description": "Integração do Buffet Sobral com Supabase",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "supabase:start": "supabase start",
-    "supabase:stop": "supabase stop",
-    "supabase:reset": "supabase db reset",
-    "supabase:deploy": "supabase db push",
-    "supabase:types": "supabase gen types typescript --local > src/types/supabase.ts"
+    "test": "node test-connection.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.0",
     "vite": "^4.4.0"
-  },
-  "devDependencies": {
-    "@supabase/cli": "^1.100.0",
-    "typescript": "^5.0.0"
   },
   "keywords": [
     "buffet",
