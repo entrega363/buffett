@@ -1,0 +1,33 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f5f5f5" />
+  
+  <!-- Mesa -->
+  <rect x="50" y="180" width="300" height="15" fill="#d7ccc8" rx="5" />
+  
+  <!-- Xícaras de café -->
+  <ellipse cx="90" cy="170" rx="12" ry="8" fill="#795548" />
+  <rect x="85" y="160" width="10" height="10" fill="#795548" rx="5" />
+  <ellipse cx="130" cy="170" rx="12" ry="8" fill="#795548" />
+  <rect x="125" y="160" width="10" height="10" fill="#795548" rx="5" />
+  <ellipse cx="170" cy="170" rx="12" ry="8" fill="#795548" />
+  <rect x="165" y="160" width="10" height="10" fill="#795548" rx="5" />
+  
+  <!-- Salgados -->
+  <rect x="210" y="160" width="25" height="15" fill="#ff9f1c" rx="3" />
+  <rect x="250" y="160" width="25" height="15" fill="#ff9f1c" rx="3" />
+  <rect x="290" y="160" width="25" height="15" fill="#ff9f1c" rx="3" />
+  
+  <!-- Doces -->
+  <circle cx="90" cy="140" r="8" fill="#e91e63" />
+  <circle cx="130" cy="140" r="8" fill="#e91e63" />
+  <circle cx="170" cy="140" r="8" fill="#e91e63" />
+  
+  <!-- Sucos -->
+  <rect x="220" y="130" width="15" height="20" fill="#4ecdc4" rx="3" />
+  <rect x="260" y="130" width="15" height="20" fill="#ffd166" rx="3" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">COFFEE BREAK</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Corporativo e profissional</text>
+</svg>

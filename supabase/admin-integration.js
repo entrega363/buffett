@@ -1,15 +1,26 @@
+<<<<<<< HEAD
 // Integração do painel administrativo com o Supabase
+=======
+// Integração do painel administrativo com Supabase
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 import supabase from './client.js';
 import {
   ServicesService,
   ContactService,
+<<<<<<< HEAD
   EventsService,
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
   PackagesService,
   ReviewsService,
   PhotosService,
   VideosService,
   AdminsService
 } from './services.js';
+<<<<<<< HEAD
+=======
+import { login, logout, register, getCurrentUser } from './auth.js';
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 
 // Função para carregar dados do painel administrativo do Supabase
 export async function loadAdminData() {
@@ -24,10 +35,13 @@ export async function loadAdminData() {
       updateContactInfoOnAdminPanel(contactInfo);
     }
     
+<<<<<<< HEAD
     // Carregar eventos associados aos serviços
     const events = await EventsService.getAll();
     updateServicesEventsOnAdminPanel(events);
     
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
     // Carregar pacotes
     const packages = await PackagesService.getAll();
     updatePackagesOnAdminPanel(packages);
@@ -45,8 +59,13 @@ export async function loadAdminData() {
     updateVideosOnAdminPanel(videos);
     
     // Carregar administradores (somente se usuário for master)
+<<<<<<< HEAD
     const authData = JSON.parse(localStorage.getItem('adminAuth'));
     if (authData && authData.adminRole === 'master') {
+=======
+    const currentUser = await getCurrentUser();
+    if (currentUser && currentUser.role === 'master') {
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
       const admins = await AdminsService.getAll();
       updateAdminsOnAdminPanel(admins);
     }
@@ -54,6 +73,7 @@ export async function loadAdminData() {
     console.log('Dados do painel administrativo carregados com sucesso do Supabase');
   } catch (error) {
     console.error('Erro ao carregar dados do painel administrativo do Supabase:', error);
+<<<<<<< HEAD
     // Fallback para dados do localStorage
     loadAdminDataFromLocalStorage();
   }
@@ -150,6 +170,8 @@ function loadAdminDataFromLocalStorage() {
         console.error('Erro ao carregar administradores do localStorage:', e);
       }
     }
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
   }
 }
 
@@ -218,6 +240,7 @@ function updateContactInfoOnAdminPanel(contactInfo) {
   }
 }
 
+<<<<<<< HEAD
 // Função para atualizar eventos dos serviços no painel administrativo
 function updateServicesEventsOnAdminPanel(events) {
   // Agrupar eventos por serviço
@@ -249,6 +272,8 @@ function updateServicesEventsOnAdminPanel(events) {
   });
 }
 
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 // Função para atualizar pacotes no painel administrativo
 function updatePackagesOnAdminPanel(packages) {
   packages.forEach(pkg => {
@@ -404,6 +429,7 @@ function updateAdminsOnAdminPanel(admins) {
   '</div>';
 }
 
+<<<<<<< HEAD
 // Função para salvar serviço no Supabase
 export async function saveServiceToSupabase(serviceId, price, imageData, events) {
   try {
@@ -563,6 +589,8 @@ export async function activateAdminInSupabase(adminId) {
   }
 }
 
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 // Função para configurar atualizações em tempo real no painel administrativo
 export function setupAdminRealtimeUpdates() {
   // Escutar atualizações de serviços
@@ -642,6 +670,7 @@ export function cleanupAdminRealtimeUpdates(subscriptions) {
 
 export default {
   loadAdminData,
+<<<<<<< HEAD
   saveServiceToSupabase,
   saveContactInfoToSupabase,
   savePackageToSupabase,
@@ -653,6 +682,8 @@ export default {
   deleteAdminFromSupabase,
   suspendAdminInSupabase,
   activateAdminInSupabase,
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
   setupAdminRealtimeUpdates,
   cleanupAdminRealtimeUpdates
 };

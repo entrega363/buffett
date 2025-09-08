@@ -6,6 +6,7 @@ Este diretório contém todos os arquivos necessários para integrar o Buffet So
 
 ```
 supabase/
+<<<<<<< HEAD
 ├── client.js              # Cliente do Supabase
 ├── config.js             # Configurações do Supabase
 ├── models.js             # Modelos de dados
@@ -16,6 +17,22 @@ supabase/
 ├── vite.config.js        # Configuração do Vite
 ├── .env                 # Variáveis de ambiente
 └── README.md             # Documentação
+=======
+├── client.js          # Cliente do Supabase
+├── config.js          # Configurações do Supabase
+├── models.js          # Modelos de dados
+├── services.js        # Serviços para interagir com o Supabase
+├── auth.js            # Autenticação com Supabase
+├── store.js          # Gerenciamento de estado da aplicação
+├── migrate.js        # Script de migração de dados do localStorage
+├── site-integration.js # Integração do site principal com Supabase
+├── admin-integration.js # Integração do painel administrativo com Supabase
+├── admin-auth.js     # Autenticação do painel administrativo
+├── schema.sql        # Esquema do banco de dados
+├── package.json      # Dependências do projeto
+├── .env.example     # Exemplo de variáveis de ambiente
+└── README.md         # Documentação
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 ```
 
 ## Configuração Inicial
@@ -27,20 +44,40 @@ supabase/
 
 2. **Configurar variáveis de ambiente**:
    ```bash
+<<<<<<< HEAD
    # Copie o arquivo de exemplo
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
    cp .env.example .env
    # Edite o arquivo .env com suas credenciais do Supabase
    ```
 
+<<<<<<< HEAD
 3. **Instalar dependências**:
+=======
+3. **Criar tabelas no banco de dados**:
+   - Acesse o painel do Supabase
+   - Vá para a seção "SQL Editor"
+   - Cole o conteúdo do arquivo `tables.sql` e execute
+   - Opcionalmente, execute também o arquivo `seed.sql` para dados de exemplo
+
+4. **Instalar dependências**:
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
    ```bash
    npm install
    ```
 
+<<<<<<< HEAD
 4. **Criar tabelas no banco de dados**:
    - Acesse o painel do Supabase
    - Vá para a seção "SQL Editor"
    - Cole o conteúdo do arquivo `schema.sql` e execute
+=======
+5. **Executar migração de dados**:
+   ```bash
+   node migrate.js
+   ```
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 
 ## Estrutura do Banco de Dados
 
@@ -81,6 +118,43 @@ O banco de dados contém as seguintes tabelas:
 - `created_at` (TIMESTAMP) - Data de criação
 - `updated_at` (TIMESTAMP) - Data de atualização
 
+<<<<<<< HEAD
+=======
+## Criação de Tabelas
+
+Para criar as tabelas no banco de dados do Supabase, você pode usar os arquivos SQL fornecidos:
+
+1. **Arquivo `tables.sql`**: Contém o esquema completo do banco de dados
+2. **Arquivo `seed.sql`**: Contém dados de exemplo para testes
+
+### Como executar os arquivos SQL:
+
+1. Acesse o painel do Supabase
+2. Vá para a seção "SQL Editor"
+3. Cole o conteúdo do arquivo `tables.sql` e clique em "Run"
+4. Opcionalmente, cole o conteúdo do arquivo `seed.sql` e clique em "Run" para dados de exemplo
+
+## Migração de Dados
+
+O script de migração (`migrate.js`) transfere automaticamente todos os dados do localStorage para o Supabase:
+
+```bash
+node migrate.js
+```
+
+## Funcionalidades Implementadas
+
+### Site Principal
+- Carregamento de dados em tempo real do Supabase
+- Atualizações automáticas quando os dados são modificados
+- Integração com WhatsApp usando número configurado
+
+### Painel Administrativo
+- Autenticação segura com Supabase Auth
+- Gerenciamento completo de todos os dados
+- Interface em tempo real com atualizações automáticas
+
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 ## Comandos Úteis
 
 ```bash
@@ -90,11 +164,19 @@ npm start
 # Construir para produção
 npm run build
 
+<<<<<<< HEAD
 # Pré-visualizar build de produção
 npm run preview
 
 # Testar conexão com o Supabase
 npm test
+=======
+# Deploy do esquema do banco de dados
+npm run supabase:deploy
+
+# Gerar tipos TypeScript
+npm run supabase:types
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 ```
 
 ## Segurança

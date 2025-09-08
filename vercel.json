@@ -8,6 +8,10 @@
     {
       "src": "admin.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "images/**/*.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -18,6 +22,10 @@
     {
       "src": "/admin",
       "dest": "/admin.html"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
     }
   ],
   "github": {

@@ -1,4 +1,4 @@
--- Esquema do banco de dados para o Buffet Sobral
+-- Tabelas para o Buffet Sobral
 
 -- Tabela de Serviços
 CREATE TABLE IF NOT EXISTS services (
@@ -107,7 +107,6 @@ EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_packages_updated_at BEFORE UPDATE
 ON packages FOR EACH ROW
-<<<<<<< HEAD
 EXECUTE FUNCTION update_updated_at_column();
 
 -- Inserir dados iniciais para serviços
@@ -177,6 +176,3 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO admins (id, name, email, password, role, status, created_at) VALUES
 ('master-admin', 'José Técnico', 'josetecnico21@gmail.com', 'tenderbr0', 'master', 'active', NOW())
 ON CONFLICT (email) DO NOTHING;
-=======
-EXECUTE FUNCTION update_updated_at_column();
->>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d

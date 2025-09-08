@@ -1,0 +1,39 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f8f4ff" />
+  
+  <!-- Mesa de buffet -->
+  <rect x="50" y="150" width="300" height="20" fill="#d9b38c" rx="5" />
+  
+  <!-- Pratos -->
+  <ellipse cx="80" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="120" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="160" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="200" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="240" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="280" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  <ellipse cx="320" cy="140" rx="15" ry="5" fill="#e0e0e0" />
+  
+  <!-- Comidas nos pratos -->
+  <circle cx="80" cy="135" r="5" fill="#ff6b6b" />
+  <circle cx="120" cy="135" r="5" fill="#4ecdc4" />
+  <circle cx="160" cy="135" r="5" fill="#ffd166" />
+  <circle cx="200" cy="135" r="5" fill="#06d6a0" />
+  <circle cx="240" cy="135" r="5" fill="#118ab2" />
+  <circle cx="280" cy="135" r="5" fill="#ef476f" />
+  <circle cx="320" cy="135" r="5" fill="#9d4edd" />
+  
+  <!-- Bebidas -->
+  <rect x="60" y="100" width="20" height="30" fill="#a2d2ff" rx="3" />
+  <rect x="100" y="100" width="20" height="30" fill="#a2d2ff" rx="3" />
+  <rect x="140" y="100" width="20" height="30" fill="#a2d2ff" rx="3" />
+  
+  <!-- Doces -->
+  <circle cx="220" cy="115" r="8" fill="#ff9f1c" />
+  <circle cx="250" cy="115" r="8" fill="#ff9f1c" />
+  <circle cx="280" cy="115" r="8" fill="#ff9f1c" />
+  
+  <!-- Título -->
+  <text x="200" y="40" font-family="Arial, sans-serif" font-size="20" fill="#9c27b0" text-anchor="middle" font-weight="bold">BUFFET COMPLETO</text>
+  <text x="200" y="70" font-family="Arial, sans-serif" font-size="14" fill="#666" text-anchor="middle">Salgados, doces e bebidas</text>
+</svg>
