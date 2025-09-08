@@ -1,0 +1,25 @@
+{
+  "name": "buffet-sobral-supabase",
+  "version": "1.0.0",
+  "description": "Integração do Buffet Sobral com Supabase",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node test-connection.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "vite": "^4.4.0"
+  },
+  "keywords": [
+    "buffet",
+    "sobral",
+    "supabase",
+    "javascript"
+  ],
+  "author": "Buffet Sobral",
+  "license": "MIT"
+}
