@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buffet Sobral</title>
+    <!-- Importar Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f5f5f5; }
@@ -1998,6 +2000,114 @@
             if (videoModal && e.target === videoModal) {
                 closeVideoModal();
             }
+        });
+        
+        // Inicializar Supabase
+        const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Funções para carregar dados do Supabase
+        async function loadServicesFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('services')
+                    .select('*')
+                    .order('name');
+                
+                if (error) throw error;
+                
+                // Atualizar serviços no localStorage
+                const servicesData = {};
+                data.forEach(service => {
+                    servicesData[service.id] = {
+                        price: service.price,
+                        image: service.image_url
+                    };
+                });
+                
+                localStorage.setItem('servicesData', JSON.stringify(servicesData));
+                
+                // Recarregar serviços na interface
+                loadAdminData();
+            } catch (error) {
+                console.error('Erro ao carregar serviços do Supabase:', error);
+            }
+        }
+        
+        async function loadReviewsFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('reviews')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Atualizar avaliações no localStorage
+                localStorage.setItem('reviews', JSON.stringify(data));
+                
+                // Recarregar avaliações na interface
+                if (document.getElementById('avaliacoes').classList.contains('active')) {
+                    loadReviews();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar avaliações do Supabase:', error);
+            }
+        }
+        
+        async function loadSpacePhotosFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('space_photos')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Atualizar fotos no localStorage
+                localStorage.setItem('spacePhotos', JSON.stringify(data));
+                
+                // Recarregar fotos na interface
+                if (document.getElementById('photosSection') && 
+                    document.getElementById('photosSection').style.display !== 'none') {
+                    loadSpacePhotos();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar fotos do espaço do Supabase:', error);
+            }
+        }
+        
+        async function loadContactInfoFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('contact_info')
+                    .select('*')
+                    .limit(1);
+                
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    // Atualizar informações de contato no localStorage
+                    localStorage.setItem('contactInfo', JSON.stringify(data[0]));
+                    
+                    // Recarregar informações na interface
+                    loadContactInfo();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar informações de contato do Supabase:', error);
+            }
+        }
+        
+        // Carregar dados do Supabase quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carregar dados do Supabase após um pequeno delay para garantir que o DOM esteja pronto
+            setTimeout(async function() {
+                await loadServicesFromSupabase();
+                await loadReviewsFromSupabase();
+                await loadSpacePhotosFromSupabase();
+                await loadContactInfoFromSupabase();
+            }, 2000);
         });
     </script>
 </body>

@@ -5,12 +5,21 @@
   "main": "index.html",
   "scripts": {
     "start": "serve -s .",
-    "build": "echo 'Nenhum build necessário'"
+    "dev": "serve -s .",
+    "build": "echo 'Nenhum build necessário'",
+    "supabase:types": "npx supabase gen types typescript --project-id vopekxfyorbuyrvzcshy > supabase/types.ts"
   },
-  "keywords": ["buffet", "sobral", "festas"],
+  "keywords": [
+    "buffet",
+    "sobral",
+    "festas"
+  ],
   "author": "Buffet Sobral",
   "license": "MIT",
   "devDependencies": {
     "serve": "^14.2.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4"
   }
 }

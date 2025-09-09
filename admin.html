@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - Buffet Sobral</title>
+    <!-- Importar Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #f5f5f5; }
@@ -1152,7 +1154,7 @@
         }
         
         // Função para salvar alterações de um serviço
-        function saveService(serviceId) {
+        async function saveService(serviceId) {
             const priceInput = document.getElementById(`price-${serviceId}`);
             const imageInput = document.getElementById(`image-${serviceId}`);
             const preview = document.getElementById(`preview-${serviceId}`);
@@ -1189,16 +1191,24 @@
             // Salvar imagem se foi alterada
             if (imageInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = async function(e) {
                     servicesData[serviceId].image = e.target.result;
                     saveServicesData(servicesData);
                     saveServicesEvents(servicesEvents);
+                    
+                    // Sincronizar com Supabase
+                    await syncServicesWithSupabase();
+                    
                     showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
                 };
                 reader.readAsDataURL(imageInput.files[0]);
             } else {
                 saveServicesData(servicesData);
                 saveServicesEvents(servicesEvents);
+                
+                // Sincronizar com Supabase
+                await syncServicesWithSupabase();
+                
                 showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
             }
         }
@@ -2002,7 +2012,164 @@
             
             localStorage.setItem('contactInfo', JSON.stringify(contactInfo));
             showSuccessMessage('Informações de contato salvas com sucesso!');
+            
+            // Sincronizar com Supabase
+            syncContactInfoWithSupabase(contactInfo);
         }
+        
+        // Funções para sincronizar dados com o Supabase
+        const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Função para sincronizar informações de contato com o Supabase
+        async function syncContactInfoWithSupabase(contactInfo) {
+            try {
+                // Verificar se já existe um registro
+                const { data: existingData, error: fetchError } = await supabase
+                    .from('contact_info')
+                    .select('id')
+                    .limit(1);
+                
+                if (fetchError) throw fetchError;
+                
+                if (existingData && existingData.length > 0) {
+                    // Atualizar registro existente
+                    const { error: updateError } = await supabase
+                        .from('contact_info')
+                        .update(contactInfo)
+                        .eq('id', existingData[0].id);
+                    
+                    if (updateError) throw updateError;
+                } else {
+                    // Criar novo registro
+                    const { error: insertError } = await supabase
+                        .from('contact_info')
+                        .insert([contactInfo]);
+                    
+                    if (insertError) throw insertError;
+                }
+                
+                console.log('Informações de contato sincronizadas com sucesso!');
+            } catch (error) {
+                console.error('Erro ao sincronizar informações de contato com Supabase:', error);
+            }
+        }
+        
+        // Função para sincronizar serviços com o Supabase
+        async function syncServicesWithSupabase() {
+            try {
+                const servicesData = getServicesData();
+                const servicesEvents = getServicesEvents();
+                
+                // Para cada serviço, atualizar no Supabase
+                for (const serviceId in servicesData) {
+                    const serviceData = servicesData[serviceId];
+                    const eventData = servicesEvents[serviceId] || [];
+                    
+                    // Preparar dados para sincronização
+                    const serviceRecord = {
+                        id: serviceId,
+                        price: serviceData.price,
+                        image_url: serviceData.image,
+                        events: eventData
+                    };
+                    
+                    // Verificar se o serviço já existe
+                    const { data: existingData, error: fetchError } = await supabase
+                        .from('services')
+                        .select('id')
+                        .eq('id', serviceId)
+                        .limit(1);
+                    
+                    if (fetchError) throw fetchError;
+                    
+                    if (existingData && existingData.length > 0) {
+                        // Atualizar serviço existente
+                        const { error: updateError } = await supabase
+                            .from('services')
+                            .update(serviceRecord)
+                            .eq('id', serviceId);
+                        
+                        if (updateError) throw updateError;
+                    } else {
+                        // Criar novo serviço
+                        const { error: insertError } = await supabase
+                            .from('services')
+                            .insert([serviceRecord]);
+                        
+                        if (insertError) throw insertError;
+                    }
+                }
+                
+                console.log('Serviços sincronizados com sucesso!');
+            } catch (error) {
+                console.error('Erro ao sincronizar serviços com Supabase:', error);
+            }
+        }
+        
+        // Substituir a função saveService para incluir sincronização com Supabase
+        async function saveServiceWithSupabaseSync(serviceId) {
+            const priceInput = document.getElementById(`price-${serviceId}`);
+            const imageInput = document.getElementById(`image-${serviceId}`);
+            const preview = document.getElementById(`preview-${serviceId}`);
+            
+            const servicesData = getServicesData();
+            const servicesEvents = getServicesEvents();
+            
+            // Salvar preço
+            const newPrice = parseFloat(priceInput.value);
+            if (newPrice && newPrice > 0) {
+                if (!servicesData[serviceId]) {
+                    servicesData[serviceId] = {};
+                }
+                servicesData[serviceId].price = newPrice;
+            }
+            
+            // Salvar eventos associados ao serviço
+            const eventCheckboxes = [
+                document.getElementById(`events-${serviceId}-birthday`),
+                document.getElementById(`events-${serviceId}-wedding`),
+                document.getElementById(`events-${serviceId}-graduation`),
+                document.getElementById(`events-${serviceId}-corporate`)
+            ];
+            
+            const selectedEvents = [];
+            eventCheckboxes.forEach(checkbox => {
+                if (checkbox && checkbox.checked) {
+                    selectedEvents.push(checkbox.value);
+                }
+            });
+            
+            servicesEvents[serviceId] = selectedEvents;
+            
+            // Salvar imagem se foi alterada
+            if (imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    servicesData[serviceId].image = e.target.result;
+                    saveServicesData(servicesData);
+                    saveServicesEvents(servicesEvents);
+                    
+                    // Sincronizar com Supabase
+                    await syncServicesWithSupabase();
+                    
+                    showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                saveServicesData(servicesData);
+                saveServicesEvents(servicesEvents);
+                
+                // Sincronizar com Supabase
+                await syncServicesWithSupabase();
+                
+                showSuccessMessage(`Serviço "${getServiceName(serviceId)}" salvo com sucesso!`);
+            }
+        }
+        
+        // Substituir a chamada original da função saveService
+        // (vamos manter a função original e substituir onde ela é chamada)
     </script>
 </body>
 </html>
