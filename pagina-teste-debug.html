@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Debug - Buffet Sobral</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #9c27b0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        .test-button:hover {
+            background: #7b1fa2;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+        .error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        .info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔬 Teste de Debug - Buffet Sobral</h1>
+    
+    <div class="test-section">
+        <h2>Diagnóstico Automático</h2>
+        <div id="autoDiagnosis">
+            <p>Executando diagnóstico automático...</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Testes Manuais</h2>
+        <button class="test-button" onclick="testDOMElements()">Verificar Elementos DOM</button>
+        <button class="test-button" onclick="testFunctions()">Verificar Funções</button>
+        <button class="test-button" onclick="testNavigation()">Testar Navegação</button>
+        <button class="test-button" onclick="testSupabaseConnection()">Testar Conexão Supabase</button>
+        <button class="test-button" onclick="testButtonClick()">Testar Clique em Botão</button>
+        
+        <div id="testResults"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Console de Erros</h2>
+        <div id="errorConsole" style="background: #000; color: #00ff00; padding: 15px; border-radius: 4px; font-family: monospace; height: 200px; overflow-y: auto;">
+            > Console de diagnóstico iniciado...
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Função para logar no console visual
+        function logToConsole(message, type = 'info') {
+            const consoleElement = document.getElementById('errorConsole');
+            const timestamp = new Date().toLocaleTimeString();
+            const typeSymbol = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            consoleElement.innerHTML += `\n[${timestamp}] ${typeSymbol} ${message}`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            
+            // Também logar no console real
+            if (type === 'error') {
+                console.error(message);
+            } else if (type === 'success') {
+                console.log(message);
+            } else {
+                console.info(message);
+            }
+        }
+        
+        // Função para mostrar resultado de teste
+        function showTestResult(message, isSuccess = true) {
+            const resultsElement = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.innerHTML = `${isSuccess ? '✅' : '❌'} ${message}`;
+            resultsElement.appendChild(resultDiv);
+        }
+        
+        // Testar elementos DOM
+        function testDOMElements() {
+            document.getElementById('testResults').innerHTML = '';
+            logToConsole('Iniciando teste de elementos DOM...');
+            
+            const elementos = [
+                'autoDiagnosis',
+                'testResults',
+                'errorConsole'
+            ];
+            
+            let successCount = 0;
+            
+            elementos.forEach(id => {
+                const elemento = document.getElementById(id);
+                if (elemento) {
+                    logToConsole(`Elemento #${id} encontrado`, 'success');
+                    successCount++;
+                } else {
+                    logToConsole(`Elemento #${id} NÃO encontrado`, 'error');
+                }
+            });
+            
+            showTestResult(`Elementos DOM: ${successCount}/${elementos.length} encontrados`, successCount === elementos.length);
+        }
+        
+        // Testar funções
+        function testFunctions() {
+            document.getElementById('testResults').innerHTML = '';
+            logToConsole('Iniciando teste de funções...');
+            
+            // Funções que devem existir
+            const funcoes = [
+                'logToConsole',
+                'showTestResult',
+                'testDOMElements',
+                'testFunctions',
+                'testNavigation',
+                'testSupabaseConnection',
+                'testButtonClick'
+            ];
+            
+            let successCount = 0;
+            
+            funcoes.forEach(nome => {
+                if (typeof window[nome] === 'function') {
+                    logToConsole(`Função ${nome} definida`, 'success');
+                    successCount++;
+                } else {
+                    logToConsole(`Função ${nome} NÃO definida`, 'error');
+                }
+            });
+            
+            showTestResult(`Funções: ${successCount}/${funcoes.length} definidas`, successCount === funcoes.length);
+        }
+        
+        // Testar navegação
+        function testNavigation() {
+            document.getElementById('testResults').innerHTML = '';
+            logToConsole('Iniciando teste de navegação...');
+            
+            // Criar elementos de teste
+            const testContainer = document.createElement('div');
+            testContainer.innerHTML = `
+                <div class="nav-tabs">
+                    <button class="nav-tab" onclick="showTestTab('tab1')">Tab 1</button>
+                    <button class="nav-tab" onclick="showTestTab('tab2')">Tab 2</button>
+                </div>
+                <div class="content">
+                    <div id="tab1" class="section">Conteúdo Tab 1</div>
+                    <div id="tab2" class="section">Conteúdo Tab 2</div>
+                </div>
+            `;
+            document.body.appendChild(testContainer);
+            
+            // Função de navegação de teste
+            window.showTestTab = function(tabName) {
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            };
+            
+            try {
+                // Testar navegação
+                showTestTab('tab1');
+                const tab1 = document.getElementById('tab1');
+                if (tab1.classList.contains('active')) {
+                    logToConsole('Navegação funcionando corretamente', 'success');
+                    showTestResult('Navegação: Funcionando corretamente', true);
+                } else {
+                    logToConsole('Problema na navegação', 'error');
+                    showTestResult('Navegação: Problema detectado', false);
+                }
+            } catch (erro) {
+                logToConsole(`Erro na navegação: ${erro.message}`, 'error');
+                showTestResult(`Navegação: Erro - ${erro.message}`, false);
+            }
+            
+            // Remover elementos de teste
+            document.body.removeChild(testContainer);
+        }
+        
+        // Testar conexão com Supabase
+        async function testSupabaseConnection() {
+            document.getElementById('testResults').innerHTML = '';
+            logToConsole('Iniciando teste de conexão com Supabase...');
+            
+            try {
+                if (typeof supabase !== 'undefined' && supabase && typeof supabase.from === 'function') {
+                    logToConsole('Cliente Supabase encontrado', 'success');
+                    
+                    // Testar conexão com uma tabela
+                    const { data, error } = await supabase
+                        .from('services')
+                        .select('id')
+                        .limit(1);
+                    
+                    if (error) {
+                        logToConsole(`Erro na conexão: ${error.message}`, 'error');
+                        showTestResult(`Supabase: Erro - ${error.message}`, false);
+                    } else {
+                        logToConsole('Conexão com Supabase estabelecida com sucesso', 'success');
+                        showTestResult('Supabase: Conexão estabelecida', true);
+                    }
+                } else {
+                    logToConsole('Cliente Supabase não configurado corretamente', 'error');
+                    showTestResult('Supabase: Cliente não encontrado', false);
+                }
+            } catch (erro) {
+                logToConsole(`Erro ao testar conexão: ${erro.message}`, 'error');
+                showTestResult(`Supabase: Erro - ${erro.message}`, false);
+            }
+        }
+        
+        // Testar clique em botão
+        function testButtonClick() {
+            document.getElementById('testResults').innerHTML = '';
+            logToConsole('Iniciando teste de clique em botão...');
+            
+            // Criar botão de teste
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Botão de Teste';
+            testButton.onclick = function() {
+                logToConsole('Clique no botão registrado com sucesso', 'success');
+                showTestResult('Clique em botão: Funcionando', true);
+            };
+            document.body.appendChild(testButton);
+            
+            // Simular clique
+            testButton.click();
+            
+            // Remover botão de teste
+            document.body.removeChild(testButton);
+        }
+        
+        // Diagnóstico automático ao carregar a página
+        window.addEventListener('DOMContentLoaded', function() {
+            const diagnosisElement = document.getElementById('autoDiagnosis');
+            
+            // Verificar estado do DOM
+            logToConsole('Página carregada - Iniciando diagnóstico automático...');
+            
+            let diagnosisHTML = '<h3>Resultado do Diagnóstico:</h3>';
+            
+            // Testar elementos principais
+            const mainElements = ['autoDiagnosis', 'testResults', 'errorConsole'];
+            let elementsFound = 0;
+            
+            mainElements.forEach(id => {
+                if (document.getElementById(id)) {
+                    elementsFound++;
+                }
+            });
+            
+            diagnosisHTML += `<p><strong>Elementos DOM:</strong> ${elementsFound}/${mainElements.length} encontrados</p>`;
+            
+            // Testar Supabase
+            if (typeof supabase !== 'undefined') {
+                diagnosisHTML += '<p><strong>Supabase:</strong> Cliente carregado</p>';
+            } else {
+                diagnosisHTML += '<p><strong>Supabase:</strong> <span style="color: red;">Cliente NÃO carregado</span></p>';
+            }
+            
+            // Testar funções principais
+            const mainFunctions = ['logToConsole', 'showTestResult'];
+            let functionsFound = 0;
+            
+            mainFunctions.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    functionsFound++;
+                }
+            });
+            
+            diagnosisHTML += `<p><strong>Funções principais:</strong> ${functionsFound}/${mainFunctions.length} definidas</p>`;
+            
+            diagnosisElement.innerHTML = diagnosisHTML;
+            
+            logToConsole('Diagnóstico automático concluído');
+        });
+        
+        logToConsole('Página de teste carregada com sucesso', 'success');
+    </script>
+</body>
+</html>

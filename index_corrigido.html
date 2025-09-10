@@ -70,6 +70,7 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
         }
         .service-image-placeholder:hover {
             transform: translateY(-2px);
@@ -331,9 +332,6 @@
                         <span class="service-price">R$ 45/pessoa</span>
                         <button class="btn-add" onclick="addService('Buffet Completo', 45, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Buffet Completo', 45, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -348,9 +346,6 @@
                         <span class="service-price">R$ 120/pessoa</span>
                         <button class="btn-add" onclick="addService('Bolo Personalizado', 120, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Bolo Personalizado', 120, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -365,9 +360,6 @@
                         <span class="service-price">R$ 200/pessoa</span>
                         <button class="btn-add" onclick="addService('Decoração Temática', 200, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Decoração Temática', 200, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -382,9 +374,6 @@
                         <span class="service-price">R$ 25/pessoa</span>
                         <button class="btn-add" onclick="addService('Coffee Break Corporativo', 25, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Coffee Break Corporativo', 25, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -399,9 +388,6 @@
                         <span class="service-price">R$ 85/pessoa</span>
                         <button class="btn-add" onclick="addService('Jantar Executivo', 85, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Jantar Executivo', 85, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -416,9 +402,6 @@
                         <span class="service-price">R$ 35/pessoa</span>
                         <button class="btn-add" onclick="addService('Coquetel de Confraternização', 35, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Coquetel de Confraternização', 35, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -433,9 +416,6 @@
                         <span class="service-price">R$ 18/pessoa</span>
                         <button class="btn-add" onclick="addService('Lanche para Eventos', 18, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Lanche para Eventos', 18, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
 
@@ -450,9 +430,6 @@
                         <span class="service-price">R$ 55/pessoa</span>
                         <button class="btn-add" onclick="addService('Churrasco Completo', 55, 'pessoa')">Adicionar</button>
                     </div>
-                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Churrasco Completo', 55, 'pessoa')" style="margin-top: 10px; width: 100%;">
-                        📱 Fechar Orçamento no WhatsApp
-                    </button>
                 </div>
             </div>
             </div>
@@ -644,17 +621,25 @@
     <script>
         let selectedServices = [];
         
-        <script type="module">
-        // Importar integração com Supabase
-        import { loadSiteData, setupRealtimeUpdates } from './supabase/site-integration.js';
-        
-        let selectedServices = [];
-        let realtimeSubscriptions = [];
-        
         function showTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            // Encontrar e ativar a aba correspondente
+            const tabToActivate = Array.from(document.querySelectorAll('.nav-tab')).find(tab => {
+                const tabText = tab.textContent.trim();
+                if (tabName === 'catalogo') return tabText.includes('Catálogo');
+                if (tabName === 'simulador') return tabText.includes('Simulador');
+                if (tabName === 'agenda') return tabText.includes('Agenda');
+                if (tabName === 'avaliacoes') return tabText.includes('Avaliações');
+                if (tabName === 'videos') return tabText.includes('Vídeos');
+                return false;
+            });
+            
+            if (tabToActivate) {
+                tabToActivate.classList.add('active');
+            }
+            
             document.getElementById(tabName).classList.add('active');
             
             // Carregar vídeos em destaque quando a aba for aberta
@@ -713,64 +698,6 @@
             
             updateServicesDisplay();
             showTab('simulador');
-        }
-        
-        // Função para adicionar serviço e compartilhar no WhatsApp
-        function addServiceAndShareWhatsApp(name, price, unit) {
-            // Adicionar o serviço
-            addService(name, price, unit);
-            
-            // Compartilhar no WhatsApp após um pequeno delay para garantir que o serviço foi adicionado
-            setTimeout(() => {
-                shareServiceWhatsApp(name, price, unit);
-            }, 500);
-        }
-        
-        // Função para compartilhar serviço no WhatsApp
-        function shareServiceWhatsApp(name, price, unit) {
-            const guestCount = document.getElementById('guestCount').textContent;
-            const selectedEventType = document.querySelector('.event-type.active').textContent;
-            
-            let message = `🎉 *Orçamento Buffet Sobral* 🎉
-
-`;
-            message += `📋 *Tipo de Evento:* ${selectedEventType}
-`;
-            message += `👥 *Número de Convidados:* ${guestCount} pessoas
-
-`;
-            message += `🍽️ *Serviço Selecionado: ${name}*
-`;
-            message += `💰 *Preço: R$ ${price}/${unit}*
-
-`;
-            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*
-
-`;
-            message += `📍 Buffet Sobral - CE
-`;
-            message += `📞 Entre em contato para confirmar!`;
-            
-            // Obter número do WhatsApp configurado no painel administrativo
-            let whatsappNumber = '5588999999999'; // Número padrão
-            const contactData = localStorage.getItem('contactInfo');
-            if (contactData) {
-                try {
-                    const contactInfo = JSON.parse(contactData);
-                    if (contactInfo.whatsappNumber) {
-                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)
-                        const cleanNumber = contactInfo.whatsappNumber.replace(/\D/g, '');
-                        if (cleanNumber.length >= 10) {
-                            whatsappNumber = '55' + cleanNumber;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Erro ao carregar número do WhatsApp:', e);
-                }
-            }
-            
-            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
         }
         
         function removeService(serviceName) {
@@ -1085,7 +1012,7 @@
                         // Atualizar atributo data-events
                         serviceCard.setAttribute('data-events', serviceEvents.join(','));
                         
-                        // Adicionar etiquetas visuais dos eventos
+                        // Adicionar etiquetas visuais dos eventos (se ainda não existirem)
                         addEventLabelsToService(serviceCard, serviceEvents);
                     }
                 }
@@ -1141,16 +1068,12 @@
                 }
             });
             
-            // Inserir as etiquetas após o conteúdo do serviço
+            // Inserir as etiquetas após o título do serviço
             const serviceContent = serviceCard.querySelector('.service-content');
             if (serviceContent) {
-                serviceContent.insertBefore(eventsContainer, serviceContent.firstChild);
+                serviceContent.insertBefore(eventsContainer, serviceContent.firstChild.nextSibling);
             }
         }
-        
-        // Função para atualizar eventos dos serviços com dados do admin
-        
-        // Função para adicionar etiquetas visuais dos eventos aos serviços
         
         // Função para carregar configurações dos pacotes
         function loadPackagesConfig() {
@@ -1222,7 +1145,40 @@
         }
         
         // Função para compartilhar pacote no WhatsApp
-        function sharePackageWhatsApp(packageName, price) {\n            const guestCount = document.getElementById('guestCount').textContent;\n            const selectedEventType = document.querySelector('.event-type.active').textContent;\n            \n            let message = `🎉 *Orçamento Buffet Sobral* 🎉\\n\\n`;\n            message += `📋 *Tipo de Evento:* ${selectedEventType}\\n`;\n            message += `👥 *Número de Convidados:* ${guestCount} pessoas\\n\\n`;\n            message += `📦 *Pacote Selecionado: ${packageName}*\\n`;\n            message += `💰 *Preço: R$ ${price}/pessoa*\\n\\n`;\n            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*\\n\\n`;\n            message += `📍 Buffet Sobral - CE\\n`;\n            message += `📞 Entre em contato para confirmar!`;\n            \n            // Obter número do WhatsApp configurado no painel administrativo\n            let whatsappNumber = '5588999999999'; // Número padrão\n            const contactData = localStorage.getItem('contactInfo');\n            if (contactData) {\n                try {\n                    const contactInfo = JSON.parse(contactData);\n                    if (contactInfo.whatsappNumber) {\n                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)\n                        const cleanNumber = contactInfo.whatsappNumber.replace(/\\D/g, '');\n                        if (cleanNumber.length >= 10) {\n                            whatsappNumber = '55' + cleanNumber;\n                        }\n                    }\n                } catch (e) {\n                    console.error('Erro ao carregar número do WhatsApp:', e);\n                }\n            }\n            \n            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;\n            window.open(whatsappUrl, '_blank');\n        }
+        function sharePackageWhatsApp(packageName, price) {
+            const guestCount = document.getElementById('guestCount').textContent;
+            const selectedEventType = document.querySelector('.event-type.active').textContent;
+            
+            let message = `🎉 *Orçamento Buffet Sobral* 🎉\n\n`;
+            message += `📋 *Tipo de Evento:* ${selectedEventType}\n`;
+            message += `👥 *Número de Convidados:* ${guestCount} pessoas\n\n`;
+            message += `📦 *Pacote Selecionado: ${packageName}*\n`;
+            message += `💰 *Preço: R$ ${price}/pessoa*\n\n`;
+            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*\n\n`;
+            message += `📍 Buffet Sobral - CE\n`;
+            message += `📞 Entre em contato para confirmar!`;
+            
+            // Obter número do WhatsApp configurado no painel administrativo
+            let whatsappNumber = '5588999999999'; // Número padrão
+            const contactData = localStorage.getItem('contactInfo');
+            if (contactData) {
+                try {
+                    const contactInfo = JSON.parse(contactData);
+                    if (contactInfo.whatsappNumber) {
+                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)
+                        const cleanNumber = contactInfo.whatsappNumber.replace(/\D/g, '');
+                        if (cleanNumber.length >= 10) {
+                            whatsappNumber = '55' + cleanNumber;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar número do WhatsApp:', e);
+                }
+            }
+            
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
         
         // Função para atualizar serviços com dados do admin
         function updateServicesFromAdmin(adminData) {
@@ -1275,7 +1231,7 @@
                 const onclick = button.getAttribute('onclick');
                 if (onclick.includes(serviceName)) {
                     // Extrair parâmetros atuais
-                    const match = onclick.match(/addService\('([^']+)',\s*(\d+),\s*'([^']+)'\)/);
+                    const match = onclick.match(/addService\('([^']+)',\s*(\d+),\s*'([^']+)'"\)/);
                     if (match) {
                         const [, name, , unit] = match;
                         button.setAttribute('onclick', `addService('${name}', ${newPrice}, '${unit}')`);
@@ -1442,9 +1398,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadAdminData();
             
-            // Carregar dados do Supabase
-            loadSiteDataFromSupabase();
-            
             // Configurar lazy loading
             setupLazyLoading();
             
@@ -1454,42 +1407,6 @@
             // Inicializar a exibição dos serviços selecionados
             updateServicesDisplay();
         });
-        
-        // Função para carregar dados do Supabase
-        async function loadSiteDataFromSupabase() {
-            try {
-                // Carregar dados do site do Supabase
-                await loadSiteData();
-                
-                // Carregar eventos dos serviços do Supabase
-                await loadServicesEventsFromSupabase();
-                
-                // Configurar atualizações em tempo real
-                const subscriptions = setupRealtimeUpdates();
-                // Armazenar subscrições para limpeza posterior
-                
-                console.log('Dados do site carregados com sucesso do Supabase');
-            } catch (error) {
-                console.error('Erro ao carregar dados do Supabase:', error);
-                // Fallback para dados do localStorage
-                loadAdminData();
-            }
-        }
-        
-        // Função para carregar eventos dos serviços do Supabase
-        async function loadServicesEventsFromSupabase() {
-            try {
-                // Verificar se o arquivo de integração com Supabase existe
-                const supabaseIntegration = await import('./supabase/site-integration.js');
-                
-                // Carregar eventos dos serviços do Supabase
-                console.log('Carregando eventos dos serviços do Supabase...');
-            } catch (error) {
-                console.error('Erro ao carregar eventos dos serviços do Supabase:', error);
-                // Fallback para dados do localStorage
-                loadServicesEvents();
-            }
-        }
         
         // Carregar configurações dos pacotes
         document.addEventListener('DOMContentLoaded', function() {
@@ -2122,12 +2039,12 @@
         // Configuração do Supabase
         const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         // Funções para carregar dados do Supabase
         async function loadServicesFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await supabase
                     .from('services')
                     .select('*')
                     .order('name');
@@ -2154,7 +2071,7 @@
         
         async function loadReviewsFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await supabase
                     .from('reviews')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -2175,7 +2092,7 @@
         
         async function loadSpacePhotosFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await supabase
                     .from('space_photos')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -2197,7 +2114,7 @@
         
         async function loadContactInfoFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await supabase
                     .from('contact_info')
                     .select('*')
                     .limit(1);
@@ -2226,6 +2143,92 @@
                 await loadContactInfoFromSupabase();
             }, 2000);
         });
+        
+        // Script de debug adicionado
+        console.log('=== DEBUG DO SISTEMA ===');
+        console.log('Iniciando diagnóstico...');
+
+        // Verificar se o Supabase está carregado corretamente
+        if (typeof supabase !== 'undefined') {
+            console.log('✓ Supabase carregado corretamente');
+        } else {
+            console.error('✗ Supabase não está disponível');
+        }
+
+        // Verificar se os elementos principais existem
+        const elementosPrincipais = [
+            'catalogo',
+            'simulador',
+            'agenda',
+            'avaliacoes',
+            'videos'
+        ];
+
+        elementosPrincipais.forEach(id => {
+            const elemento = document.getElementById(id);
+            if (elemento) {
+                console.log(`✓ Elemento #${id} encontrado`);
+            } else {
+                console.error(`✗ Elemento #${id} não encontrado`);
+            }
+        });
+
+        // Verificar se as funções principais estão definidas
+        const funcoesPrincipais = [
+            'showTab',
+            'addService',
+            'shareWhatsApp',
+            'generateCalendar'
+        ];
+
+        funcoesPrincipais.forEach(nome => {
+            if (typeof window[nome] === 'function') {
+                console.log(`✓ Função ${nome} definida`);
+            } else {
+                console.error(`✗ Função ${nome} não definida`);
+            }
+        });
+
+        // Verificar se os event listeners estão funcionando
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✓ DOMContentLoaded disparado');
+            
+            // Testar clique em um botão
+            const primeiroBotao = document.querySelector('button');
+            if (primeiroBotao) {
+                console.log('✓ Primeiro botão encontrado:', primeiroBotao.textContent);
+            } else {
+                console.error('✗ Nenhum botão encontrado');
+            }
+        });
+
+        // Verificar conexão com Supabase
+        async function testarConexaoSupabase() {
+            try {
+                if (typeof supabase !== 'undefined' && supabase && typeof supabase.from === 'function') {
+                    // Tentar uma operação simples
+                    const { data, error } = await supabase
+                        .from('services')
+                        .select('id')
+                        .limit(1);
+                    
+                    if (error) {
+                        console.error('✗ Erro na conexão com Supabase:', error);
+                    } else {
+                        console.log('✓ Conexão com Supabase estabelecida com sucesso');
+                    }
+                } else {
+                    console.error('✗ Cliente Supabase não configurado corretamente');
+                }
+            } catch (erro) {
+                console.error('✗ Erro ao testar conexão com Supabase:', erro);
+            }
+        }
+
+        // Executar teste de conexão após um pequeno delay
+        setTimeout(testarConexaoSupabase, 3000);
+
+        console.log('=== FIM DO DIAGNÓSTICO ===');
     </script>
-    </script>\n</body>
+</body>
 </html>
