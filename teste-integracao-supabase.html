@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Integração Supabase - Buffet Sobral</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .header { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 20px; }
+        .content { max-width: 800px; margin: 0 auto; }
+        .test-section { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .btn { background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 10px 5px; }
+        .btn:hover { background: #7b1fa2; }
+        .result { margin: 15px 0; padding: 15px; border-radius: 8px; }
+        .success { background: #e8f5e8; border: 1px solid #4caf50; color: #2e7d32; }
+        .error { background: #ffebee; border: 1px solid #f44336; color: #c62828; }
+        .info { background: #e3f2fd; border: 1px solid #2196f3; color: #0d47a1; }
+        #console { background: #000; color: #00ff00; padding: 15px; border-radius: 4px; font-family: monospace; height: 300px; overflow-y: auto; margin: 20px 0; }
+        .data-display { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; margin: 10px 0; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Teste de Integração Supabase</h1>
+        <div>Buffet Sobral - Diagnóstico de Conexão</div>
+    </div>
+
+    <div class="content">
+        <div class="test-section">
+            <h2>Configuração e Teste de Conexão</h2>
+            <button class="btn" onclick="testSupabaseConnection()">Testar Conexão Supabase</button>
+            <button class="btn" onclick="loadServices()">Carregar Serviços</button>
+            <button class="btn" onclick="loadReviews()">Carregar Avaliações</button>
+            <button class="btn" onclick="loadAllData()">Carregar Todos os Dados</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Dados Carregados</h2>
+            <div id="dataDisplay">
+                <p style="text-align: center; color: #666;">Nenhum dado carregado ainda. Clique nos botões acima para testar.</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Console de Diagnóstico</h2>
+            <div id="console">> Console de diagnóstico iniciado...</div>
+            <button class="btn" onclick="clearConsole()">Limpar Console</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuração do Supabase
+        const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
+        
+        let supabaseClient = null;
+        
+        // Função para logar no console
+        function logToConsole(message, type = 'info') {
+            const consoleElement = document.getElementById('console');
+            const timestamp = new Date().toLocaleTimeString();
+            const typeSymbol = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${typeSymbol} ${message}`;
+            consoleElement.appendChild(logEntry);
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            
+            // Também logar no console real
+            if (type === 'error') {
+                console.error(message);
+            } else if (type === 'success') {
+                console.log(message);
+            } else if (type === 'warning') {
+                console.warn(message);
+            } else {
+                console.info(message);
+            }
+        }
+        
+        // Função para mostrar resultados
+        function showResult(message, isSuccess = true) {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.innerHTML = `${isSuccess ? '✅' : '❌'} ${message}`;
+            document.querySelector('.content').insertBefore(resultDiv, document.querySelector('.content').lastChild);
+            
+            // Remover após 5 segundos
+            setTimeout(() => {
+                if (resultDiv.parentNode) {
+                    resultDiv.parentNode.removeChild(resultDiv);
+                }
+            }, 5000);
+        }
+        
+        // Função para mostrar dados
+        function showData(title, data) {
+            const dataDisplay = document.getElementById('dataDisplay');
+            const dataDiv = document.createElement('div');
+            dataDiv.className = 'data-display';
+            dataDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            dataDisplay.innerHTML = '';
+            dataDisplay.appendChild(dataDiv);
+        }
+        
+        // Testar conexão com Supabase
+        async function testSupabaseConnection() {
+            logToConsole('Iniciando teste de conexão com Supabase...');
+            
+            try {
+                // Verificar se o cliente Supabase está disponível
+                if (typeof supabase === 'undefined') {
+                    logToConsole('❌ Cliente Supabase não carregado', 'error');
+                    showResult('Cliente Supabase não carregado', false);
+                    return;
+                }
+                
+                logToConsole('✅ Cliente Supabase disponível');
+                
+                // Criar cliente
+                supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                logToConsole('✅ Cliente Supabase criado com sucesso');
+                
+                // Testar conexão simples
+                const { data, error } = await supabaseClient
+                    .from('services')
+                    .select('id')
+                    .limit(1);
+                
+                if (error) {
+                    logToConsole(`❌ Erro na conexão: ${error.message}`, 'error');
+                    showResult(`Erro na conexão: ${error.message}`, false);
+                    return;
+                }
+                
+                logToConsole('✅ Conexão com Supabase estabelecida com sucesso', 'success');
+                showResult('Conexão com Supabase estabelecida com sucesso');
+                
+            } catch (error) {
+                logToConsole(`❌ Erro no teste de conexão: ${error.message}`, 'error');
+                showResult(`Erro no teste de conexão: ${error.message}`, false);
+            }
+        }
+        
+        // Carregar serviços
+        async function loadServices() {
+            logToConsole('Iniciando carregamento de serviços...');
+            
+            if (!supabaseClient) {
+                logToConsole('❌ Cliente Supabase não inicializado. Execute primeiro o teste de conexão.', 'error');
+                showResult('Cliente Supabase não inicializado', false);
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('services')
+                    .select('*');
+                
+                if (error) {
+                    logToConsole(`❌ Erro ao carregar serviços: ${error.message}`, 'error');
+                    showResult(`Erro ao carregar serviços: ${error.message}`, false);
+                    return;
+                }
+                
+                logToConsole(`✅ ${data.length} serviços carregados com sucesso`, 'success');
+                showData('Serviços', data);
+                showResult(`Serviços carregados (${data.length} itens)`);
+                
+            } catch (error) {
+                logToConsole(`❌ Erro ao carregar serviços: ${error.message}`, 'error');
+                showResult(`Erro ao carregar serviços: ${error.message}`, false);
+            }
+        }
+        
+        // Carregar avaliações
+        async function loadReviews() {
+            logToConsole('Iniciando carregamento de avaliações...');
+            
+            if (!supabaseClient) {
+                logToConsole('❌ Cliente Supabase não inicializado. Execute primeiro o teste de conexão.', 'error');
+                showResult('Cliente Supabase não inicializado', false);
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('reviews')
+                    .select('*');
+                
+                if (error) {
+                    logToConsole(`❌ Erro ao carregar avaliações: ${error.message}`, 'error');
+                    showResult(`Erro ao carregar avaliações: ${error.message}`, false);
+                    return;
+                }
+                
+                logToConsole(`✅ ${data.length} avaliações carregadas com sucesso`, 'success');
+                showData('Avaliações', data);
+                showResult(`Avaliações carregadas (${data.length} itens)`);
+                
+            } catch (error) {
+                logToConsole(`❌ Erro ao carregar avaliações: ${error.message}`, 'error');
+                showResult(`Erro ao carregar avaliações: ${error.message}`, false);
+            }
+        }
+        
+        // Carregar todos os dados
+        async function loadAllData() {
+            logToConsole('Iniciando carregamento completo de dados...');
+            
+            if (!supabaseClient) {
+                await testSupabaseConnection();
+            }
+            
+            if (!supabaseClient) {
+                logToConsole('❌ Não foi possível inicializar o cliente Supabase', 'error');
+                return;
+            }
+            
+            try {
+                // Carregar serviços
+                await loadServices();
+                
+                // Carregar avaliações
+                await loadReviews();
+                
+                // Carregar fotos do espaço
+                const { data: photos, error: photosError } = await supabaseClient
+                    .from('space_photos')
+                    .select('*');
+                
+                if (photosError) {
+                    logToConsole(`❌ Erro ao carregar fotos: ${photosError.message}`, 'error');
+                } else {
+                    logToConsole(`✅ ${photos.length} fotos carregadas`, 'success');
+                }
+                
+                // Carregar informações de contato
+                const { data: contacts, error: contactsError } = await supabaseClient
+                    .from('contact_info')
+                    .select('*');
+                
+                if (contactsError) {
+                    logToConsole(`❌ Erro ao carregar contatos: ${contactsError.message}`, 'error');
+                } else {
+                    logToConsole(`✅ ${contacts.length} contatos carregados`, 'success');
+                }
+                
+                // Carregar vídeos em destaque
+                const { data: videos, error: videosError } = await supabaseClient
+                    .from('featured_videos')
+                    .select('*');
+                
+                if (videosError) {
+                    logToConsole(`❌ Erro ao carregar vídeos: ${videosError.message}`, 'error');
+                } else {
+                    logToConsole(`✅ ${videos.length} vídeos carregados`, 'success');
+                }
+                
+                logToConsole('✅ Carregamento completo de dados concluído', 'success');
+                showResult('Carregamento completo de dados concluído');
+                
+            } catch (error) {
+                logToConsole(`❌ Erro no carregamento completo: ${error.message}`, 'error');
+                showResult(`Erro no carregamento completo: ${error.message}`, false);
+            }
+        }
+        
+        // Limpar console
+        function clearConsole() {
+            document.getElementById('console').innerHTML = '> Console limpo...
+';
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            logToConsole('✅ Página de teste carregada com sucesso', 'success');
+            logToConsole('✅ Clique nos botões para executar os testes', 'info');
+        });
+        
+        logToConsole('✅ Script inicializado', 'success');
+    </script>
+</body>
+</html>
