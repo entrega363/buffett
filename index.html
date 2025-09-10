@@ -331,6 +331,9 @@
                         <span class="service-price">R$ 45/pessoa</span>
                         <button class="btn-add" onclick="addService('Buffet Completo', 45, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Buffet Completo', 45, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -345,6 +348,9 @@
                         <span class="service-price">R$ 120/pessoa</span>
                         <button class="btn-add" onclick="addService('Bolo Personalizado', 120, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Bolo Personalizado', 120, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -359,6 +365,9 @@
                         <span class="service-price">R$ 200/pessoa</span>
                         <button class="btn-add" onclick="addService('Decoração Temática', 200, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Decoração Temática', 200, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -373,6 +382,9 @@
                         <span class="service-price">R$ 25/pessoa</span>
                         <button class="btn-add" onclick="addService('Coffee Break Corporativo', 25, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Coffee Break Corporativo', 25, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -387,6 +399,9 @@
                         <span class="service-price">R$ 85/pessoa</span>
                         <button class="btn-add" onclick="addService('Jantar Executivo', 85, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Jantar Executivo', 85, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -401,6 +416,9 @@
                         <span class="service-price">R$ 35/pessoa</span>
                         <button class="btn-add" onclick="addService('Coquetel de Confraternização', 35, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Coquetel de Confraternização', 35, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -415,6 +433,9 @@
                         <span class="service-price">R$ 18/pessoa</span>
                         <button class="btn-add" onclick="addService('Lanche para Eventos', 18, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Lanche para Eventos', 18, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
 
@@ -429,6 +450,9 @@
                         <span class="service-price">R$ 55/pessoa</span>
                         <button class="btn-add" onclick="addService('Churrasco Completo', 55, 'pessoa')">Adicionar</button>
                     </div>
+                    <button class="whatsapp-btn" onclick="addServiceAndShareWhatsApp('Churrasco Completo', 55, 'pessoa')" style="margin-top: 10px; width: 100%;">
+                        📱 Fechar Orçamento no WhatsApp
+                    </button>
                 </div>
             </div>
             </div>
@@ -620,25 +644,17 @@
     <script>
         let selectedServices = [];
         
+        <script type="module">
+        // Importar integração com Supabase
+        import { loadSiteData, setupRealtimeUpdates } from './supabase/site-integration.js';
+        
+        let selectedServices = [];
+        let realtimeSubscriptions = [];
+        
         function showTab(tabName) {
             document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-            
-            // Encontrar e ativar a aba correspondente
-            const tabToActivate = Array.from(document.querySelectorAll('.nav-tab')).find(tab => {
-                const tabText = tab.textContent.trim();
-                if (tabName === 'catalogo') return tabText.includes('Catálogo');
-                if (tabName === 'simulador') return tabText.includes('Simulador');
-                if (tabName === 'agenda') return tabText.includes('Agenda');
-                if (tabName === 'avaliacoes') return tabText.includes('Avaliações');
-                if (tabName === 'videos') return tabText.includes('Vídeos');
-                return false;
-            });
-            
-            if (tabToActivate) {
-                tabToActivate.classList.add('active');
-            }
-            
+            event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
             
             // Carregar vídeos em destaque quando a aba for aberta
@@ -697,6 +713,64 @@
             
             updateServicesDisplay();
             showTab('simulador');
+        }
+        
+        // Função para adicionar serviço e compartilhar no WhatsApp
+        function addServiceAndShareWhatsApp(name, price, unit) {
+            // Adicionar o serviço
+            addService(name, price, unit);
+            
+            // Compartilhar no WhatsApp após um pequeno delay para garantir que o serviço foi adicionado
+            setTimeout(() => {
+                shareServiceWhatsApp(name, price, unit);
+            }, 500);
+        }
+        
+        // Função para compartilhar serviço no WhatsApp
+        function shareServiceWhatsApp(name, price, unit) {
+            const guestCount = document.getElementById('guestCount').textContent;
+            const selectedEventType = document.querySelector('.event-type.active').textContent;
+            
+            let message = `🎉 *Orçamento Buffet Sobral* 🎉
+
+`;
+            message += `📋 *Tipo de Evento:* ${selectedEventType}
+`;
+            message += `👥 *Número de Convidados:* ${guestCount} pessoas
+
+`;
+            message += `🍽️ *Serviço Selecionado: ${name}*
+`;
+            message += `💰 *Preço: R$ ${price}/${unit}*
+
+`;
+            message += `💵 *Valor Total: R$ ${Math.round(price * parseInt(guestCount)).toLocaleString('pt-BR')}*
+
+`;
+            message += `📍 Buffet Sobral - CE
+`;
+            message += `📞 Entre em contato para confirmar!`;
+            
+            // Obter número do WhatsApp configurado no painel administrativo
+            let whatsappNumber = '5588999999999'; // Número padrão
+            const contactData = localStorage.getItem('contactInfo');
+            if (contactData) {
+                try {
+                    const contactInfo = JSON.parse(contactData);
+                    if (contactInfo.whatsappNumber) {
+                        // Remover todos os caracteres não numéricos e adicionar o código do país (55)
+                        const cleanNumber = contactInfo.whatsappNumber.replace(/\D/g, '');
+                        if (cleanNumber.length >= 10) {
+                            whatsappNumber = '55' + cleanNumber;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Erro ao carregar número do WhatsApp:', e);
+                }
+            }
+            
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
         
         function removeService(serviceName) {
@@ -982,6 +1056,95 @@
                 } catch (e) {
                     console.error('Erro ao carregar eventos dos serviços:', e);
                 }
+            }
+        }
+        
+        // Função para atualizar eventos dos serviços com dados do admin
+        function updateServicesEventsFromAdmin(adminEventsData) {
+            // Mapeamento dos IDs do admin para os elementos do site
+            const serviceMapping = {
+                'buffet-completo': 'buffet-completo',
+                'bolo-personalizado': 'bolo-personalizado',
+                'decoracao-tematica': 'decoracao-tematica',
+                'coffee-break': 'coffee-break',
+                'jantar-executivo': 'jantar-executivo',
+                'coquetel-confraternizacao': 'coquetel-confraternizacao',
+                'lanche-eventos': 'lanche-eventos',
+                'churrasco-completo': 'churrasco-completo'
+            };
+            
+            // Atualizar eventos para cada serviço
+            Object.keys(serviceMapping).forEach(serviceId => {
+                const adminServiceId = serviceMapping[serviceId];
+                const serviceEvents = adminEventsData[adminServiceId] || [];
+                const serviceElement = document.querySelector(`[data-service="${serviceId}"]`);
+                
+                if (serviceElement) {
+                    const serviceCard = serviceElement.closest('.service-card');
+                    if (serviceCard) {
+                        // Atualizar atributo data-events
+                        serviceCard.setAttribute('data-events', serviceEvents.join(','));
+                        
+                        // Adicionar etiquetas visuais dos eventos
+                        addEventLabelsToService(serviceCard, serviceEvents);
+                    }
+                }
+            });
+        }
+        
+        // Função para adicionar etiquetas visuais dos eventos aos serviços
+        function addEventLabelsToService(serviceCard, events) {
+            // Remover etiquetas existentes se houver
+            const existingLabels = serviceCard.querySelector('.service-events');
+            if (existingLabels) {
+                existingLabels.remove();
+            }
+            
+            // Não adicionar etiquetas se não houver eventos ou se for "all"
+            if (!events || events.length === 0 || (events.length === 1 && events[0] === 'all')) {
+                return;
+            }
+            
+            // Mapeamento de eventos para nomes e cores
+            const eventNames = {
+                'birthday': { name: 'Aniversário', color: '#4CAF50' },
+                'wedding': { name: 'Casamento', color: '#E91E63' },
+                'graduation': { name: 'Formatura', color: '#2196F3' },
+                'corporate': { name: 'Corporativo', color: '#9C27B0' }
+            };
+            
+            // Criar container para as etiquetas
+            const eventsContainer = document.createElement('div');
+            eventsContainer.className = 'service-events';
+            eventsContainer.style.cssText = `
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin: 10px 0;
+            `;
+            
+            // Adicionar etiquetas para cada evento
+            events.forEach(event => {
+                if (event !== 'all' && eventNames[event]) {
+                    const eventLabel = document.createElement('span');
+                    eventLabel.className = 'service-event-label';
+                    eventLabel.textContent = eventNames[event].name;
+                    eventLabel.style.cssText = `
+                        background: ${eventNames[event].color};
+                        color: white;
+                        padding: 3px 8px;
+                        border-radius: 12px;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                    `;
+                    eventsContainer.appendChild(eventLabel);
+                }
+            });
+            
+            // Inserir as etiquetas após o conteúdo do serviço
+            const serviceContent = serviceCard.querySelector('.service-content');
+            if (serviceContent) {
+                serviceContent.insertBefore(eventsContainer, serviceContent.firstChild);
             }
         }
         
@@ -1364,6 +1527,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadAdminData();
             
+            // Carregar dados do Supabase
+            loadSiteDataFromSupabase();
+            
             // Configurar lazy loading
             setupLazyLoading();
             
@@ -1373,6 +1539,42 @@
             // Inicializar a exibição dos serviços selecionados
             updateServicesDisplay();
         });
+        
+        // Função para carregar dados do Supabase
+        async function loadSiteDataFromSupabase() {
+            try {
+                // Carregar dados do site do Supabase
+                await loadSiteData();
+                
+                // Carregar eventos dos serviços do Supabase
+                await loadServicesEventsFromSupabase();
+                
+                // Configurar atualizações em tempo real
+                const subscriptions = setupRealtimeUpdates();
+                // Armazenar subscrições para limpeza posterior
+                
+                console.log('Dados do site carregados com sucesso do Supabase');
+            } catch (error) {
+                console.error('Erro ao carregar dados do Supabase:', error);
+                // Fallback para dados do localStorage
+                loadAdminData();
+            }
+        }
+        
+        // Função para carregar eventos dos serviços do Supabase
+        async function loadServicesEventsFromSupabase() {
+            try {
+                // Verificar se o arquivo de integração com Supabase existe
+                const supabaseIntegration = await import('./supabase/site-integration.js');
+                
+                // Carregar eventos dos serviços do Supabase
+                console.log('Carregando eventos dos serviços do Supabase...');
+            } catch (error) {
+                console.error('Erro ao carregar eventos dos serviços do Supabase:', error);
+                // Fallback para dados do localStorage
+                loadServicesEvents();
+            }
+        }
         
         // Carregar configurações dos pacotes
         document.addEventListener('DOMContentLoaded', function() {

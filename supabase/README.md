@@ -1,182 +1,199 @@
-# Configuração do Banco de Dados Supabase para Buffet Sobral
+# Integração do Buffet Sobral com Supabase
 
-## Estrutura do Banco de Dados
+Este diretório contém todos os arquivos necessários para integrar o Buffet Sobral com o Supabase, substituindo o uso do localStorage por um banco de dados em nuvem.
 
-Este documento descreve a estrutura do banco de dados utilizada no projeto Buffet Sobral.
+## Estrutura do Projeto
 
-### Tabelas
-
-1. **services** - Serviços oferecidos pelo buffet
-   - id (UUID)
-   - name (VARCHAR) - Nome do serviço
-   - description (TEXT) - Descrição do serviço
-   - price (DECIMAL) - Preço do serviço
-   - image_url (TEXT) - URL da imagem do serviço
-   - created_at (TIMESTAMP) - Data de criação
-   - updated_at (TIMESTAMP) - Data de atualização
-
-2. **reviews** - Avaliações dos clientes
-   - id (UUID)
-   - name (VARCHAR) - Nome do cliente
-   - stars (INTEGER) - Número de estrelas (1-5)
-   - comment (TEXT) - Comentário do cliente
-   - created_at (TIMESTAMP) - Data da avaliação
-
-3. **space_photos** - Fotos do espaço do buffet
-   - id (UUID)
-   - name (VARCHAR) - Nome da foto
-   - data (TEXT) - Dados da imagem em base64
-   - upload_date (TIMESTAMP) - Data de upload
-
-4. **featured_videos** - Vídeos em destaque
-   - id (UUID)
-   - url (TEXT) - URL do vídeo
-   - video_id (TEXT) - ID do vídeo (ex: YouTube ID)
-   - title (VARCHAR) - Título do vídeo
-   - added_date (TIMESTAMP) - Data de adição
-
-5. **contact_info** - Informações de contato
-   - id (UUID)
-   - whatsapp_number (VARCHAR) - Número do WhatsApp
-   - contact_email (VARCHAR) - Email de contato
-   - contact_phone (VARCHAR) - Telefone de contato
-   - last_updated (TIMESTAMP) - Última atualização
-
-6. **streaming_config** - Configurações de streaming ao vivo
-   - id (UUID)
-   - channel_id (VARCHAR) - ID do canal de streaming
-   - status (VARCHAR) - Status do streaming (enabled/disabled)
-   - last_updated (TIMESTAMP) - Última atualização
-
-7. **packages_config** - Configurações dos pacotes oferecidos
-   - id (UUID)
-   - basic_name (VARCHAR) - Nome do pacote básico
-   - basic_price (DECIMAL) - Preço do pacote básico
-   - basic_description (TEXT) - Descrição do pacote básico
-   - complete_name (VARCHAR) - Nome do pacote completo
-   - complete_price (DECIMAL) - Preço do pacote completo
-   - complete_description (TEXT) - Descrição do pacote completo
-   - last_updated (TIMESTAMP) - Última atualização
+```
+supabase/
+<<<<<<< HEAD
+├── client.js              # Cliente do Supabase
+├── config.js             # Configurações do Supabase
+├── models.js             # Modelos de dados
+├── services.js           # Serviços para interagir com o Supabase
+├── site-integration.js   # Integração do site principal com Supabase
+├── admin-integration.js  # Integração do painel administrativo com Supabase
+├── package.json          # Dependências do projeto
+├── vite.config.js        # Configuração do Vite
+├── .env                 # Variáveis de ambiente
+└── README.md             # Documentação
+=======
+├── client.js          # Cliente do Supabase
+├── config.js          # Configurações do Supabase
+├── models.js          # Modelos de dados
+├── services.js        # Serviços para interagir com o Supabase
+├── auth.js            # Autenticação com Supabase
+├── store.js          # Gerenciamento de estado da aplicação
+├── migrate.js        # Script de migração de dados do localStorage
+├── site-integration.js # Integração do site principal com Supabase
+├── admin-integration.js # Integração do painel administrativo com Supabase
+├── admin-auth.js     # Autenticação do painel administrativo
+├── schema.sql        # Esquema do banco de dados
+├── package.json      # Dependências do projeto
+├── .env.example     # Exemplo de variáveis de ambiente
+└── README.md         # Documentação
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
+```
 
 ## Configuração Inicial
 
-### Passo 1: Criar as tabelas
+1. **Criar projeto no Supabase**:
+   - Acesse [https://supabase.com](https://supabase.com)
+   - Crie um novo projeto
+   - Obtenha a URL do projeto e a chave anônima
 
-Execute o arquivo `setup.sql` no editor SQL do Supabase:
+2. **Configurar variáveis de ambiente**:
+   ```bash
+<<<<<<< HEAD
+   # Copie o arquivo de exemplo
+=======
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
+   cp .env.example .env
+   # Edite o arquivo .env com suas credenciais do Supabase
+   ```
+
+<<<<<<< HEAD
+3. **Instalar dependências**:
+=======
+3. **Criar tabelas no banco de dados**:
+   - Acesse o painel do Supabase
+   - Vá para a seção "SQL Editor"
+   - Cole o conteúdo do arquivo `tables.sql` e execute
+   - Opcionalmente, execute também o arquivo `seed.sql` para dados de exemplo
+
+4. **Instalar dependências**:
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
+   ```bash
+   npm install
+   ```
+
+<<<<<<< HEAD
+4. **Criar tabelas no banco de dados**:
+   - Acesse o painel do Supabase
+   - Vá para a seção "SQL Editor"
+   - Cole o conteúdo do arquivo `schema.sql` e execute
+=======
+5. **Executar migração de dados**:
+   ```bash
+   node migrate.js
+   ```
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
+
+## Estrutura do Banco de Dados
+
+O banco de dados contém as seguintes tabelas:
+
+- `services` - Serviços oferecidos pelo buffet
+- `contact_info` - Informações de contato
+- `events` - Associação entre serviços e tipos de eventos
+- `packages` - Pacotes de serviços
+- `reviews` - Avaliações dos clientes
+- `photos` - Fotos do espaço
+- `videos` - Vídeos em destaque
+- `admins` - Administradores do sistema
+
+### Detalhes das Tabelas
+
+#### services
+- `id` (UUID) - Identificador único do serviço
+- `name` (VARCHAR) - Nome do serviço
+- `description` (TEXT) - Descrição do serviço
+- `price` (DECIMAL) - Preço por pessoa
+- `image_url` (TEXT) - URL da imagem do serviço
+- `category` (VARCHAR) - Categoria do serviço
+- `created_at` (TIMESTAMP) - Data de criação
+- `updated_at` (TIMESTAMP) - Data de atualização
+
+#### events
+- `id` (UUID) - Identificador único da associação
+- `service_id` (UUID) - Referência ao serviço
+- `event_type` (VARCHAR) - Tipo de evento (birthday, wedding, graduation, corporate)
+- `created_at` (TIMESTAMP) - Data de criação
+
+#### packages
+- `id` (UUID) - Identificador único do pacote
+- `name` (VARCHAR) - Nome do pacote
+- `price` (DECIMAL) - Preço por pessoa
+- `description` (TEXT) - Descrição do pacote
+- `created_at` (TIMESTAMP) - Data de criação
+- `updated_at` (TIMESTAMP) - Data de atualização
+
+<<<<<<< HEAD
+=======
+## Criação de Tabelas
+
+Para criar as tabelas no banco de dados do Supabase, você pode usar os arquivos SQL fornecidos:
+
+1. **Arquivo `tables.sql`**: Contém o esquema completo do banco de dados
+2. **Arquivo `seed.sql`**: Contém dados de exemplo para testes
+
+### Como executar os arquivos SQL:
 
 1. Acesse o painel do Supabase
 2. Vá para a seção "SQL Editor"
-3. Cole o conteúdo do arquivo `setup.sql`
-4. Execute o script
+3. Cole o conteúdo do arquivo `tables.sql` e clique em "Run"
+4. Opcionalmente, cole o conteúdo do arquivo `seed.sql` e clique em "Run" para dados de exemplo
 
-### Passo 2: Inserir dados de exemplo (opcional)
+## Migração de Dados
 
-Para popular o banco com dados de exemplo, execute o arquivo `seed.sql`:
+O script de migração (`migrate.js`) transfere automaticamente todos os dados do localStorage para o Supabase:
 
-1. No "SQL Editor" do Supabase
-2. Cole o conteúdo do arquivo `seed.sql`
-3. Execute o script
-
-## Políticas de Segurança
-
-As seguintes políticas de segurança foram configuradas:
-
-- Leitura pública para todas as tabelas (usuários anônimos podem ler os dados)
-- Acesso restrito para escrita (apenas usuários autenticados podem modificar)
-
-## Índices
-
-Índices foram criados para melhorar a performance nas seguintes colunas:
-
-- services.name
-- reviews.created_at
-- space_photos.upload_date
-- featured_videos.added_date
-
-## Gatilhos
-
-Um gatilho foi criado para atualizar automaticamente o campo `updated_at` na tabela `services` sempre que um registro for modificado.
-
-## Manutenção
-
-### Adicionar novos serviços
-
-```sql
-INSERT INTO services (name, description, price, image_url)
-VALUES ('Novo Serviço', 'Descrição do novo serviço', 99.99, 'https://exemplo.com/imagem.jpg');
+```bash
+node migrate.js
 ```
 
-### Atualizar preços
+## Funcionalidades Implementadas
 
-```sql
-UPDATE services 
-SET price = 55.00, updated_at = NOW()
-WHERE name = 'Buffet Completo';
+### Site Principal
+- Carregamento de dados em tempo real do Supabase
+- Atualizações automáticas quando os dados são modificados
+- Integração com WhatsApp usando número configurado
+
+### Painel Administrativo
+- Autenticação segura com Supabase Auth
+- Gerenciamento completo de todos os dados
+- Interface em tempo real com atualizações automáticas
+
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
+## Comandos Úteis
+
+```bash
+# Iniciar servidor de desenvolvimento
+npm start
+
+# Construir para produção
+npm run build
+
+<<<<<<< HEAD
+# Pré-visualizar build de produção
+npm run preview
+
+# Testar conexão com o Supabase
+npm test
+=======
+# Deploy do esquema do banco de dados
+npm run supabase:deploy
+
+# Gerar tipos TypeScript
+npm run supabase:types
+>>>>>>> cc19c6937ceacbf2677ff80a439f95f6220eee1d
 ```
 
-### Adicionar nova avaliação
+## Segurança
 
-```sql
-INSERT INTO reviews (name, stars, comment)
-VALUES ('Nome do Cliente', 5, 'Comentário da avaliação');
-```
+- Todos os dados sensíveis são armazenados de forma segura
+- Autenticação baseada em tokens JWT
+- Acesso controlado por políticas de segurança
+- Criptografia em trânsito (HTTPS)
 
-### Atualizar informações de contato
+## Contribuição
 
-```sql
-UPDATE contact_info 
-SET whatsapp_number = '(85) 98888-8888', 
-    contact_email = 'novoemail@buffetsobral.com',
-    last_updated = NOW()
-WHERE id = (SELECT id FROM contact_info LIMIT 1);
-```
+1. Fork o repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -am 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Crie um novo Pull Request
 
-## Backup e Restauração
+## Licença
 
-### Exportar dados
-
-```sql
--- Exportar tabela específica
-COPY services TO '/caminho/para/arquivo.csv' WITH CSV HEADER;
-
--- Ou usar o painel do Supabase para exportar todo o banco
-```
-
-### Importar dados
-
-```sql
--- Importar tabela específica
-COPY services FROM '/caminho/para/arquivo.csv' WITH CSV HEADER;
-```
-
-## Troubleshooting
-
-### Problemas comuns
-
-1. **Erro de permissão**: Certifique-se de que as políticas RLS estão configuradas corretamente
-2. **Dados não aparecem**: Verifique se os índices estão atualizados e se não há filtros aplicados
-3. **Campos obrigatórios**: Verifique se todos os campos NOT NULL estão sendo preenchidos
-
-### Consultas úteis
-
-```sql
--- Verificar todas as tabelas
-SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';
-
--- Contar registros em cada tabela
-SELECT 'services' as table_name, COUNT(*) as count FROM services
-UNION ALL
-SELECT 'reviews' as table_name, COUNT(*) as count FROM reviews
-UNION ALL
-SELECT 'space_photos' as table_name, COUNT(*) as count FROM space_photos;
-
--- Verificar últimas atualizações
-SELECT * FROM services ORDER BY updated_at DESC LIMIT 5;
-```
-
-## Considerações de Segurança
-
-1. **Chaves de API**: Nunca exponha as chaves de API no código do frontend
-2. **Políticas RLS**: Revise regularmente as políticas de segurança
-3. **Backups**: Realize backups regulares do banco de dados
-4. **Monitoramento**: Utilize as ferramentas de monitoramento do Supabase para acompanhar acessos
+MIT © Buffet Sobral
