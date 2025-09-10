@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Mínimo - Buffet Sobral</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .header { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 20px; }
+        .nav-tabs { background: white; display: flex; border-radius: 8px; margin-bottom: 20px; }
+        .nav-tab { flex: 1; padding: 15px; text-align: center; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; }
+        .nav-tab.active { color: #9c27b0; border-bottom-color: #9c27b0; background: #f8f4ff; }
+        .content { max-width: 600px; margin: 0 auto; }
+        .section { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .section.active { display: block; }
+        .btn { background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 10px 5px; }
+        .btn:hover { background: #7b1fa2; }
+        #error-console { background: #000; color: #ff0000; padding: 15px; border-radius: 4px; font-family: monospace; height: 200px; overflow-y: auto; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎂 Teste Mínimo - Buffet Sobral</h1>
+        <div>Diagnóstico de Problemas</div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('teste1')">Teste 1</button>
+        <button class="nav-tab" onclick="showTab('teste2')">Teste 2</button>
+        <button class="nav-tab" onclick="showTab('erros')">Erros</button>
+    </div>
+
+    <div class="content">
+        <div id="teste1" class="section active">
+            <h2>Teste de Funcionalidade Básica</h2>
+            <p>Este teste verifica se os botões e navegação estão funcionando.</p>
+            <button class="btn" onclick="logSuccess('Botão do Teste 1 funcionou!')">Clique-me (Teste 1)</button>
+            <button class="btn" onclick="showTab('teste2')">Ir para Teste 2</button>
+        </div>
+
+        <div id="teste2" class="section">
+            <h2>Teste de JavaScript</h2>
+            <p>Este teste verifica se o JavaScript está sendo executado corretamente.</p>
+            <button class="btn" onclick="logSuccess('Botão do Teste 2 funcionou!')">Clique-me (Teste 2)</button>
+            <button class="btn" onclick="showTab('teste1')">Voltar para Teste 1</button>
+            <button class="btn" onclick="testJavaScript()">Testar JavaScript</button>
+        </div>
+
+        <div id="erros" class="section">
+            <h2>Console de Erros</h2>
+            <div id="error-console">> Aguardando erros...</div>
+            <button class="btn" onclick="checkForErrors()">Verificar Erros</button>
+            <button class="btn" onclick="clearErrors()">Limpar Console</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para logar sucesso
+        function logSuccess(message) {
+            const consoleElement = document.getElementById('error-console');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleElement.innerHTML += `[${timestamp}] ✅ ${message}
+`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            console.log(message);
+        }
+        
+        // Função para logar erro
+        function logError(message) {
+            const consoleElement = document.getElementById('error-console');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleElement.innerHTML += `[${timestamp}] ❌ ${message}
+`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            console.error(message);
+        }
+        
+        // Função para mostrar abas
+        function showTab(tabName) {
+            try {
+                // Esconder todas as seções
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Remover classe active de todas as abas
+                document.querySelectorAll('.nav-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Mostrar a seção solicitada
+                const targetSection = document.getElementById(tabName);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+                
+                // Ativar a aba correspondente
+                event.target.classList.add('active');
+                
+                logSuccess(`Aba ${tabName} ativada com sucesso`);
+            } catch (error) {
+                logError(`Erro ao mostrar aba ${tabName}: ${error.message}`);
+            }
+        }
+        
+        // Testar JavaScript
+        function testJavaScript() {
+            try {
+                logSuccess('Iniciando teste de JavaScript...');
+                
+                // Teste básico
+                const result = 2 + 2;
+                if (result === 4) {
+                    logSuccess('✅ Operações matemáticas funcionando');
+                } else {
+                    logError('❌ Problema com operações matemáticas');
+                }
+                
+                // Teste de DOM
+                const testElement = document.createElement('div');
+                testElement.textContent = 'Teste';
+                if (testElement.textContent === 'Teste') {
+                    logSuccess('✅ Manipulação de DOM funcionando');
+                } else {
+                    logError('❌ Problema com manipulação de DOM');
+                }
+                
+                // Teste de funções
+                if (typeof showTab === 'function') {
+                    logSuccess('✅ Funções definidas corretamente');
+                } else {
+                    logError('❌ Funções não definidas');
+                }
+                
+                logSuccess('Teste de JavaScript concluído');
+            } catch (error) {
+                logError(`Erro no teste de JavaScript: ${error.message}`);
+            }
+        }
+        
+        // Verificar erros
+        function checkForErrors() {
+            logSuccess('Verificando por erros...');
+            
+            // Verificar se há erros no console
+            window.addEventListener('error', function(e) {
+                logError(`Erro de script: ${e.error.message}`);
+            });
+            
+            window.addEventListener('unhandledrejection', function(e) {
+                logError(`Promise rejeitada: ${e.reason}`);
+            });
+            
+            logSuccess('Monitoramento de erros ativado');
+        }
+        
+        // Limpar console
+        function clearErrors() {
+            document.getElementById('error-console').innerHTML = '> Console limpo...
+';
+        }
+        
+        // Capturar erros globais
+        window.onerror = function(message, source, lineno, colno, error) {
+            logError(`Erro global: ${message} (${source}:${lineno}:${colno})`);
+            if (error && error.stack) {
+                logError(`Stack trace: ${error.stack}`);
+            }
+        };
+        
+        window.onunhandledrejection = function(event) {
+            logError(`Promise não tratada: ${event.reason}`);
+        };
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            logSuccess('✅ Página carregada com sucesso');
+            logSuccess('✅ Event listeners registrados');
+        });
+        
+        logSuccess('✅ Script inicializado');
+    </script>
+</body>
+</html>
