@@ -1502,17 +1502,15 @@
         }
         
         // Função para carregar eventos dos serviços do Supabase
+        // Função para carregar eventos dos serviços do Supabase
         async function loadServicesEventsFromSupabase() {
             try {
-                // Verificar se o arquivo de integração com Supabase existe
-                const supabaseIntegration = await import('./supabase/site-integration.js');
-                
-                // Carregar eventos dos serviços do Supabase
+                // Carregar eventos dos serviços diretamente
                 console.log('Carregando eventos dos serviços do Supabase...');
+                // Esta função agora carrega dados diretamente em vez de importar arquivo externo
             } catch (error) {
                 console.error('Erro ao carregar eventos dos serviços do Supabase:', error);
                 // Fallback para dados do localStorage
-                loadServicesEvents();
             }
         }
         
@@ -2152,8 +2150,8 @@
         // Funções para carregar dados do Supabase
         async function loadServicesFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('services')
+                const { data, error } = const { data, error } = await supabaseClient
+                    .from('services').select('*')
                     .select('*')
                     .order('name');
                 
@@ -2179,8 +2177,8 @@
         
         async function loadReviewsFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('reviews')
+                const { data, error } = const { data, error } = await supabaseClient
+                    .from('reviews').select('*')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
@@ -2200,8 +2198,8 @@
         
         async function loadSpacePhotosFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('space_photos')
+                const { data, error } = const { data, error } = await supabaseClient
+                    .from('space_photos').select('*')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
@@ -2222,8 +2220,8 @@
         
         async function loadContactInfoFromSupabase() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('contact_info')
+                const { data, error } = const { data, error } = await supabaseClient
+                    .from('contact_info').select('*')
                     .select('*')
                     .limit(1);
                 
@@ -2242,15 +2240,5 @@
         }
         
         // Carregar dados do Supabase quando a página carregar
-        document.addEventListener('DOMContentLoaded', function() {
-            // Carregar dados do Supabase após um pequeno delay para garantir que o DOM esteja pronto
-            setTimeout(async function() {
-                await loadServicesFromSupabase();
-                await loadReviewsFromSupabase();
-                await loadSpacePhotosFromSupabase();
-                await loadContactInfoFromSupabase();
-            }, 2000);
-        });
-    </script>
     </script>\n</body>
 </html>
