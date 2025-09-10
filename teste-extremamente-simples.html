@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Extremamente Simples</title>
+</head>
+<body>
+    <h1>Teste Extremamente Simples</h1>
+    
+    <button onclick="testeBasico()">Clique-me</button>
+    <div id="resultado"></div>
+    
+    <script>
+        function testeBasico() {
+            document.getElementById('resultado').innerHTML = '<p style="color: green;">✅ JavaScript está funcionando!</p>';
+            console.log('Botão clicado com sucesso!');
+        }
+        
+        console.log('Script carregado com sucesso!');
+    </script>
+</body>
+</html>
