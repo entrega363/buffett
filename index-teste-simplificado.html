@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Simplificado - Buffet Sobral</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .header { background: linear-gradient(135deg, #e91e63, #9c27b0); color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 20px; }
+        .nav-tabs { background: white; display: flex; border-radius: 8px; margin-bottom: 20px; }
+        .nav-tab { flex: 1; padding: 15px; text-align: center; border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent; }
+        .nav-tab.active { color: #9c27b0; border-bottom-color: #9c27b0; background: #f8f4ff; }
+        .content { max-width: 600px; margin: 0 auto; }
+        .section { display: none; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .section.active { display: block; }
+        .btn { background: #9c27b0; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin: 10px 5px; }
+        .btn:hover { background: #7b1fa2; }
+        #debug-console { background: #000; color: #00ff00; padding: 15px; border-radius: 4px; font-family: monospace; height: 200px; overflow-y: auto; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎂 Teste Simplificado - Buffet Sobral</h1>
+        <div>Diagnóstico de Funcionalidades</div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showTab('teste1')">Teste 1</button>
+        <button class="nav-tab" onclick="showTab('teste2')">Teste 2</button>
+        <button class="nav-tab" onclick="showTab('debug')">Debug</button>
+    </div>
+
+    <div class="content">
+        <div id="teste1" class="section active">
+            <h2>Teste de Navegação</h2>
+            <p>Este é o teste 1 - Verificando se a navegação funciona.</p>
+            <button class="btn" onclick="logMessage('Botão do Teste 1 clicado!')">Clique-me (Teste 1)</button>
+            <button class="btn" onclick="showTab('teste2')">Ir para Teste 2</button>
+        </div>
+
+        <div id="teste2" class="section">
+            <h2>Teste de Funcionalidades</h2>
+            <p>Este é o teste 2 - Verificando funcionalidades adicionais.</p>
+            <button class="btn" onclick="logMessage('Botão do Teste 2 clicado!')">Clique-me (Teste 2)</button>
+            <button class="btn" onclick="showTab('teste1')">Voltar para Teste 1</button>
+            <button class="btn" onclick="testSupabaseConnection()">Testar Conexão Supabase</button>
+        </div>
+
+        <div id="debug" class="section">
+            <h2>Console de Debug</h2>
+            <div id="debug-console">> Console de diagnóstico iniciado...</div>
+            <button class="btn" onclick="runFullDiagnostic()">Executar Diagnóstico Completo</button>
+            <button class="btn" onclick="clearConsole()">Limpar Console</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para logar mensagens
+        function logMessage(message) {
+            const consoleElement = document.getElementById('debug-console');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleElement.innerHTML += `\n[${timestamp}] ℹ️ ${message}`;
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            console.log(message);
+        }
+        
+        // Função para mostrar abas
+        function showTab(tabName) {
+            logMessage(`Tentando mostrar aba: ${tabName}`);
+            
+            // Esconder todas as seções
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Mostrar a seção solicitada
+            const targetSection = document.getElementById(tabName);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                logMessage(`Aba ${tabName} ativada com sucesso`);
+            } else {
+                logMessage(`Erro: Seção ${tabName} não encontrada`);
+            }
+            
+            // Ativar a aba correspondente
+            const targetTab = Array.from(document.querySelectorAll('.nav-tab')).find(tab => 
+                tab.textContent.toLowerCase().includes(tabName.toLowerCase()) ||
+                tab.onclick.toString().includes(tabName)
+            );
+            
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+        }
+        
+        // Testar conexão com Supabase
+        async function testSupabaseConnection() {
+            logMessage('Iniciando teste de conexão com Supabase...');
+            
+            try {
+                if (typeof supabase !== 'undefined' && typeof supabase.createClient === 'function') {
+                    logMessage('✅ Cliente Supabase disponível');
+                    
+                    // Configuração do Supabase
+                    const SUPABASE_URL = 'https://vopekxfyorbuyrvzcshy.supabase.co';
+                    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvcGVreGZ5b3JidXlydnpjc2h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0NTkyNjMsImV4cCI6MjA3MzAzNTI2M30.jIQqu4j_0QfPpn67YXHyy760X6Z4wwhuHMj-xK3emP4';
+                    
+                    try {
+                        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                        logMessage('✅ Cliente Supabase criado com sucesso');
+                        
+                        // Testar uma operação simples
+                        logMessage('✅ Teste de conexão concluído com sucesso');
+                    } catch (clientError) {
+                        logMessage(`❌ Erro ao criar cliente: ${clientError.message}`);
+                    }
+                } else {
+                    logMessage('❌ Cliente Supabase NÃO disponível');
+                }
+            } catch (error) {
+                logMessage(`❌ Erro no teste do Supabase: ${error.message}`);
+            }
+        }
+        
+        // Diagnóstico completo
+        function runFullDiagnostic() {
+            logMessage('=== INICIANDO DIAGNÓSTICO COMPLETO ===');
+            
+            // Testar DOM
+            logMessage('1. Testando elementos DOM...');
+            const elementos = ['teste1', 'teste2', 'debug', 'debug-console'];
+            let encontrados = 0;
+            elementos.forEach(id => {
+                if (document.getElementById(id)) {
+                    encontrados++;
+                }
+            });
+            logMessage(`✅ ${encontrados}/${elementos.length} elementos encontrados`);
+            
+            // Testar funções
+            logMessage('2. Testando funções...');
+            const funcoes = ['showTab', 'logMessage', 'testSupabaseConnection'];
+            funcoes.forEach(nome => {
+                if (typeof window[nome] === 'function') {
+                    logMessage(`✅ Função ${nome} disponível`);
+                } else {
+                    logMessage(`❌ Função ${nome} NÃO disponível`);
+                }
+            });
+            
+            // Testar Supabase
+            logMessage('3. Testando Supabase...');
+            if (typeof supabase !== 'undefined') {
+                logMessage('✅ Supabase carregado');
+            } else {
+                logMessage('❌ Supabase NÃO carregado');
+            }
+            
+            // Testar eventos
+            logMessage('4. Testando eventos...');
+            try {
+                const btn = document.querySelector('.btn');
+                if (btn) {
+                    logMessage('✅ Botões encontrados');
+                } else {
+                    logMessage('❌ Nenhum botão encontrado');
+                }
+            } catch (error) {
+                logMessage(`❌ Erro ao testar eventos: ${error.message}`);
+            }
+            
+            logMessage('=== FIM DO DIAGNÓSTICO ===');
+        }
+        
+        // Limpar console
+        function clearConsole() {
+            document.getElementById('debug-console').innerHTML = '> Console limpo...';
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            logMessage('✅ Página carregada com sucesso');
+            logMessage('✅ Event listeners registrados');
+        });
+        
+        logMessage('✅ Script inicializado');
+    </script>
+</body>
+</html>
