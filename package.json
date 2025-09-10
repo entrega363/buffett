@@ -7,7 +7,10 @@
     "start": "serve -s .",
     "dev": "serve -s .",
     "build": "echo 'Nenhum build necessário'",
-    "supabase:types": "npx supabase gen types typescript --project-id vopekxfyorbuyrvzcshy > supabase/types.ts"
+    "supabase:types": "npx supabase gen types typescript --project-id vopekxfyorbuyrvzcshy > supabase/types.ts",
+    "supabase:setup": "cd supabase && sh migrate.sh",
+    "supabase:seed": "cd supabase && node -e \"console.log('Para inserir dados de exemplo, execute: cd supabase && sh migrate.sh')\"",
+    "supabase:reset": "cd supabase && node -e \"console.log('Para resetar o banco de dados, use o painel do Supabase')\""
   },
   "keywords": [
     "buffet",
